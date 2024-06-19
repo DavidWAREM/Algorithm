@@ -12,5 +12,3 @@ class DataLoader:
         except Exception as e:
             print(f"Failed to load data from {self.file_path}. Error: {e}")
             raise e
-
-#test
