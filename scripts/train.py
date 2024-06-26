@@ -10,9 +10,9 @@ from data import DataLoader, preprocess_data
 
 
 def main():
-    # Daten laden
-    beispieldaten = DataLoader(file_path='temp.xlsx')
-    data = beispieldaten.load()
+    # Daten Knoten laden
+    daten_knoten = DataLoader(file_path='C:\\Users\\d.muehlfeld\Berechnungsdaten\\25_Schopfloch_NODE.CSV')
+    data = daten_knoten.load()
     print(data)
 
     # daten verarbeiten
@@ -24,4 +24,3 @@ if __name__ == "__main__":
     main()
 
 
-#test git
