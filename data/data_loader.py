@@ -13,6 +13,11 @@ class DataLoader:
         self.file_path = file_path
         logging.info(f"DataLoader initialized with file path: {file_path}")
 
+    """The functions `def find_max_columns`, `def clean_lines`, and `def custom_read_csv` were introduced because the
+        raw data from STANET in CSV format caused errors when being read into Python. Issues included varying numbers
+        of columns per row and ";" at the end of the lines. Therefore, these issues are cleaned before the data
+        is further processed."""
+
     def find_max_columns(self):
         """
         Find the maximum number of columns in the CSV file.

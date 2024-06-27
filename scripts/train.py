@@ -18,7 +18,7 @@ def configure_logging(log_file):
         handlers=[
             logging.FileHandler(log_file),
             logging.StreamHandler()
-        ]
+        ]   # TODO: Logging File beim Speichern so bennenen, wie die Datei heißt und das Projekt
     )
 
 
@@ -27,7 +27,7 @@ def main():
     Main function to load, process, and save data.
     """
     # Path to the CSV file
-    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV'
+    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV'
 
     # Determine the directory of the current script and set the log file path
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,6 +36,7 @@ def main():
     # Configure logging
     configure_logging(log_file)
 
+    logging.info((f'')) # one empy blank for navigating in the logging file
     logging.info(f'Starting data processing for file: {file_path}')
 
     # Create an instance of the DataLoader and load the data
