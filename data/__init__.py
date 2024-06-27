@@ -2,4 +2,4 @@
 
 # Importieren der wichtigsten Klassen und Funktionen des data-Pakets
 from .data_loader import DataLoader
-from .preprocess import preprocess_data
+from .preprocess import DataProcessor
