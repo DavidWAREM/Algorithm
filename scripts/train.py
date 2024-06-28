@@ -13,12 +13,12 @@ def configure_logging(log_file):
         log_file (str): Path to the log file.
     """
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,  # Set the logging level to DEBUG to capture all messages
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file),
             logging.StreamHandler()
-        ]   # TODO: Logging File beim Speichern so bennenen, wie die Datei heißt und das Projekt
+        ]
     )
 
 
@@ -27,7 +27,7 @@ def main():
     Main function to load, process, and save data.
     """
     # Path to the CSV file
-    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV'
+    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV'
 
     # Determine the directory of the current script and set the log file path
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,7 +36,6 @@ def main():
     # Configure logging
     configure_logging(log_file)
 
-    logging.info((f'')) # one empy blank for navigating in the logging file
     logging.info(f'Starting data processing for file: {file_path}')
 
     # Create an instance of the DataLoader and load the data
@@ -53,16 +52,15 @@ def main():
         data_processor = DataProcessor(data, file_path)
         kno_df, lei_df = data_processor.split_data()
         logging.info('Data split successfully.')
+
+        # Save the resulting DataFrames to CSV files
+        data_processor.save_dataframes()
+
+        # Log 'KNAM' values for rows where 'ABGAENGE' is '2'
+        data_processor.log_knam_for_abgaenge_2(kno_df)
+
     except Exception as e:
         logging.error(f'Error processing data: {e}')
-        return
-
-    # Save the resulting DataFrames to CSV files
-    try:
-        data_processor.save_dataframes()
-        logging.info('DataFrames saved successfully.')
-    except Exception as e:
-        logging.error(f'Error saving DataFrames: {e}')
         return
 
     logging.info("Data processing complete. DataFrames saved.")

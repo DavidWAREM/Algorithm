@@ -2,7 +2,6 @@ import pandas as pd
 import os
 import logging
 
-
 class DataProcessor:
     def __init__(self, dataframe, original_file_path):
         """
@@ -21,22 +20,15 @@ class DataProcessor:
     def split_data(self):
         """
         Split the DataFrame into two DataFrames based on the value in the first column.
-        Also includes the row immediately above the first occurrence of 'KNO' in the 'KNO' DataFrame.
 
         Returns:
             tuple: Two DataFrames, one for rows with 'KNO' and one for rows with 'LEI'.
         """
         try:
-            kno_indices = self.dataframe.index[self.dataframe.iloc[:, 0] == 'KNO'].tolist()
-            if kno_indices:
-                first_kno_index = kno_indices[0]
-                header_index = first_kno_index - 1 if first_kno_index > 0 else first_kno_index
-                kno_df = self.dataframe.loc[header_index:].copy()
-                kno_df = kno_df[kno_df.iloc[:, 0].str.contains('KNO', na=False) | (kno_df.index == header_index)]
-            else:
-                kno_df = pd.DataFrame()
-
+            # Filter rows where the first column is 'KNO' or 'LEI'
+            kno_df = self.dataframe[self.dataframe.iloc[:, 0] == 'KNO']
             lei_df = self.dataframe[self.dataframe.iloc[:, 0] == 'LEI']
+
             logging.info("Data split successfully into 'KNO' and 'LEI'")
             return kno_df, lei_df
         except Exception as e:
@@ -59,3 +51,23 @@ class DataProcessor:
                 logging.error("DataFrames could not be saved due to an earlier error.")
         except Exception as e:
             logging.error(f"Error saving DataFrames: {e}")
+
+    def log_knam_for_abgaenge_2(self, kno_df):
+        """
+        Log the 'KNAM' values for rows where 'ABGAENGE' is '2' in the kno_df DataFrame.
+
+        Args:
+            kno_df (pd.DataFrame): The DataFrame to check.
+        """
+        if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
+            logging.debug("ABGAENGE and KNAM columns found.")
+            found = False
+            for _, row in kno_df.iterrows():
+                logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']}")
+                if row['ABGAENGE'] == 2:  # Ensure this is not a string comparison
+                    logging.info(f"KNAM value with ABGAENGE == 2: {row['KNAM']}")
+                    found = True
+            if not found:
+                logging.info("No rows with ABGAENGE == 2 found.")
+        else:
+            logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
