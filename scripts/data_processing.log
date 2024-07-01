@@ -1,133 +1,48 @@
-2024-06-27 11:32:58,997 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:33:00,386 - INFO - Data loaded successfully.
-2024-06-27 11:33:00,404 - INFO - Data split successfully.
-2024-06-27 11:33:00,779 - INFO - DataFrames saved successfully.
-2024-06-27 11:33:00,780 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:36:01,367 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:36:01,367 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:36:01,535 - INFO - Maximum number of columns found: 290
-2024-06-27 11:36:01,972 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:36:02,756 - INFO - Data loaded successfully.
-2024-06-27 11:36:02,776 - INFO - Data split successfully.
-2024-06-27 11:36:03,155 - INFO - DataFrames saved successfully.
-2024-06-27 11:36:03,155 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:36:34,086 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:36:34,087 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:36:34,246 - INFO - Maximum number of columns found: 290
-2024-06-27 11:36:34,679 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:36:35,440 - INFO - Data loaded successfully.
-2024-06-27 11:36:35,458 - INFO - Data split successfully.
-2024-06-27 11:36:35,854 - INFO - DataFrames saved successfully.
-2024-06-27 11:36:35,854 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:37:59,850 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:37:59,850 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:38:00,020 - INFO - Maximum number of columns found: 290
-2024-06-27 11:38:00,446 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:38:01,222 - INFO - Data loaded successfully.
-2024-06-27 11:38:01,241 - INFO - Data split successfully.
-2024-06-27 11:38:01,613 - INFO - DataFrames saved successfully.
-2024-06-27 11:38:01,613 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:40:07,981 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:40:07,981 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:40:08,143 - INFO - Maximum number of columns found: 290
-2024-06-27 11:40:08,564 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:40:09,342 - INFO - Data loaded successfully.
-2024-06-27 11:40:09,343 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:40:09,361 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:40:09,361 - INFO - Data split successfully.
-2024-06-27 11:40:09,380 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:40:09,751 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
-2024-06-27 11:40:09,757 - INFO - DataFrames saved successfully.
-2024-06-27 11:40:09,757 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:41:08,880 - INFO - 
- Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:08,880 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:09,053 - INFO - Maximum number of columns found: 290
-2024-06-27 11:41:09,481 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:41:10,226 - INFO - Data loaded successfully.
-2024-06-27 11:41:10,227 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:10,244 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:41:10,245 - INFO - Data split successfully.
-2024-06-27 11:41:10,263 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:41:10,612 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
-2024-06-27 11:41:10,618 - INFO - DataFrames saved successfully.
-2024-06-27 11:41:10,618 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:41:50,749 - INFO - 
-
-2024-06-27 11:41:50,749 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:50,750 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:50,982 - INFO - Maximum number of columns found: 290
-2024-06-27 11:41:51,486 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:41:52,238 - INFO - Data loaded successfully.
-2024-06-27 11:41:52,239 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:41:52,257 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:41:52,258 - INFO - Data split successfully.
-2024-06-27 11:41:52,282 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:41:52,641 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
-2024-06-27 11:41:52,645 - INFO - DataFrames saved successfully.
-2024-06-27 11:41:52,647 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 11:42:20,371 - INFO - 
-2024-06-27 11:42:20,372 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:42:20,372 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:42:20,532 - INFO - Maximum number of columns found: 290
-2024-06-27 11:42:20,969 - INFO - CSV file read and cleaned successfully.
-2024-06-27 11:42:21,706 - INFO - Data loaded successfully.
-2024-06-27 11:42:21,707 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
-2024-06-27 11:42:21,725 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:42:21,726 - INFO - Data split successfully.
-2024-06-27 11:42:21,745 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 11:42:22,107 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
-2024-06-27 11:42:22,111 - INFO - DataFrames saved successfully.
-2024-06-27 11:42:22,112 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 12:54:40,791 - INFO - 
-2024-06-27 12:54:40,792 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV.CSV
-2024-06-27 12:54:40,792 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV.CSV
-2024-06-27 12:54:40,793 - ERROR - Error finding max columns: [Errno 2] No such file or directory: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB.CSV.CSV'
-2024-06-27 12:54:40,794 - ERROR - Error reading and cleaning CSV file: [Errno 2] No such file or directory: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB.CSV.CSV'
-2024-06-27 12:54:40,796 - INFO - Data loaded successfully.
-2024-06-27 12:54:40,797 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV.CSV
-2024-06-27 12:54:40,797 - ERROR - Error splitting data: single positional indexer is out-of-bounds
-2024-06-27 12:54:40,797 - INFO - Data split successfully.
-2024-06-27 12:54:40,798 - ERROR - Error splitting data: single positional indexer is out-of-bounds
-2024-06-27 12:54:40,798 - ERROR - DataFrames could not be saved due to an earlier error.
-2024-06-27 12:54:40,799 - INFO - DataFrames saved successfully.
-2024-06-27 12:54:40,799 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 13:00:59,501 - INFO - 
-2024-06-27 13:00:59,502 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:00:59,502 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:00:59,525 - INFO - Maximum number of columns found: 187
-2024-06-27 13:00:59,584 - INFO - CSV file read and cleaned successfully.
-2024-06-27 13:00:59,714 - INFO - Data loaded successfully.
-2024-06-27 13:00:59,714 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:00:59,719 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:00:59,720 - INFO - Data split successfully.
-2024-06-27 13:00:59,724 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:00:59,776 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
-2024-06-27 13:00:59,777 - INFO - DataFrames saved successfully.
-2024-06-27 13:00:59,778 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 13:04:04,032 - INFO - 
-2024-06-27 13:04:04,032 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:04,033 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:04,058 - INFO - Maximum number of columns found: 187
-2024-06-27 13:04:04,109 - INFO - CSV file read and cleaned successfully.
-2024-06-27 13:04:04,232 - INFO - Data loaded successfully.
-2024-06-27 13:04:04,233 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:04,248 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:04:04,249 - INFO - Data split successfully.
-2024-06-27 13:04:04,264 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:04:04,269 - ERROR - Error saving DataFrames: [Errno 13] Permission denied: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB_Node.csv'
-2024-06-27 13:04:04,269 - INFO - DataFrames saved successfully.
-2024-06-27 13:04:04,270 - INFO - Data processing complete. DataFrames saved.
-2024-06-27 13:04:16,199 - INFO - 
-2024-06-27 13:04:16,200 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:16,201 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:16,223 - INFO - Maximum number of columns found: 187
-2024-06-27 13:04:16,274 - INFO - CSV file read and cleaned successfully.
-2024-06-27 13:04:16,395 - INFO - Data loaded successfully.
-2024-06-27 13:04:16,396 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
-2024-06-27 13:04:16,410 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:04:16,411 - INFO - Data split successfully.
-2024-06-27 13:04:16,424 - INFO - Data split successfully into 'KNO' and 'LEI'
-2024-06-27 13:04:16,470 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
-2024-06-27 13:04:16,471 - INFO - DataFrames saved successfully.
-2024-06-27 13:04:16,472 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 10:32:37,808 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:32:37,809 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:32:38,089 - INFO - Maximum number of columns found: 290
+2024-07-01 10:32:38,742 - INFO - CSV file read and cleaned successfully.
+2024-07-01 10:32:39,666 - INFO - Data loaded successfully.
+2024-07-01 10:32:39,666 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:32:39,687 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:32:39,687 - INFO - Data split successfully.
+2024-07-01 10:32:39,709 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:32:40,155 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
+2024-07-01 10:32:40,160 - WARNING - 'ABGAENGE' or 'KNAM' columns not found in the DataFrame.
+2024-07-01 10:32:40,161 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 10:33:16,291 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:16,291 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:16,545 - INFO - Maximum number of columns found: 290
+2024-07-01 10:33:17,185 - INFO - CSV file read and cleaned successfully.
+2024-07-01 10:33:18,210 - INFO - Data loaded successfully.
+2024-07-01 10:33:18,210 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:18,388 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:33:18,388 - INFO - Data split successfully.
+2024-07-01 10:33:18,562 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:33:19,043 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
+2024-07-01 10:33:19,049 - WARNING - 'ABGAENGE' or 'KNAM' columns not found in the DataFrame.
+2024-07-01 10:33:19,049 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 10:33:52,493 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:52,494 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:52,673 - INFO - Maximum number of columns found: 290
+2024-07-01 10:33:53,125 - INFO - CSV file read and cleaned successfully.
+2024-07-01 10:33:53,884 - INFO - Data loaded successfully.
+2024-07-01 10:33:53,884 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:33:54,018 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:33:54,019 - INFO - Data split successfully.
+2024-07-01 10:33:54,157 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:33:54,528 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
+2024-07-01 10:33:54,533 - WARNING - 'ABGAENGE' or 'KNAM' columns not found in the DataFrame.
+2024-07-01 10:33:54,533 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 10:37:36,060 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:37:36,061 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:37:36,225 - INFO - Maximum number of columns found: 290
+2024-07-01 10:37:36,699 - INFO - CSV file read and cleaned successfully.
+2024-07-01 10:37:37,416 - INFO - Data loaded successfully.
+2024-07-01 10:37:37,416 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV
+2024-07-01 10:37:37,556 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:37:37,557 - INFO - Data split successfully.
+2024-07-01 10:37:37,706 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:37:38,093 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch_Pipes.csv
+2024-07-01 10:37:38,390 - INFO - No rows with ABGAENGE == 2 found.
+2024-07-01 10:37:38,391 - INFO - Data processing complete. DataFrames saved.

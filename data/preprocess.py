@@ -20,14 +20,28 @@ class DataProcessor:
     def split_data(self):
         """
         Split the DataFrame into two DataFrames based on the value in the first column.
+        Use the row immediately above the first occurrence of 'KNO' and 'LEI' as headers.
 
         Returns:
             tuple: Two DataFrames, one for rows with 'KNO' and one for rows with 'LEI'.
         """
         try:
+            # Find the indices where 'KNO' and 'LEI' first occur
+            kno_index = self.dataframe.index[self.dataframe.iloc[:, 0] == 'KNO'][0]
+            lei_index = self.dataframe.index[self.dataframe.iloc[:, 0] == 'LEI'][0]
+
+            # Use the rows immediately before these indices as headers and create the DataFrames
+            kno_header_index = kno_index - 1 if kno_index > 0 else kno_index
+            kno_df = self.dataframe.iloc[kno_index + 1:].copy()
+            kno_df.columns = self.dataframe.iloc[kno_header_index]
+
+            lei_header_index = lei_index - 1 if lei_index > 0 else lei_index
+            lei_df = self.dataframe.iloc[lei_index + 1:].copy()
+            lei_df.columns = self.dataframe.iloc[lei_header_index]
+
             # Filter rows where the first column is 'KNO' or 'LEI'
-            kno_df = self.dataframe[self.dataframe.iloc[:, 0] == 'KNO']
-            lei_df = self.dataframe[self.dataframe.iloc[:, 0] == 'LEI']
+            kno_df = kno_df[kno_df.iloc[:, 0] == 'KNO']
+            lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
             logging.info("Data split successfully into 'KNO' and 'LEI'")
             return kno_df, lei_df

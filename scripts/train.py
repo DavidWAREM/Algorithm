@@ -13,7 +13,7 @@ def configure_logging(log_file):
         log_file (str): Path to the log file.
     """
     logging.basicConfig(
-        level=logging.DEBUG,  # Set the logging level to DEBUG to capture all messages
+        level=logging.INFO,  # Set the logging level to INFO to capture all messages
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(log_file),
