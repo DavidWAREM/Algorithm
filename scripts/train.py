@@ -27,7 +27,7 @@ def main():
     Main function to load, process, and save data.
     """
     # Path to the CSV file
-    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\25_Schopfloch.CSV'
+    file_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV'
 
     # Determine the directory of the current script and set the log file path
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -56,8 +56,8 @@ def main():
         # Save the resulting DataFrames to CSV files
         data_processor.save_dataframes()
 
-        # Log 'KNAM' values for rows where 'ABGAENGE' is '2'
-        data_processor.log_knam_for_abgaenge_2(kno_df)
+        # Log 'KNAM' values for rows where 'ABGAENGE' is '2' and matching indices in lei_df
+        data_processor.log_knam_for_abgaenge_2(kno_df, lei_df)
 
     except Exception as e:
         logging.error(f'Error processing data: {e}')

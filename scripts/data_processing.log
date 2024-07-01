@@ -1254,3 +1254,1379 @@
 2024-07-01 10:42:26,116 - INFO - KNAM value with ABGAENGE == 2: K4566
 2024-07-01 10:42:26,117 - INFO - KNAM value with ABGAENGE == 2: K4572
 2024-07-01 10:42:26,120 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 10:51:56,405 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 10:51:56,406 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 10:51:56,427 - INFO - Maximum number of columns found: 187
+2024-07-01 10:51:56,475 - INFO - CSV file read and cleaned successfully.
+2024-07-01 10:51:56,591 - INFO - Data loaded successfully.
+2024-07-01 10:51:56,591 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 10:51:56,608 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:51:56,608 - INFO - Data split successfully.
+2024-07-01 10:51:56,625 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 10:51:56,672 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 10:51:56,676 - INFO - KNAM value with ABGAENGE == 2: K0005
+2024-07-01 10:51:56,678 - INFO - KNAM value with ABGAENGE == 2: K0031
+2024-07-01 10:51:56,679 - INFO - KNAM value with ABGAENGE == 2: K0035
+2024-07-01 10:51:56,681 - INFO - KNAM value with ABGAENGE == 2: K0055
+2024-07-01 10:51:56,681 - INFO - KNAM value with ABGAENGE == 2: K0058
+2024-07-01 10:51:56,683 - INFO - KNAM value with ABGAENGE == 2: K0077
+2024-07-01 10:51:56,684 - INFO - KNAM value with ABGAENGE == 2: K0078
+2024-07-01 10:51:56,684 - INFO - KNAM value with ABGAENGE == 2: K0079
+2024-07-01 10:51:56,685 - INFO - KNAM value with ABGAENGE == 2: K0084
+2024-07-01 10:51:56,685 - INFO - KNAM value with ABGAENGE == 2: K0085
+2024-07-01 10:51:56,686 - INFO - KNAM value with ABGAENGE == 2: K0088
+2024-07-01 10:51:56,686 - INFO - KNAM value with ABGAENGE == 2: K0094
+2024-07-01 10:51:56,688 - INFO - KNAM value with ABGAENGE == 2: K0104
+2024-07-01 10:51:56,688 - INFO - KNAM value with ABGAENGE == 2: K0105
+2024-07-01 10:51:56,689 - INFO - KNAM value with ABGAENGE == 2: K0111
+2024-07-01 10:51:56,689 - INFO - KNAM value with ABGAENGE == 2: K0113
+2024-07-01 10:51:56,691 - INFO - KNAM value with ABGAENGE == 2: K0131
+2024-07-01 10:51:56,692 - INFO - KNAM value with ABGAENGE == 2: K0139
+2024-07-01 10:51:56,692 - INFO - KNAM value with ABGAENGE == 2: K0140
+2024-07-01 10:51:56,696 - INFO - KNAM value with ABGAENGE == 2: K0182
+2024-07-01 10:51:56,697 - INFO - KNAM value with ABGAENGE == 2: K0192
+2024-07-01 10:51:56,697 - INFO - KNAM value with ABGAENGE == 2: K0194
+2024-07-01 10:51:56,698 - INFO - KNAM value with ABGAENGE == 2: K0196
+2024-07-01 10:51:56,698 - INFO - KNAM value with ABGAENGE == 2: K0197
+2024-07-01 10:51:56,699 - INFO - KNAM value with ABGAENGE == 2: K0199
+2024-07-01 10:51:56,699 - INFO - KNAM value with ABGAENGE == 2: K0201
+2024-07-01 10:51:56,700 - INFO - KNAM value with ABGAENGE == 2: K0204
+2024-07-01 10:51:56,700 - INFO - KNAM value with ABGAENGE == 2: K0207
+2024-07-01 10:51:56,701 - INFO - KNAM value with ABGAENGE == 2: K0210
+2024-07-01 10:51:56,702 - INFO - KNAM value with ABGAENGE == 2: K0215
+2024-07-01 10:51:56,702 - INFO - KNAM value with ABGAENGE == 2: K0217
+2024-07-01 10:51:56,703 - INFO - KNAM value with ABGAENGE == 2: K0226
+2024-07-01 10:51:56,704 - INFO - KNAM value with ABGAENGE == 2: K0233
+2024-07-01 10:51:56,704 - INFO - KNAM value with ABGAENGE == 2: K0236
+2024-07-01 10:51:56,705 - INFO - KNAM value with ABGAENGE == 2: K0237
+2024-07-01 10:51:56,705 - INFO - KNAM value with ABGAENGE == 2: K0238
+2024-07-01 10:51:56,706 - INFO - KNAM value with ABGAENGE == 2: K0243
+2024-07-01 10:51:56,706 - INFO - KNAM value with ABGAENGE == 2: K0245
+2024-07-01 10:51:56,706 - INFO - KNAM value with ABGAENGE == 2: K0247
+2024-07-01 10:51:56,707 - INFO - KNAM value with ABGAENGE == 2: K0248
+2024-07-01 10:51:56,707 - INFO - KNAM value with ABGAENGE == 2: K0249
+2024-07-01 10:51:56,707 - INFO - KNAM value with ABGAENGE == 2: K0253
+2024-07-01 10:51:56,707 - INFO - KNAM value with ABGAENGE == 2: K0254
+2024-07-01 10:51:56,709 - INFO - KNAM value with ABGAENGE == 2: K0279
+2024-07-01 10:51:56,711 - INFO - KNAM value with ABGAENGE == 2: K0297
+2024-07-01 10:51:56,711 - INFO - KNAM value with ABGAENGE == 2: K0302
+2024-07-01 10:51:56,711 - INFO - KNAM value with ABGAENGE == 2: K0303
+2024-07-01 10:51:56,713 - INFO - KNAM value with ABGAENGE == 2: K0329
+2024-07-01 10:51:56,714 - INFO - KNAM value with ABGAENGE == 2: K0336
+2024-07-01 10:51:56,714 - INFO - KNAM value with ABGAENGE == 2: K0339
+2024-07-01 10:51:56,715 - INFO - KNAM value with ABGAENGE == 2: K0340
+2024-07-01 10:51:56,715 - INFO - KNAM value with ABGAENGE == 2: K0344
+2024-07-01 10:51:56,715 - INFO - KNAM value with ABGAENGE == 2: K0345
+2024-07-01 10:51:56,715 - INFO - KNAM value with ABGAENGE == 2: K0346
+2024-07-01 10:51:56,716 - INFO - KNAM value with ABGAENGE == 2: K0347
+2024-07-01 10:51:56,716 - INFO - KNAM value with ABGAENGE == 2: K0348
+2024-07-01 10:51:56,716 - INFO - KNAM value with ABGAENGE == 2: K0349
+2024-07-01 10:51:56,716 - INFO - KNAM value with ABGAENGE == 2: K0350
+2024-07-01 10:51:56,716 - INFO - KNAM value with ABGAENGE == 2: K0353
+2024-07-01 10:51:56,717 - INFO - KNAM value with ABGAENGE == 2: K0357
+2024-07-01 10:51:56,717 - INFO - KNAM value with ABGAENGE == 2: K0364
+2024-07-01 10:51:56,718 - INFO - KNAM value with ABGAENGE == 2: K0365
+2024-07-01 10:51:56,718 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 11:17:03,888 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:03,889 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:03,915 - INFO - Maximum number of columns found: 187
+2024-07-01 11:17:03,968 - INFO - CSV file read and cleaned successfully.
+2024-07-01 11:17:04,105 - INFO - Data loaded successfully.
+2024-07-01 11:17:04,106 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:04,132 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:17:04,132 - INFO - Data split successfully.
+2024-07-01 11:17:04,149 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:17:04,153 - ERROR - Error saving DataFrames: [Errno 13] Permission denied: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB_Node.csv'
+2024-07-01 11:17:04,159 - INFO - KNAM value with ABGAENGE == 2: K0005
+2024-07-01 11:17:04,162 - INFO - KNAM value with ABGAENGE == 2: K0031
+2024-07-01 11:17:04,162 - INFO - KNAM value with ABGAENGE == 2: K0035
+2024-07-01 11:17:04,164 - INFO - KNAM value with ABGAENGE == 2: K0055
+2024-07-01 11:17:04,165 - INFO - KNAM value with ABGAENGE == 2: K0058
+2024-07-01 11:17:04,168 - INFO - KNAM value with ABGAENGE == 2: K0077
+2024-07-01 11:17:04,169 - INFO - KNAM value with ABGAENGE == 2: K0078
+2024-07-01 11:17:04,169 - INFO - KNAM value with ABGAENGE == 2: K0079
+2024-07-01 11:17:04,170 - INFO - KNAM value with ABGAENGE == 2: K0084
+2024-07-01 11:17:04,171 - INFO - KNAM value with ABGAENGE == 2: K0085
+2024-07-01 11:17:04,172 - INFO - KNAM value with ABGAENGE == 2: K0088
+2024-07-01 11:17:04,173 - INFO - KNAM value with ABGAENGE == 2: K0094
+2024-07-01 11:17:04,174 - INFO - KNAM value with ABGAENGE == 2: K0104
+2024-07-01 11:17:04,175 - INFO - KNAM value with ABGAENGE == 2: K0105
+2024-07-01 11:17:04,176 - INFO - KNAM value with ABGAENGE == 2: K0111
+2024-07-01 11:17:04,176 - INFO - KNAM value with ABGAENGE == 2: K0113
+2024-07-01 11:17:04,179 - INFO - KNAM value with ABGAENGE == 2: K0131
+2024-07-01 11:17:04,179 - INFO - KNAM value with ABGAENGE == 2: K0139
+2024-07-01 11:17:04,180 - INFO - KNAM value with ABGAENGE == 2: K0140
+2024-07-01 11:17:04,183 - INFO - KNAM value with ABGAENGE == 2: K0182
+2024-07-01 11:17:04,184 - INFO - KNAM value with ABGAENGE == 2: K0192
+2024-07-01 11:17:04,184 - INFO - KNAM value with ABGAENGE == 2: K0194
+2024-07-01 11:17:04,184 - INFO - KNAM value with ABGAENGE == 2: K0196
+2024-07-01 11:17:04,184 - INFO - KNAM value with ABGAENGE == 2: K0197
+2024-07-01 11:17:04,185 - INFO - KNAM value with ABGAENGE == 2: K0199
+2024-07-01 11:17:04,185 - INFO - KNAM value with ABGAENGE == 2: K0201
+2024-07-01 11:17:04,185 - INFO - KNAM value with ABGAENGE == 2: K0204
+2024-07-01 11:17:04,186 - INFO - KNAM value with ABGAENGE == 2: K0207
+2024-07-01 11:17:04,186 - INFO - KNAM value with ABGAENGE == 2: K0210
+2024-07-01 11:17:04,187 - INFO - KNAM value with ABGAENGE == 2: K0215
+2024-07-01 11:17:04,187 - INFO - KNAM value with ABGAENGE == 2: K0217
+2024-07-01 11:17:04,188 - INFO - KNAM value with ABGAENGE == 2: K0226
+2024-07-01 11:17:04,188 - INFO - KNAM value with ABGAENGE == 2: K0233
+2024-07-01 11:17:04,189 - INFO - KNAM value with ABGAENGE == 2: K0236
+2024-07-01 11:17:04,189 - INFO - KNAM value with ABGAENGE == 2: K0237
+2024-07-01 11:17:04,189 - INFO - KNAM value with ABGAENGE == 2: K0238
+2024-07-01 11:17:04,189 - INFO - KNAM value with ABGAENGE == 2: K0243
+2024-07-01 11:17:04,190 - INFO - KNAM value with ABGAENGE == 2: K0245
+2024-07-01 11:17:04,190 - INFO - KNAM value with ABGAENGE == 2: K0247
+2024-07-01 11:17:04,190 - INFO - KNAM value with ABGAENGE == 2: K0248
+2024-07-01 11:17:04,190 - INFO - KNAM value with ABGAENGE == 2: K0249
+2024-07-01 11:17:04,191 - INFO - KNAM value with ABGAENGE == 2: K0253
+2024-07-01 11:17:04,191 - INFO - KNAM value with ABGAENGE == 2: K0254
+2024-07-01 11:17:04,193 - INFO - KNAM value with ABGAENGE == 2: K0279
+2024-07-01 11:17:04,194 - INFO - KNAM value with ABGAENGE == 2: K0297
+2024-07-01 11:17:04,195 - INFO - KNAM value with ABGAENGE == 2: K0302
+2024-07-01 11:17:04,195 - INFO - KNAM value with ABGAENGE == 2: K0303
+2024-07-01 11:17:04,199 - INFO - KNAM value with ABGAENGE == 2: K0329
+2024-07-01 11:17:04,200 - INFO - KNAM value with ABGAENGE == 2: K0336
+2024-07-01 11:17:04,200 - INFO - KNAM value with ABGAENGE == 2: K0339
+2024-07-01 11:17:04,201 - INFO - KNAM value with ABGAENGE == 2: K0340
+2024-07-01 11:17:04,201 - INFO - KNAM value with ABGAENGE == 2: K0344
+2024-07-01 11:17:04,201 - INFO - KNAM value with ABGAENGE == 2: K0345
+2024-07-01 11:17:04,202 - INFO - KNAM value with ABGAENGE == 2: K0346
+2024-07-01 11:17:04,202 - INFO - KNAM value with ABGAENGE == 2: K0347
+2024-07-01 11:17:04,202 - INFO - KNAM value with ABGAENGE == 2: K0348
+2024-07-01 11:17:04,203 - INFO - KNAM value with ABGAENGE == 2: K0349
+2024-07-01 11:17:04,203 - INFO - KNAM value with ABGAENGE == 2: K0350
+2024-07-01 11:17:04,203 - INFO - KNAM value with ABGAENGE == 2: K0353
+2024-07-01 11:17:04,204 - INFO - KNAM value with ABGAENGE == 2: K0357
+2024-07-01 11:17:04,205 - INFO - KNAM value with ABGAENGE == 2: K0364
+2024-07-01 11:17:04,205 - INFO - KNAM value with ABGAENGE == 2: K0365
+2024-07-01 11:17:04,206 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 11:17:22,081 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:22,082 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:22,104 - INFO - Maximum number of columns found: 187
+2024-07-01 11:17:22,159 - INFO - CSV file read and cleaned successfully.
+2024-07-01 11:17:22,269 - INFO - Data loaded successfully.
+2024-07-01 11:17:22,270 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:17:22,289 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:17:22,290 - INFO - Data split successfully.
+2024-07-01 11:17:22,307 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:17:22,370 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 11:17:22,373 - INFO - KNAM value with ABGAENGE == 2: K0005
+2024-07-01 11:17:22,375 - INFO - KNAM value with ABGAENGE == 2: K0031
+2024-07-01 11:17:22,376 - INFO - KNAM value with ABGAENGE == 2: K0035
+2024-07-01 11:17:22,377 - INFO - KNAM value with ABGAENGE == 2: K0055
+2024-07-01 11:17:22,378 - INFO - KNAM value with ABGAENGE == 2: K0058
+2024-07-01 11:17:22,379 - INFO - KNAM value with ABGAENGE == 2: K0077
+2024-07-01 11:17:22,380 - INFO - KNAM value with ABGAENGE == 2: K0078
+2024-07-01 11:17:22,380 - INFO - KNAM value with ABGAENGE == 2: K0079
+2024-07-01 11:17:22,380 - INFO - KNAM value with ABGAENGE == 2: K0084
+2024-07-01 11:17:22,381 - INFO - KNAM value with ABGAENGE == 2: K0085
+2024-07-01 11:17:22,381 - INFO - KNAM value with ABGAENGE == 2: K0088
+2024-07-01 11:17:22,381 - INFO - KNAM value with ABGAENGE == 2: K0094
+2024-07-01 11:17:22,382 - INFO - KNAM value with ABGAENGE == 2: K0104
+2024-07-01 11:17:22,383 - INFO - KNAM value with ABGAENGE == 2: K0105
+2024-07-01 11:17:22,383 - INFO - KNAM value with ABGAENGE == 2: K0111
+2024-07-01 11:17:22,383 - INFO - KNAM value with ABGAENGE == 2: K0113
+2024-07-01 11:17:22,385 - INFO - KNAM value with ABGAENGE == 2: K0131
+2024-07-01 11:17:22,385 - INFO - KNAM value with ABGAENGE == 2: K0139
+2024-07-01 11:17:22,386 - INFO - KNAM value with ABGAENGE == 2: K0140
+2024-07-01 11:17:22,391 - INFO - KNAM value with ABGAENGE == 2: K0182
+2024-07-01 11:17:22,392 - INFO - KNAM value with ABGAENGE == 2: K0192
+2024-07-01 11:17:22,393 - INFO - KNAM value with ABGAENGE == 2: K0194
+2024-07-01 11:17:22,393 - INFO - KNAM value with ABGAENGE == 2: K0196
+2024-07-01 11:17:22,393 - INFO - KNAM value with ABGAENGE == 2: K0197
+2024-07-01 11:17:22,394 - INFO - KNAM value with ABGAENGE == 2: K0199
+2024-07-01 11:17:22,394 - INFO - KNAM value with ABGAENGE == 2: K0201
+2024-07-01 11:17:22,395 - INFO - KNAM value with ABGAENGE == 2: K0204
+2024-07-01 11:17:22,395 - INFO - KNAM value with ABGAENGE == 2: K0207
+2024-07-01 11:17:22,396 - INFO - KNAM value with ABGAENGE == 2: K0210
+2024-07-01 11:17:22,396 - INFO - KNAM value with ABGAENGE == 2: K0215
+2024-07-01 11:17:22,397 - INFO - KNAM value with ABGAENGE == 2: K0217
+2024-07-01 11:17:22,398 - INFO - KNAM value with ABGAENGE == 2: K0226
+2024-07-01 11:17:22,398 - INFO - KNAM value with ABGAENGE == 2: K0233
+2024-07-01 11:17:22,399 - INFO - KNAM value with ABGAENGE == 2: K0236
+2024-07-01 11:17:22,399 - INFO - KNAM value with ABGAENGE == 2: K0237
+2024-07-01 11:17:22,399 - INFO - KNAM value with ABGAENGE == 2: K0238
+2024-07-01 11:17:22,400 - INFO - KNAM value with ABGAENGE == 2: K0243
+2024-07-01 11:17:22,400 - INFO - KNAM value with ABGAENGE == 2: K0245
+2024-07-01 11:17:22,400 - INFO - KNAM value with ABGAENGE == 2: K0247
+2024-07-01 11:17:22,400 - INFO - KNAM value with ABGAENGE == 2: K0248
+2024-07-01 11:17:22,401 - INFO - KNAM value with ABGAENGE == 2: K0249
+2024-07-01 11:17:22,401 - INFO - KNAM value with ABGAENGE == 2: K0253
+2024-07-01 11:17:22,401 - INFO - KNAM value with ABGAENGE == 2: K0254
+2024-07-01 11:17:22,403 - INFO - KNAM value with ABGAENGE == 2: K0279
+2024-07-01 11:17:22,405 - INFO - KNAM value with ABGAENGE == 2: K0297
+2024-07-01 11:17:22,405 - INFO - KNAM value with ABGAENGE == 2: K0302
+2024-07-01 11:17:22,405 - INFO - KNAM value with ABGAENGE == 2: K0303
+2024-07-01 11:17:22,407 - INFO - KNAM value with ABGAENGE == 2: K0329
+2024-07-01 11:17:22,408 - INFO - KNAM value with ABGAENGE == 2: K0336
+2024-07-01 11:17:22,408 - INFO - KNAM value with ABGAENGE == 2: K0339
+2024-07-01 11:17:22,408 - INFO - KNAM value with ABGAENGE == 2: K0340
+2024-07-01 11:17:22,409 - INFO - KNAM value with ABGAENGE == 2: K0344
+2024-07-01 11:17:22,409 - INFO - KNAM value with ABGAENGE == 2: K0345
+2024-07-01 11:17:22,409 - INFO - KNAM value with ABGAENGE == 2: K0346
+2024-07-01 11:17:22,409 - INFO - KNAM value with ABGAENGE == 2: K0347
+2024-07-01 11:17:22,410 - INFO - KNAM value with ABGAENGE == 2: K0348
+2024-07-01 11:17:22,410 - INFO - KNAM value with ABGAENGE == 2: K0349
+2024-07-01 11:17:22,410 - INFO - KNAM value with ABGAENGE == 2: K0350
+2024-07-01 11:17:22,410 - INFO - KNAM value with ABGAENGE == 2: K0353
+2024-07-01 11:17:22,411 - INFO - KNAM value with ABGAENGE == 2: K0357
+2024-07-01 11:17:22,411 - INFO - KNAM value with ABGAENGE == 2: K0364
+2024-07-01 11:17:22,412 - INFO - KNAM value with ABGAENGE == 2: K0365
+2024-07-01 11:17:22,412 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 11:21:23,906 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:21:23,908 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:21:23,927 - INFO - Maximum number of columns found: 187
+2024-07-01 11:21:23,976 - INFO - CSV file read and cleaned successfully.
+2024-07-01 11:21:24,085 - INFO - Data loaded successfully.
+2024-07-01 11:21:24,085 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:21:24,102 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:21:24,103 - INFO - Data split successfully.
+2024-07-01 11:21:24,119 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:21:24,164 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 11:21:24,168 - INFO - KNAM value with ABGAENGE == 2: K0005
+2024-07-01 11:21:24,171 - INFO - KNAM value with ABGAENGE == 2: K0031
+2024-07-01 11:21:24,171 - INFO - KNAM value with ABGAENGE == 2: K0035
+2024-07-01 11:21:24,173 - INFO - KNAM value with ABGAENGE == 2: K0055
+2024-07-01 11:21:24,174 - INFO - KNAM value with ABGAENGE == 2: K0058
+2024-07-01 11:21:24,176 - INFO - KNAM value with ABGAENGE == 2: K0077
+2024-07-01 11:21:24,176 - INFO - KNAM value with ABGAENGE == 2: K0078
+2024-07-01 11:21:24,177 - INFO - KNAM value with ABGAENGE == 2: K0079
+2024-07-01 11:21:24,177 - INFO - KNAM value with ABGAENGE == 2: K0084
+2024-07-01 11:21:24,178 - INFO - KNAM value with ABGAENGE == 2: K0085
+2024-07-01 11:21:24,178 - INFO - KNAM value with ABGAENGE == 2: K0088
+2024-07-01 11:21:24,179 - INFO - KNAM value with ABGAENGE == 2: K0094
+2024-07-01 11:21:24,180 - INFO - KNAM value with ABGAENGE == 2: K0104
+2024-07-01 11:21:24,180 - INFO - KNAM value with ABGAENGE == 2: K0105
+2024-07-01 11:21:24,181 - INFO - KNAM value with ABGAENGE == 2: K0111
+2024-07-01 11:21:24,182 - INFO - KNAM value with ABGAENGE == 2: K0113
+2024-07-01 11:21:24,183 - INFO - KNAM value with ABGAENGE == 2: K0131
+2024-07-01 11:21:24,184 - INFO - KNAM value with ABGAENGE == 2: K0139
+2024-07-01 11:21:24,185 - INFO - KNAM value with ABGAENGE == 2: K0140
+2024-07-01 11:21:24,188 - INFO - KNAM value with ABGAENGE == 2: K0182
+2024-07-01 11:21:24,189 - INFO - KNAM value with ABGAENGE == 2: K0192
+2024-07-01 11:21:24,190 - INFO - KNAM value with ABGAENGE == 2: K0194
+2024-07-01 11:21:24,191 - INFO - KNAM value with ABGAENGE == 2: K0196
+2024-07-01 11:21:24,191 - INFO - KNAM value with ABGAENGE == 2: K0197
+2024-07-01 11:21:24,192 - INFO - KNAM value with ABGAENGE == 2: K0199
+2024-07-01 11:21:24,192 - INFO - KNAM value with ABGAENGE == 2: K0201
+2024-07-01 11:21:24,193 - INFO - KNAM value with ABGAENGE == 2: K0204
+2024-07-01 11:21:24,194 - INFO - KNAM value with ABGAENGE == 2: K0207
+2024-07-01 11:21:24,194 - INFO - KNAM value with ABGAENGE == 2: K0210
+2024-07-01 11:21:24,195 - INFO - KNAM value with ABGAENGE == 2: K0215
+2024-07-01 11:21:24,196 - INFO - KNAM value with ABGAENGE == 2: K0217
+2024-07-01 11:21:24,197 - INFO - KNAM value with ABGAENGE == 2: K0226
+2024-07-01 11:21:24,197 - INFO - KNAM value with ABGAENGE == 2: K0233
+2024-07-01 11:21:24,198 - INFO - KNAM value with ABGAENGE == 2: K0236
+2024-07-01 11:21:24,199 - INFO - KNAM value with ABGAENGE == 2: K0237
+2024-07-01 11:21:24,199 - INFO - KNAM value with ABGAENGE == 2: K0238
+2024-07-01 11:21:24,200 - INFO - KNAM value with ABGAENGE == 2: K0243
+2024-07-01 11:21:24,200 - INFO - KNAM value with ABGAENGE == 2: K0245
+2024-07-01 11:21:24,200 - INFO - KNAM value with ABGAENGE == 2: K0247
+2024-07-01 11:21:24,200 - INFO - KNAM value with ABGAENGE == 2: K0248
+2024-07-01 11:21:24,201 - INFO - KNAM value with ABGAENGE == 2: K0249
+2024-07-01 11:21:24,201 - INFO - KNAM value with ABGAENGE == 2: K0253
+2024-07-01 11:21:24,201 - INFO - KNAM value with ABGAENGE == 2: K0254
+2024-07-01 11:21:24,204 - INFO - KNAM value with ABGAENGE == 2: K0279
+2024-07-01 11:21:24,206 - INFO - KNAM value with ABGAENGE == 2: K0297
+2024-07-01 11:21:24,206 - INFO - KNAM value with ABGAENGE == 2: K0302
+2024-07-01 11:21:24,207 - INFO - KNAM value with ABGAENGE == 2: K0303
+2024-07-01 11:21:24,209 - INFO - KNAM value with ABGAENGE == 2: K0329
+2024-07-01 11:21:24,209 - INFO - KNAM value with ABGAENGE == 2: K0336
+2024-07-01 11:21:24,209 - INFO - KNAM value with ABGAENGE == 2: K0339
+2024-07-01 11:21:24,210 - INFO - KNAM value with ABGAENGE == 2: K0340
+2024-07-01 11:21:24,210 - INFO - KNAM value with ABGAENGE == 2: K0344
+2024-07-01 11:21:24,210 - INFO - KNAM value with ABGAENGE == 2: K0345
+2024-07-01 11:21:24,210 - INFO - KNAM value with ABGAENGE == 2: K0346
+2024-07-01 11:21:24,211 - INFO - KNAM value with ABGAENGE == 2: K0347
+2024-07-01 11:21:24,211 - INFO - KNAM value with ABGAENGE == 2: K0348
+2024-07-01 11:21:24,211 - INFO - KNAM value with ABGAENGE == 2: K0349
+2024-07-01 11:21:24,211 - INFO - KNAM value with ABGAENGE == 2: K0350
+2024-07-01 11:21:24,212 - INFO - KNAM value with ABGAENGE == 2: K0353
+2024-07-01 11:21:24,212 - INFO - KNAM value with ABGAENGE == 2: K0357
+2024-07-01 11:21:24,213 - INFO - KNAM value with ABGAENGE == 2: K0364
+2024-07-01 11:21:24,213 - INFO - KNAM value with ABGAENGE == 2: K0365
+2024-07-01 11:21:24,214 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 11:25:00,704 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:25:00,705 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:25:00,725 - INFO - Maximum number of columns found: 187
+2024-07-01 11:25:00,779 - INFO - CSV file read and cleaned successfully.
+2024-07-01 11:25:00,891 - INFO - Data loaded successfully.
+2024-07-01 11:25:00,891 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 11:25:00,912 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:25:00,913 - INFO - Data split successfully.
+2024-07-01 11:25:00,934 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 11:25:00,980 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 11:25:00,984 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 11:25:00,989 - ERROR - Error processing data: 'KNAM'
+2024-07-01 12:31:28,897 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:31:28,898 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:31:28,916 - INFO - Maximum number of columns found: 187
+2024-07-01 12:31:28,972 - INFO - CSV file read and cleaned successfully.
+2024-07-01 12:31:29,077 - INFO - Data loaded successfully.
+2024-07-01 12:31:29,078 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:31:29,094 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:31:29,095 - INFO - Data split successfully.
+2024-07-01 12:31:29,111 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:31:29,155 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 12:31:29,159 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 12:31:29,160 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1344
+2024-07-01 12:31:29,161 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1691
+2024-07-01 12:31:29,163 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 12:31:29,163 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1376
+2024-07-01 12:31:29,164 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1360
+2024-07-01 12:31:29,164 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 12:31:29,165 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1363
+2024-07-01 12:31:29,165 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1556
+2024-07-01 12:31:29,167 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 12:31:29,167 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1375
+2024-07-01 12:31:29,167 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1374
+2024-07-01 12:31:29,168 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 12:31:29,168 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1607
+2024-07-01 12:31:29,169 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1376
+2024-07-01 12:31:29,170 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 12:31:29,171 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1387
+2024-07-01 12:31:29,171 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1622
+2024-07-01 12:31:29,171 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 12:31:29,172 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1624
+2024-07-01 12:31:29,172 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1391
+2024-07-01 12:31:29,172 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 12:31:29,173 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1388
+2024-07-01 12:31:29,173 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1474
+2024-07-01 12:31:29,174 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 12:31:29,175 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1391
+2024-07-01 12:31:29,175 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1393
+2024-07-01 12:31:29,175 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 12:31:29,176 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1397
+2024-07-01 12:31:29,177 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1394
+2024-07-01 12:31:29,177 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 12:31:29,178 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1492
+2024-07-01 12:31:29,178 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1396
+2024-07-01 12:31:29,179 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 12:31:29,180 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1401
+2024-07-01 12:31:29,180 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1606
+2024-07-01 12:31:29,181 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 12:31:29,182 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1407
+2024-07-01 12:31:29,183 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1433
+2024-07-01 12:31:29,183 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 12:31:29,184 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1626
+2024-07-01 12:31:29,184 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1407
+2024-07-01 12:31:29,185 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 12:31:29,185 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1706
+2024-07-01 12:31:29,186 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1411
+2024-07-01 12:31:29,186 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 12:31:29,187 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1412
+2024-07-01 12:31:29,187 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1711
+2024-07-01 12:31:29,188 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 12:31:29,189 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1425
+2024-07-01 12:31:29,189 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1479
+2024-07-01 12:31:29,190 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 12:31:29,191 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1461
+2024-07-01 12:31:29,191 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1703
+2024-07-01 12:31:29,191 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1701
+2024-07-01 12:31:29,191 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 12:31:29,192 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1509
+2024-07-01 12:31:29,192 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1613
+2024-07-01 12:31:29,195 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 12:31:29,196 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1458
+2024-07-01 12:31:29,196 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1457
+2024-07-01 12:31:29,197 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 12:31:29,198 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1481
+2024-07-01 12:31:29,198 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1464
+2024-07-01 12:31:29,198 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 12:31:29,199 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1466
+2024-07-01 12:31:29,199 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1468
+2024-07-01 12:31:29,199 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 12:31:29,200 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1632
+2024-07-01 12:31:29,200 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1467
+2024-07-01 12:31:29,200 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 12:31:29,201 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1469
+2024-07-01 12:31:29,201 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1523
+2024-07-01 12:31:29,201 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 12:31:29,202 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1545
+2024-07-01 12:31:29,202 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1470
+2024-07-01 12:31:29,202 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 12:31:29,203 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1494
+2024-07-01 12:31:29,203 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1471
+2024-07-01 12:31:29,203 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 12:31:29,204 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1475
+2024-07-01 12:31:29,204 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1473
+2024-07-01 12:31:29,205 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 12:31:29,205 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1477
+2024-07-01 12:31:29,205 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1647
+2024-07-01 12:31:29,206 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 12:31:29,207 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1478
+2024-07-01 12:31:29,207 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1693
+2024-07-01 12:31:29,208 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 12:31:29,209 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1484
+2024-07-01 12:31:29,210 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1657
+2024-07-01 12:31:29,210 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1658
+2024-07-01 12:31:29,210 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 12:31:29,211 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1677
+2024-07-01 12:31:29,211 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1486
+2024-07-01 12:31:29,212 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 12:31:29,213 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1497
+2024-07-01 12:31:29,214 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1502
+2024-07-01 12:31:29,215 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 12:31:29,215 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1508
+2024-07-01 12:31:29,216 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1506
+2024-07-01 12:31:29,216 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 12:31:29,217 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1591
+2024-07-01 12:31:29,217 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1509
+2024-07-01 12:31:29,217 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 12:31:29,218 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1516
+2024-07-01 12:31:29,218 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1511
+2024-07-01 12:31:29,218 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 12:31:29,219 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1512
+2024-07-01 12:31:29,219 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1609
+2024-07-01 12:31:29,220 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 12:31:29,220 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1515
+2024-07-01 12:31:29,220 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1610
+2024-07-01 12:31:29,221 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 12:31:29,221 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1609
+2024-07-01 12:31:29,221 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1517
+2024-07-01 12:31:29,222 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 12:31:29,222 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1620
+2024-07-01 12:31:29,223 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1519
+2024-07-01 12:31:29,223 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 12:31:29,223 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1521
+2024-07-01 12:31:29,224 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1520
+2024-07-01 12:31:29,224 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1720
+2024-07-01 12:31:29,224 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 12:31:29,225 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1636
+2024-07-01 12:31:29,225 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1638
+2024-07-01 12:31:29,225 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 12:31:29,226 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1690
+2024-07-01 12:31:29,226 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1526
+2024-07-01 12:31:29,226 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 12:31:29,227 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1707
+2024-07-01 12:31:29,227 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1527
+2024-07-01 12:31:29,229 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 12:31:29,229 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1548
+2024-07-01 12:31:29,230 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1641
+2024-07-01 12:31:29,230 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1533
+2024-07-01 12:31:29,231 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 12:31:29,232 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1577
+2024-07-01 12:31:29,232 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1562
+2024-07-01 12:31:29,233 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 12:31:29,233 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1580
+2024-07-01 12:31:29,233 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1565
+2024-07-01 12:31:29,234 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 12:31:29,234 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1566
+2024-07-01 12:31:29,234 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1699
+2024-07-01 12:31:29,236 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 12:31:29,237 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1603
+2024-07-01 12:31:29,237 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1655
+2024-07-01 12:31:29,237 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1593
+2024-07-01 12:31:29,238 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 12:31:29,239 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1709
+2024-07-01 12:31:29,239 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1726
+2024-07-01 12:31:29,239 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1727
+2024-07-01 12:31:29,239 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1604
+2024-07-01 12:31:29,239 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 12:31:29,240 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1468
+2024-07-01 12:31:29,240 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1694
+2024-07-01 12:31:29,240 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 12:31:29,241 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1695
+2024-07-01 12:31:29,241 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1595
+2024-07-01 12:31:29,243 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 12:31:29,243 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1698
+2024-07-01 12:31:29,243 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1697
+2024-07-01 12:31:29,244 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 12:31:29,244 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1699
+2024-07-01 12:31:29,244 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1698
+2024-07-01 12:31:29,245 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 12:31:29,245 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1700
+2024-07-01 12:31:29,245 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1596
+2024-07-01 12:31:29,245 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 12:31:29,246 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1701
+2024-07-01 12:31:29,246 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1702
+2024-07-01 12:31:29,246 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1429
+2024-07-01 12:31:29,247 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 12:31:29,247 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1702
+2024-07-01 12:31:29,248 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 12:31:29,248 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1703
+2024-07-01 12:31:29,248 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 12:31:29,249 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1704
+2024-07-01 12:31:29,249 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 12:31:29,250 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1705
+2024-07-01 12:31:29,250 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 12:31:29,251 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1712
+2024-07-01 12:31:29,251 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1719
+2024-07-01 12:31:29,251 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1416
+2024-07-01 12:31:29,251 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1716
+2024-07-01 12:31:29,252 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 12:31:29,253 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1717
+2024-07-01 12:31:29,253 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1522
+2024-07-01 12:31:29,253 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1719
+2024-07-01 12:31:29,253 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 12:31:29,254 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1718
+2024-07-01 12:31:29,254 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1637
+2024-07-01 12:31:29,255 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 12:38:43,204 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:38:43,206 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:38:43,226 - INFO - Maximum number of columns found: 187
+2024-07-01 12:38:43,276 - INFO - CSV file read and cleaned successfully.
+2024-07-01 12:38:43,395 - INFO - Data loaded successfully.
+2024-07-01 12:38:43,396 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:38:43,416 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:38:43,417 - INFO - Data split successfully.
+2024-07-01 12:38:43,433 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:38:43,458 - ERROR - Error saving DataFrames: [Errno 13] Permission denied: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB_Pipes.csv'
+2024-07-01 12:38:43,461 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 12:38:43,466 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1344 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,466 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1691 with ROHRTYP=DN 100
+2024-07-01 12:38:43,469 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 12:38:43,470 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,470 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1360 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,471 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 12:38:43,472 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1363 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,472 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1556 with ROHRTYP=80 GG
+2024-07-01 12:38:43,474 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 12:38:43,475 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1375 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,476 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1374 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,476 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 12:38:43,477 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1607 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,478 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,479 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 12:38:43,481 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1387 with ROHRTYP=100 GG
+2024-07-01 12:38:43,481 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1622 with ROHRTYP=DN 100
+2024-07-01 12:38:43,482 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 12:38:43,482 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1624 with ROHRTYP=100 GG
+2024-07-01 12:38:43,483 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 12:38:43,483 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 12:38:43,483 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1388 with ROHRTYP=DN 100
+2024-07-01 12:38:43,484 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1474 with ROHRTYP=DN 100
+2024-07-01 12:38:43,484 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 12:38:43,485 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 12:38:43,485 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1393 with ROHRTYP=100 GG
+2024-07-01 12:38:43,485 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 12:38:43,486 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1397 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,486 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1394 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,486 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 12:38:43,487 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1492 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,487 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1396 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,488 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 12:38:43,488 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1401 with ROHRTYP=100 GG
+2024-07-01 12:38:43,489 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1606 with ROHRTYP=DN 100
+2024-07-01 12:38:43,490 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 12:38:43,490 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,491 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1433 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,491 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 12:38:43,491 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1626 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,492 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,492 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 12:38:43,493 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1706 with ROHRTYP=DN 100
+2024-07-01 12:38:43,493 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1411 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,493 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 12:38:43,494 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1412 with ROHRTYP=100 GG
+2024-07-01 12:38:43,494 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1711 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,496 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 12:38:43,496 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1425 with ROHRTYP=80 GG
+2024-07-01 12:38:43,497 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1479 with ROHRTYP=80 GGG
+2024-07-01 12:38:43,497 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 12:38:43,498 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1461 with ROHRTYP=50 PE 100 SDR 11
+2024-07-01 12:38:43,498 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 12:38:43,498 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 12:38:43,499 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 12:38:43,499 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 12:38:43,500 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1613 with ROHRTYP=100 GG
+2024-07-01 12:38:43,503 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 12:38:43,503 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1458 with ROHRTYP=100 GG
+2024-07-01 12:38:43,504 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1457 with ROHRTYP=100 GG
+2024-07-01 12:38:43,504 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 12:38:43,505 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1481 with ROHRTYP=80 GG
+2024-07-01 12:38:43,505 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1464 with ROHRTYP=DN 80
+2024-07-01 12:38:43,506 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 12:38:43,506 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1466 with ROHRTYP=DN 100
+2024-07-01 12:38:43,507 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 12:38:43,507 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 12:38:43,508 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1632 with ROHRTYP=DN 100
+2024-07-01 12:38:43,508 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1467 with ROHRTYP=DN 100
+2024-07-01 12:38:43,508 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 12:38:43,509 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1469 with ROHRTYP=DN 100
+2024-07-01 12:38:43,509 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1523 with ROHRTYP=100 GG
+2024-07-01 12:38:43,509 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 12:38:43,510 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1545 with ROHRTYP=80 GG
+2024-07-01 12:38:43,510 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1470 with ROHRTYP=DN 80
+2024-07-01 12:38:43,511 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 12:38:43,511 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1494 with ROHRTYP=80 PVC 10
+2024-07-01 12:38:43,512 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1471 with ROHRTYP=80 PVC 10
+2024-07-01 12:38:43,512 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 12:38:43,513 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1475 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,513 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1473 with ROHRTYP=DN 100
+2024-07-01 12:38:43,513 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 12:38:43,514 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1477 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,514 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1647 with ROHRTYP=100 GG
+2024-07-01 12:38:43,514 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 12:38:43,515 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1478 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,515 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1693 with ROHRTYP=DN 100
+2024-07-01 12:38:43,516 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 12:38:43,516 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1484 with ROHRTYP=40 GG
+2024-07-01 12:38:43,517 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1657 with ROHRTYP=100 GG
+2024-07-01 12:38:43,517 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1658 with ROHRTYP=100 GG
+2024-07-01 12:38:43,517 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 12:38:43,518 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1677 with ROHRTYP=100 GG
+2024-07-01 12:38:43,518 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1486 with ROHRTYP=100 GG
+2024-07-01 12:38:43,519 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 12:38:43,519 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1497 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,520 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1502 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,521 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 12:38:43,523 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1508 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,523 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1506 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,523 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 12:38:43,525 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1591 with ROHRTYP=80 PVC 10
+2024-07-01 12:38:43,525 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 12:38:43,525 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 12:38:43,526 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1516 with ROHRTYP=40 GG
+2024-07-01 12:38:43,526 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1511 with ROHRTYP=40 GG
+2024-07-01 12:38:43,527 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 12:38:43,528 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1512 with ROHRTYP=80 GG
+2024-07-01 12:38:43,528 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 12:38:43,529 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 12:38:43,530 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1515 with ROHRTYP=80 GGG
+2024-07-01 12:38:43,530 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1610 with ROHRTYP=80 GGG
+2024-07-01 12:38:43,530 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 12:38:43,531 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 12:38:43,531 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1517 with ROHRTYP=100 GG
+2024-07-01 12:38:43,532 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 12:38:43,532 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1620 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,533 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1519 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,533 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 12:38:43,534 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1521 with ROHRTYP=125 GG
+2024-07-01 12:38:43,534 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1520 with ROHRTYP=125 GG
+2024-07-01 12:38:43,534 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1720 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,534 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 12:38:43,535 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1636 with ROHRTYP=125 GG
+2024-07-01 12:38:43,535 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1638 with ROHRTYP=125 GG
+2024-07-01 12:38:43,536 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 12:38:43,536 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1690 with ROHRTYP=DN 125
+2024-07-01 12:38:43,537 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1526 with ROHRTYP=125 GGG
+2024-07-01 12:38:43,537 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 12:38:43,538 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1707 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,538 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1527 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,540 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 12:38:43,541 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1548 with ROHRTYP=100 GG
+2024-07-01 12:38:43,541 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1641 with ROHRTYP=100 GG
+2024-07-01 12:38:43,541 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1533 with ROHRTYP=100 GG
+2024-07-01 12:38:43,543 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 12:38:43,544 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1577 with ROHRTYP=100 GG
+2024-07-01 12:38:43,544 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1562 with ROHRTYP=100 GG
+2024-07-01 12:38:43,544 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 12:38:43,545 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1580 with ROHRTYP=200 GG
+2024-07-01 12:38:43,545 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1565 with ROHRTYP=200 GG
+2024-07-01 12:38:43,546 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 12:38:43,546 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1566 with ROHRTYP=DN 200
+2024-07-01 12:38:43,547 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 12:38:43,549 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 12:38:43,549 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1603 with ROHRTYP=100 GG
+2024-07-01 12:38:43,550 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1655 with ROHRTYP=100 GG
+2024-07-01 12:38:43,550 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1593 with ROHRTYP=100 GG
+2024-07-01 12:38:43,551 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 12:38:43,551 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1709 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,552 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1726 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,552 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1727 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,552 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1604 with ROHRTYP=100 GG
+2024-07-01 12:38:43,552 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 12:38:43,553 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 12:38:43,553 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1694 with ROHRTYP=DN 100
+2024-07-01 12:38:43,554 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 12:38:43,554 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1695 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,555 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1595 with ROHRTYP=100 GGG
+2024-07-01 12:38:43,555 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 12:38:43,556 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 12:38:43,556 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1697 with ROHRTYP=DN 150
+2024-07-01 12:38:43,556 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 12:38:43,557 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 12:38:43,557 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 12:38:43,558 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 12:38:43,558 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1700 with ROHRTYP=100 GG
+2024-07-01 12:38:43,559 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1596 with ROHRTYP=100 GG
+2024-07-01 12:38:43,559 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 12:38:43,560 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 12:38:43,560 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 12:38:43,560 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1429 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 12:38:43,560 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 12:38:43,561 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 12:38:43,561 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 12:38:43,562 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 12:38:43,562 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 12:38:43,563 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1704 with ROHRTYP=DN 100
+2024-07-01 12:38:43,563 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 12:38:43,564 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1705 with ROHRTYP=DN 100
+2024-07-01 12:38:43,565 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 12:38:43,565 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1712 with ROHRTYP=DN 150
+2024-07-01 12:38:43,566 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,566 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1416 with ROHRTYP=DN 150
+2024-07-01 12:38:43,566 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1716 with ROHRTYP=DN 150
+2024-07-01 12:38:43,567 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 12:38:43,568 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1717 with ROHRTYP=125 GG
+2024-07-01 12:38:43,568 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1522 with ROHRTYP=125 GG
+2024-07-01 12:38:43,568 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 12:38:43,568 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 12:38:43,569 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1718 with ROHRTYP=125 GG
+2024-07-01 12:38:43,569 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1637 with ROHRTYP=125 GG
+2024-07-01 12:38:43,570 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 12:56:13,484 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:13,485 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:13,504 - INFO - Maximum number of columns found: 187
+2024-07-01 12:56:13,554 - INFO - CSV file read and cleaned successfully.
+2024-07-01 12:56:13,660 - INFO - Data loaded successfully.
+2024-07-01 12:56:13,661 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:13,678 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:56:13,679 - INFO - Data split successfully.
+2024-07-01 12:56:13,696 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:56:13,699 - ERROR - Error saving DataFrames: [Errno 13] Permission denied: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB_Node.csv'
+2024-07-01 12:56:13,703 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 12:56:13,704 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 12:56:21,923 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:21,924 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:21,942 - INFO - Maximum number of columns found: 187
+2024-07-01 12:56:21,990 - INFO - CSV file read and cleaned successfully.
+2024-07-01 12:56:22,104 - INFO - Data loaded successfully.
+2024-07-01 12:56:22,104 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 12:56:22,122 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:56:22,122 - INFO - Data split successfully.
+2024-07-01 12:56:22,140 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 12:56:22,190 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 12:56:22,194 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 12:56:22,195 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 13:03:00,864 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:00,865 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:00,887 - INFO - Maximum number of columns found: 187
+2024-07-01 13:03:00,936 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:03:01,050 - INFO - Data loaded successfully.
+2024-07-01 13:03:01,051 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:01,067 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:03:01,068 - INFO - Data split successfully.
+2024-07-01 13:03:01,085 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:03:01,108 - ERROR - Error saving DataFrames: [Errno 13] Permission denied: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB_Pipes.csv'
+2024-07-01 13:03:01,112 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:03:01,113 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 13:03:25,792 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:25,793 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:25,811 - INFO - Maximum number of columns found: 187
+2024-07-01 13:03:25,859 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:03:25,966 - INFO - Data loaded successfully.
+2024-07-01 13:03:25,967 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:03:25,983 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:03:25,984 - INFO - Data split successfully.
+2024-07-01 13:03:26,000 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:03:26,052 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:03:26,056 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:03:26,057 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 13:04:09,969 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:04:09,970 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:04:09,989 - INFO - Maximum number of columns found: 187
+2024-07-01 13:04:10,038 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:04:10,147 - INFO - Data loaded successfully.
+2024-07-01 13:04:10,148 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:04:10,166 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:04:10,166 - INFO - Data split successfully.
+2024-07-01 13:04:10,183 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:04:10,234 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:04:10,239 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:04:10,256 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 13:04:10,259 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 13:04:10,263 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 13:04:10,265 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 13:04:10,269 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 13:04:10,271 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 13:04:10,272 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 13:04:10,274 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 13:04:10,275 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 13:04:10,277 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 13:04:10,279 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 13:04:10,281 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 13:04:10,282 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 13:04:10,284 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 13:04:10,286 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 13:04:10,289 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 13:04:10,291 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 13:04:10,292 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 13:04:10,296 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 13:04:10,299 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 13:04:10,300 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 13:04:10,302 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 13:04:10,303 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 13:04:10,305 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 13:04:10,306 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 13:04:10,308 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 13:04:10,309 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 13:04:10,311 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 13:04:10,313 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 13:04:10,314 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 13:04:10,316 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 13:04:10,318 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 13:04:10,320 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 13:04:10,321 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 13:04:10,323 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 13:04:10,325 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 13:04:10,326 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 13:04:10,328 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 13:04:10,329 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 13:04:10,331 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 13:04:10,332 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 13:04:10,334 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 13:04:10,337 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 13:04:10,340 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 13:04:10,341 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 13:04:10,343 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 13:04:10,346 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 13:04:10,348 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 13:04:10,350 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 13:04:10,351 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 13:04:10,353 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 13:04:10,354 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 13:04:10,356 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 13:04:10,357 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 13:04:10,359 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 13:04:10,360 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 13:04:10,362 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 13:04:10,363 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 13:04:10,365 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 13:04:10,367 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 13:04:10,368 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 13:04:10,370 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 13:10:30,630 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:10:30,631 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:10:30,651 - INFO - Maximum number of columns found: 187
+2024-07-01 13:10:30,701 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:10:30,812 - INFO - Data loaded successfully.
+2024-07-01 13:10:30,812 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:10:30,829 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:10:30,830 - INFO - Data split successfully.
+2024-07-01 13:10:30,846 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:10:30,898 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:10:30,902 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:10:30,906 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 13:10:30,908 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 13:10:30,911 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 13:10:30,913 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 13:10:30,916 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 13:10:30,918 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 13:10:30,920 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 13:10:30,922 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 13:10:30,924 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 13:10:30,926 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 13:10:30,928 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 13:10:30,931 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 13:10:30,932 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 13:10:30,934 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 13:10:30,936 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 13:10:30,940 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 13:10:30,942 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 13:10:30,944 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 13:10:30,948 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 13:10:30,951 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 13:10:30,952 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 13:10:30,955 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 13:10:30,957 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 13:10:30,960 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 13:10:30,962 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 13:10:30,965 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 13:10:30,967 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 13:10:30,970 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 13:10:30,973 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 13:10:30,975 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 13:10:30,978 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 13:10:30,980 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 13:10:30,982 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 13:10:30,983 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 13:10:30,984 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 13:10:30,986 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 13:10:30,988 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 13:10:30,989 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 13:10:30,990 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 13:10:30,992 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 13:10:30,993 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 13:10:30,995 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 13:10:30,998 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 13:10:31,000 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 13:10:31,002 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 13:10:31,003 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 13:10:31,007 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 13:10:31,008 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 13:10:31,010 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 13:10:31,011 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 13:10:31,013 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 13:10:31,014 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 13:10:31,015 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 13:10:31,017 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 13:10:31,019 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 13:10:31,020 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 13:10:31,021 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 13:10:31,023 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 13:10:31,024 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 13:10:31,026 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 13:10:31,027 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 13:10:31,029 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 13:11:04,091 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:11:04,092 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:11:04,114 - INFO - Maximum number of columns found: 187
+2024-07-01 13:11:04,162 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:11:04,273 - INFO - Data loaded successfully.
+2024-07-01 13:11:04,274 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:11:04,290 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:11:04,291 - INFO - Data split successfully.
+2024-07-01 13:11:04,310 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:11:04,364 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:11:04,367 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:11:04,369 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 13:13:52,126 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:13:52,127 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:13:52,145 - INFO - Maximum number of columns found: 187
+2024-07-01 13:13:52,193 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:13:52,305 - INFO - Data loaded successfully.
+2024-07-01 13:13:52,306 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:13:52,322 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:13:52,323 - INFO - Data split successfully.
+2024-07-01 13:13:52,342 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:13:52,389 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:13:52,393 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:13:52,394 - ERROR - Error processing data: 'ROHRTYP'
+2024-07-01 13:19:02,389 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:19:02,389 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:19:02,412 - INFO - Maximum number of columns found: 187
+2024-07-01 13:19:02,465 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:19:02,576 - INFO - Data loaded successfully.
+2024-07-01 13:19:02,576 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:19:02,594 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:19:02,595 - INFO - Data split successfully.
+2024-07-01 13:19:02,612 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:19:02,654 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:19:02,658 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:19:02,660 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1344 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,661 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1691 with ROHRTYP=DN 100
+2024-07-01 13:19:02,663 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 13:19:02,665 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,665 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1360 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,666 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 13:19:02,668 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1363 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,668 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1556 with ROHRTYP=80 GG
+2024-07-01 13:19:02,670 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 13:19:02,672 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1375 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,672 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1374 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,673 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 13:19:02,674 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1607 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,675 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,677 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 13:19:02,678 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1387 with ROHRTYP=100 GG
+2024-07-01 13:19:02,679 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1622 with ROHRTYP=DN 100
+2024-07-01 13:19:02,679 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 13:19:02,681 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1624 with ROHRTYP=100 GG
+2024-07-01 13:19:02,681 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 13:19:02,681 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 13:19:02,682 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1388 with ROHRTYP=DN 100
+2024-07-01 13:19:02,682 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1474 with ROHRTYP=DN 100
+2024-07-01 13:19:02,683 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 13:19:02,684 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 13:19:02,684 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1393 with ROHRTYP=100 GG
+2024-07-01 13:19:02,684 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 13:19:02,686 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1397 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,686 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1394 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,687 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 13:19:02,688 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1492 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,688 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1396 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,689 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 13:19:02,690 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1401 with ROHRTYP=100 GG
+2024-07-01 13:19:02,690 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1606 with ROHRTYP=DN 100
+2024-07-01 13:19:02,691 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 13:19:02,692 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,692 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1433 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,692 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 13:19:02,693 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1626 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,694 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,694 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 13:19:02,695 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1706 with ROHRTYP=DN 100
+2024-07-01 13:19:02,696 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1411 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,696 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 13:19:02,697 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1412 with ROHRTYP=100 GG
+2024-07-01 13:19:02,697 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1711 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,699 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 13:19:02,700 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1425 with ROHRTYP=80 GG
+2024-07-01 13:19:02,700 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1479 with ROHRTYP=80 GGG
+2024-07-01 13:19:02,701 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 13:19:02,702 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1461 with ROHRTYP=50 PE 100 SDR 11
+2024-07-01 13:19:02,703 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 13:19:02,703 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:19:02,703 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 13:19:02,704 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 13:19:02,705 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1613 with ROHRTYP=100 GG
+2024-07-01 13:19:02,708 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 13:19:02,709 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1458 with ROHRTYP=100 GG
+2024-07-01 13:19:02,709 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1457 with ROHRTYP=100 GG
+2024-07-01 13:19:02,710 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 13:19:02,711 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1481 with ROHRTYP=80 GG
+2024-07-01 13:19:02,712 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1464 with ROHRTYP=DN 80
+2024-07-01 13:19:02,712 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 13:19:02,713 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1466 with ROHRTYP=DN 100
+2024-07-01 13:19:02,713 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 13:19:02,714 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 13:19:02,715 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1632 with ROHRTYP=DN 100
+2024-07-01 13:19:02,715 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1467 with ROHRTYP=DN 100
+2024-07-01 13:19:02,715 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 13:19:02,716 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1469 with ROHRTYP=DN 100
+2024-07-01 13:19:02,716 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1523 with ROHRTYP=100 GG
+2024-07-01 13:19:02,717 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 13:19:02,718 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1545 with ROHRTYP=80 GG
+2024-07-01 13:19:02,718 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1470 with ROHRTYP=DN 80
+2024-07-01 13:19:02,718 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 13:19:02,719 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1494 with ROHRTYP=80 PVC 10
+2024-07-01 13:19:02,720 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1471 with ROHRTYP=80 PVC 10
+2024-07-01 13:19:02,720 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 13:19:02,721 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1475 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,721 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1473 with ROHRTYP=DN 100
+2024-07-01 13:19:02,722 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 13:19:02,723 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1477 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,723 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1647 with ROHRTYP=100 GG
+2024-07-01 13:19:02,724 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 13:19:02,725 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1478 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,725 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1693 with ROHRTYP=DN 100
+2024-07-01 13:19:02,725 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 13:19:02,726 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1484 with ROHRTYP=40 GG
+2024-07-01 13:19:02,727 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1657 with ROHRTYP=100 GG
+2024-07-01 13:19:02,727 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1658 with ROHRTYP=100 GG
+2024-07-01 13:19:02,727 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 13:19:02,728 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1677 with ROHRTYP=100 GG
+2024-07-01 13:19:02,729 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1486 with ROHRTYP=100 GG
+2024-07-01 13:19:02,730 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 13:19:02,731 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1497 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,731 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1502 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,732 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 13:19:02,733 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1508 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,733 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1506 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,733 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 13:19:02,734 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1591 with ROHRTYP=80 PVC 10
+2024-07-01 13:19:02,735 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 13:19:02,735 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 13:19:02,736 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1516 with ROHRTYP=40 GG
+2024-07-01 13:19:02,736 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1511 with ROHRTYP=40 GG
+2024-07-01 13:19:02,737 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 13:19:02,738 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1512 with ROHRTYP=80 GG
+2024-07-01 13:19:02,738 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 13:19:02,738 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 13:19:02,739 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1515 with ROHRTYP=80 GGG
+2024-07-01 13:19:02,741 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1610 with ROHRTYP=80 GGG
+2024-07-01 13:19:02,741 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 13:19:02,742 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 13:19:02,742 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1517 with ROHRTYP=100 GG
+2024-07-01 13:19:02,743 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 13:19:02,744 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1620 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,744 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1519 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,744 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 13:19:02,745 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1521 with ROHRTYP=125 GG
+2024-07-01 13:19:02,746 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1520 with ROHRTYP=125 GG
+2024-07-01 13:19:02,746 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1720 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,746 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 13:19:02,747 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1636 with ROHRTYP=125 GG
+2024-07-01 13:19:02,747 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1638 with ROHRTYP=125 GG
+2024-07-01 13:19:02,748 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 13:19:02,749 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1690 with ROHRTYP=DN 125
+2024-07-01 13:19:02,749 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1526 with ROHRTYP=125 GGG
+2024-07-01 13:19:02,749 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 13:19:02,750 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1707 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,751 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1527 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,753 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 13:19:02,754 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1548 with ROHRTYP=100 GG
+2024-07-01 13:19:02,754 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1641 with ROHRTYP=100 GG
+2024-07-01 13:19:02,754 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1533 with ROHRTYP=100 GG
+2024-07-01 13:19:02,756 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 13:19:02,757 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1577 with ROHRTYP=100 GG
+2024-07-01 13:19:02,757 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1562 with ROHRTYP=100 GG
+2024-07-01 13:19:02,758 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 13:19:02,759 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1580 with ROHRTYP=200 GG
+2024-07-01 13:19:02,759 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1565 with ROHRTYP=200 GG
+2024-07-01 13:19:02,760 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 13:19:02,761 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1566 with ROHRTYP=DN 200
+2024-07-01 13:19:02,761 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 13:19:02,763 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 13:19:02,764 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1603 with ROHRTYP=100 GG
+2024-07-01 13:19:02,764 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1655 with ROHRTYP=100 GG
+2024-07-01 13:19:02,764 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1593 with ROHRTYP=100 GG
+2024-07-01 13:19:02,765 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 13:19:02,766 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1709 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,767 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1726 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,767 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1727 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,767 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1604 with ROHRTYP=100 GG
+2024-07-01 13:19:02,767 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 13:19:02,768 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 13:19:02,769 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1694 with ROHRTYP=DN 100
+2024-07-01 13:19:02,769 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 13:19:02,770 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1695 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,770 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1595 with ROHRTYP=100 GGG
+2024-07-01 13:19:02,771 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 13:19:02,772 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 13:19:02,772 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1697 with ROHRTYP=DN 150
+2024-07-01 13:19:02,772 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 13:19:02,773 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 13:19:02,774 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 13:19:02,774 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 13:19:02,775 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1700 with ROHRTYP=100 GG
+2024-07-01 13:19:02,775 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1596 with ROHRTYP=100 GG
+2024-07-01 13:19:02,775 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 13:19:02,776 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:19:02,777 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 13:19:02,777 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1429 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:19:02,777 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 13:19:02,778 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 13:19:02,778 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 13:19:02,779 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 13:19:02,780 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 13:19:02,781 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1704 with ROHRTYP=DN 100
+2024-07-01 13:19:02,781 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 13:19:02,782 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1705 with ROHRTYP=DN 100
+2024-07-01 13:19:02,783 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 13:19:02,784 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1712 with ROHRTYP=DN 150
+2024-07-01 13:19:02,784 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,784 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1416 with ROHRTYP=DN 150
+2024-07-01 13:19:02,784 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1716 with ROHRTYP=DN 150
+2024-07-01 13:19:02,785 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 13:19:02,786 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1717 with ROHRTYP=125 GG
+2024-07-01 13:19:02,787 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1522 with ROHRTYP=125 GG
+2024-07-01 13:19:02,787 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 13:19:02,787 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 13:19:02,788 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1718 with ROHRTYP=125 GG
+2024-07-01 13:19:02,788 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1637 with ROHRTYP=125 GG
+2024-07-01 13:19:02,789 - INFO - Data processing complete. DataFrames saved.
+2024-07-01 13:23:56,477 - INFO - Starting data processing for file: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:23:56,479 - INFO - DataLoader initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:23:56,503 - INFO - Maximum number of columns found: 187
+2024-07-01 13:23:56,564 - INFO - CSV file read and cleaned successfully.
+2024-07-01 13:23:56,774 - INFO - Data loaded successfully.
+2024-07-01 13:23:56,775 - INFO - DataProcessor initialized with file path: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB.CSV
+2024-07-01 13:23:56,798 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:23:56,799 - INFO - Data split successfully.
+2024-07-01 13:23:56,825 - INFO - Data split successfully into 'KNO' and 'LEI'
+2024-07-01 13:23:56,882 - INFO - DataFrames saved successfully: C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Node.csv and C:\Users\d.muehlfeld\Berechnungsdaten\11_Spechbach_RNAB_Pipes.csv
+2024-07-01 13:23:56,891 - INFO - KNAM value with ABGAENGE == 2: K0005 at index 971
+2024-07-01 13:23:56,894 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1344 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,895 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1691 with ROHRTYP=DN 100
+2024-07-01 13:23:56,898 - INFO - KNAM value with ABGAENGE == 2: K0031 at index 997
+2024-07-01 13:23:56,900 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,901 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1360 with ROHRTYP=150 GGG
+2024-07-01 13:23:56,902 - INFO - KNAM value with ABGAENGE == 2: K0035 at index 1001
+2024-07-01 13:23:56,904 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1363 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,905 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1556 with ROHRTYP=80 GG
+2024-07-01 13:23:56,907 - INFO - KNAM value with ABGAENGE == 2: K0055 at index 1021
+2024-07-01 13:23:56,909 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1375 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,910 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1374 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,911 - INFO - Matching row found: ANFNAM=K0055, ENDNAM=K0055, ROHRTYP=125 GGG, indices 1375 and 1374
+2024-07-01 13:23:56,911 - INFO - KNAM value with ABGAENGE == 2: K0058 at index 1024
+2024-07-01 13:23:56,913 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1607 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,913 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1376 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,914 - INFO - Matching row found: ANFNAM=K0058, ENDNAM=K0058, ROHRTYP=125 GGG, indices 1607 and 1376
+2024-07-01 13:23:56,917 - INFO - KNAM value with ABGAENGE == 2: K0077 at index 1043
+2024-07-01 13:23:56,918 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1387 with ROHRTYP=100 GG
+2024-07-01 13:23:56,919 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1622 with ROHRTYP=DN 100
+2024-07-01 13:23:56,919 - INFO - KNAM value with ABGAENGE == 2: K0078 at index 1044
+2024-07-01 13:23:56,921 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1624 with ROHRTYP=100 GG
+2024-07-01 13:23:56,921 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 13:23:56,922 - INFO - Matching row found: ANFNAM=K0078, ENDNAM=K0078, ROHRTYP=100 GG, indices 1624 and 1391
+2024-07-01 13:23:56,922 - INFO - KNAM value with ABGAENGE == 2: K0079 at index 1045
+2024-07-01 13:23:56,923 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1388 with ROHRTYP=DN 100
+2024-07-01 13:23:56,924 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1474 with ROHRTYP=DN 100
+2024-07-01 13:23:56,925 - INFO - Matching row found: ANFNAM=K0079, ENDNAM=K0079, ROHRTYP=DN 100, indices 1388 and 1474
+2024-07-01 13:23:56,925 - INFO - KNAM value with ABGAENGE == 2: K0084 at index 1050
+2024-07-01 13:23:56,926 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1391 with ROHRTYP=100 GG
+2024-07-01 13:23:56,927 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1393 with ROHRTYP=100 GG
+2024-07-01 13:23:56,928 - INFO - Matching row found: ANFNAM=K0084, ENDNAM=K0084, ROHRTYP=100 GG, indices 1391 and 1393
+2024-07-01 13:23:56,928 - INFO - KNAM value with ABGAENGE == 2: K0085 at index 1051
+2024-07-01 13:23:56,929 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1397 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,930 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1394 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,931 - INFO - Matching row found: ANFNAM=K0085, ENDNAM=K0085, ROHRTYP=100 GGG, indices 1397 and 1394
+2024-07-01 13:23:56,931 - INFO - KNAM value with ABGAENGE == 2: K0088 at index 1054
+2024-07-01 13:23:56,932 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1492 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,933 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1396 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,935 - INFO - Matching row found: ANFNAM=K0088, ENDNAM=K0088, ROHRTYP=125 GGG, indices 1492 and 1396
+2024-07-01 13:23:56,936 - INFO - KNAM value with ABGAENGE == 2: K0094 at index 1060
+2024-07-01 13:23:56,938 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1401 with ROHRTYP=100 GG
+2024-07-01 13:23:56,938 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1606 with ROHRTYP=DN 100
+2024-07-01 13:23:56,940 - INFO - KNAM value with ABGAENGE == 2: K0104 at index 1070
+2024-07-01 13:23:56,946 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,947 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1433 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,948 - INFO - Matching row found: ANFNAM=K0104, ENDNAM=K0104, ROHRTYP=100 GGG, indices 1407 and 1433
+2024-07-01 13:23:56,949 - INFO - KNAM value with ABGAENGE == 2: K0105 at index 1071
+2024-07-01 13:23:56,951 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1626 with ROHRTYP=125 GGG
+2024-07-01 13:23:56,952 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1407 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,953 - INFO - KNAM value with ABGAENGE == 2: K0111 at index 1077
+2024-07-01 13:23:56,955 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1706 with ROHRTYP=DN 100
+2024-07-01 13:23:56,955 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1411 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,956 - INFO - KNAM value with ABGAENGE == 2: K0113 at index 1079
+2024-07-01 13:23:56,957 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1412 with ROHRTYP=100 GG
+2024-07-01 13:23:56,958 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1711 with ROHRTYP=100 GGG
+2024-07-01 13:23:56,959 - INFO - KNAM value with ABGAENGE == 2: K0131 at index 1097
+2024-07-01 13:23:56,963 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1425 with ROHRTYP=80 GG
+2024-07-01 13:23:56,963 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1479 with ROHRTYP=80 GGG
+2024-07-01 13:23:56,966 - INFO - KNAM value with ABGAENGE == 2: K0139 at index 1105
+2024-07-01 13:23:56,969 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1461 with ROHRTYP=50 PE 100 SDR 11
+2024-07-01 13:23:56,970 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 13:23:56,970 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:23:56,972 - INFO - KNAM value with ABGAENGE == 2: K0140 at index 1106
+2024-07-01 13:23:56,973 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 13:23:56,973 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1613 with ROHRTYP=100 GG
+2024-07-01 13:23:56,978 - INFO - KNAM value with ABGAENGE == 2: K0182 at index 1148
+2024-07-01 13:23:56,980 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1458 with ROHRTYP=100 GG
+2024-07-01 13:23:56,980 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1457 with ROHRTYP=100 GG
+2024-07-01 13:23:56,981 - INFO - Matching row found: ANFNAM=K0182, ENDNAM=K0182, ROHRTYP=100 GG, indices 1458 and 1457
+2024-07-01 13:23:56,983 - INFO - KNAM value with ABGAENGE == 2: K0192 at index 1158
+2024-07-01 13:23:56,986 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1481 with ROHRTYP=80 GG
+2024-07-01 13:23:56,986 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1464 with ROHRTYP=DN 80
+2024-07-01 13:23:56,988 - INFO - KNAM value with ABGAENGE == 2: K0194 at index 1160
+2024-07-01 13:23:56,990 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1466 with ROHRTYP=DN 100
+2024-07-01 13:23:56,991 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 13:23:56,993 - INFO - Matching row found: ANFNAM=K0194, ENDNAM=K0194, ROHRTYP=DN 100, indices 1466 and 1468
+2024-07-01 13:23:56,993 - INFO - KNAM value with ABGAENGE == 2: K0196 at index 1162
+2024-07-01 13:23:56,995 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1632 with ROHRTYP=DN 100
+2024-07-01 13:23:56,995 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1467 with ROHRTYP=DN 100
+2024-07-01 13:23:56,996 - INFO - Matching row found: ANFNAM=K0196, ENDNAM=K0196, ROHRTYP=DN 100, indices 1632 and 1467
+2024-07-01 13:23:56,996 - INFO - KNAM value with ABGAENGE == 2: K0197 at index 1163
+2024-07-01 13:23:56,998 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1469 with ROHRTYP=DN 100
+2024-07-01 13:23:56,998 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1523 with ROHRTYP=100 GG
+2024-07-01 13:23:56,999 - INFO - KNAM value with ABGAENGE == 2: K0199 at index 1165
+2024-07-01 13:23:57,001 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1545 with ROHRTYP=80 GG
+2024-07-01 13:23:57,002 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1470 with ROHRTYP=DN 80
+2024-07-01 13:23:57,003 - INFO - KNAM value with ABGAENGE == 2: K0201 at index 1167
+2024-07-01 13:23:57,004 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1494 with ROHRTYP=80 PVC 10
+2024-07-01 13:23:57,005 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1471 with ROHRTYP=80 PVC 10
+2024-07-01 13:23:57,005 - INFO - Matching row found: ANFNAM=K0201, ENDNAM=K0201, ROHRTYP=80 PVC 10, indices 1494 and 1471
+2024-07-01 13:23:57,006 - INFO - KNAM value with ABGAENGE == 2: K0204 at index 1170
+2024-07-01 13:23:57,008 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1475 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,008 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1473 with ROHRTYP=DN 100
+2024-07-01 13:23:57,010 - INFO - KNAM value with ABGAENGE == 2: K0207 at index 1173
+2024-07-01 13:23:57,012 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1477 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,012 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1647 with ROHRTYP=100 GG
+2024-07-01 13:23:57,013 - INFO - KNAM value with ABGAENGE == 2: K0210 at index 1176
+2024-07-01 13:23:57,015 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1478 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,016 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1693 with ROHRTYP=DN 100
+2024-07-01 13:23:57,018 - INFO - KNAM value with ABGAENGE == 2: K0215 at index 1181
+2024-07-01 13:23:57,019 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1484 with ROHRTYP=40 GG
+2024-07-01 13:23:57,020 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1657 with ROHRTYP=100 GG
+2024-07-01 13:23:57,020 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1658 with ROHRTYP=100 GG
+2024-07-01 13:23:57,022 - INFO - Matching row found: ANFNAM=K0215, ENDNAM=K0215, ROHRTYP=100 GG, indices 1657 and 1658
+2024-07-01 13:23:57,022 - INFO - KNAM value with ABGAENGE == 2: K0217 at index 1183
+2024-07-01 13:23:57,025 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1677 with ROHRTYP=100 GG
+2024-07-01 13:23:57,025 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1486 with ROHRTYP=100 GG
+2024-07-01 13:23:57,026 - INFO - Matching row found: ANFNAM=K0217, ENDNAM=K0217, ROHRTYP=100 GG, indices 1677 and 1486
+2024-07-01 13:23:57,028 - INFO - KNAM value with ABGAENGE == 2: K0226 at index 1192
+2024-07-01 13:23:57,029 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1497 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,032 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1502 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,034 - INFO - Matching row found: ANFNAM=K0226, ENDNAM=K0226, ROHRTYP=100 GGG, indices 1497 and 1502
+2024-07-01 13:23:57,035 - INFO - KNAM value with ABGAENGE == 2: K0233 at index 1199
+2024-07-01 13:23:57,037 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1508 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,037 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1506 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,038 - INFO - Matching row found: ANFNAM=K0233, ENDNAM=K0233, ROHRTYP=100 GGG, indices 1508 and 1506
+2024-07-01 13:23:57,039 - INFO - KNAM value with ABGAENGE == 2: K0236 at index 1202
+2024-07-01 13:23:57,040 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1591 with ROHRTYP=80 PVC 10
+2024-07-01 13:23:57,041 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1509 with ROHRTYP=80 PVC 10
+2024-07-01 13:23:57,042 - INFO - Matching row found: ANFNAM=K0236, ENDNAM=K0236, ROHRTYP=80 PVC 10, indices 1591 and 1509
+2024-07-01 13:23:57,042 - INFO - KNAM value with ABGAENGE == 2: K0237 at index 1203
+2024-07-01 13:23:57,044 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1516 with ROHRTYP=40 GG
+2024-07-01 13:23:57,045 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1511 with ROHRTYP=40 GG
+2024-07-01 13:23:57,046 - INFO - Matching row found: ANFNAM=K0237, ENDNAM=K0237, ROHRTYP=40 GG, indices 1516 and 1511
+2024-07-01 13:23:57,046 - INFO - KNAM value with ABGAENGE == 2: K0238 at index 1204
+2024-07-01 13:23:57,048 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1512 with ROHRTYP=80 GG
+2024-07-01 13:23:57,048 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 13:23:57,050 - INFO - KNAM value with ABGAENGE == 2: K0243 at index 1209
+2024-07-01 13:23:57,052 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1515 with ROHRTYP=80 GGG
+2024-07-01 13:23:57,053 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1610 with ROHRTYP=80 GGG
+2024-07-01 13:23:57,053 - INFO - KNAM value with ABGAENGE == 2: K0245 at index 1211
+2024-07-01 13:23:57,055 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1609 with ROHRTYP=DN 80
+2024-07-01 13:23:57,055 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1517 with ROHRTYP=100 GG
+2024-07-01 13:23:57,056 - INFO - KNAM value with ABGAENGE == 2: K0247 at index 1213
+2024-07-01 13:23:57,058 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1620 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,059 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1519 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,060 - INFO - Matching row found: ANFNAM=K0247, ENDNAM=K0247, ROHRTYP=100 GGG, indices 1620 and 1519
+2024-07-01 13:23:57,060 - INFO - KNAM value with ABGAENGE == 2: K0248 at index 1214
+2024-07-01 13:23:57,062 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1521 with ROHRTYP=125 GG
+2024-07-01 13:23:57,062 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1520 with ROHRTYP=125 GG
+2024-07-01 13:23:57,062 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1720 with ROHRTYP=150 GGG
+2024-07-01 13:23:57,063 - INFO - Matching row found: ANFNAM=K0248, ENDNAM=K0248, ROHRTYP=125 GG, indices 1521 and 1520
+2024-07-01 13:23:57,064 - INFO - KNAM value with ABGAENGE == 2: K0249 at index 1215
+2024-07-01 13:23:57,066 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1636 with ROHRTYP=125 GG
+2024-07-01 13:23:57,067 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1638 with ROHRTYP=125 GG
+2024-07-01 13:23:57,068 - INFO - Matching row found: ANFNAM=K0249, ENDNAM=K0249, ROHRTYP=125 GG, indices 1636 and 1638
+2024-07-01 13:23:57,068 - INFO - KNAM value with ABGAENGE == 2: K0253 at index 1219
+2024-07-01 13:23:57,070 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1690 with ROHRTYP=DN 125
+2024-07-01 13:23:57,071 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1526 with ROHRTYP=125 GGG
+2024-07-01 13:23:57,071 - INFO - KNAM value with ABGAENGE == 2: K0254 at index 1220
+2024-07-01 13:23:57,073 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1707 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,074 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1527 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,075 - INFO - Matching row found: ANFNAM=K0254, ENDNAM=K0254, ROHRTYP=100 GGG, indices 1707 and 1527
+2024-07-01 13:23:57,077 - INFO - KNAM value with ABGAENGE == 2: K0279 at index 1245
+2024-07-01 13:23:57,079 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1548 with ROHRTYP=100 GG
+2024-07-01 13:23:57,079 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1641 with ROHRTYP=100 GG
+2024-07-01 13:23:57,080 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1533 with ROHRTYP=100 GG
+2024-07-01 13:23:57,081 - INFO - Matching row found: ANFNAM=K0279, ENDNAM=K0279, ROHRTYP=100 GG, indices 1548 and 1533
+2024-07-01 13:23:57,082 - INFO - Matching row found: ANFNAM=K0279, ENDNAM=K0279, ROHRTYP=100 GG, indices 1641 and 1533
+2024-07-01 13:23:57,084 - INFO - KNAM value with ABGAENGE == 2: K0297 at index 1263
+2024-07-01 13:23:57,086 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1577 with ROHRTYP=100 GG
+2024-07-01 13:23:57,087 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1562 with ROHRTYP=100 GG
+2024-07-01 13:23:57,088 - INFO - Matching row found: ANFNAM=K0297, ENDNAM=K0297, ROHRTYP=100 GG, indices 1577 and 1562
+2024-07-01 13:23:57,089 - INFO - KNAM value with ABGAENGE == 2: K0302 at index 1268
+2024-07-01 13:23:57,091 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1580 with ROHRTYP=200 GG
+2024-07-01 13:23:57,092 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1565 with ROHRTYP=200 GG
+2024-07-01 13:23:57,093 - INFO - Matching row found: ANFNAM=K0302, ENDNAM=K0302, ROHRTYP=200 GG, indices 1580 and 1565
+2024-07-01 13:23:57,094 - INFO - KNAM value with ABGAENGE == 2: K0303 at index 1269
+2024-07-01 13:23:57,095 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1566 with ROHRTYP=DN 200
+2024-07-01 13:23:57,096 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 13:23:57,099 - INFO - KNAM value with ABGAENGE == 2: K0329 at index 1295
+2024-07-01 13:23:57,101 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1603 with ROHRTYP=100 GG
+2024-07-01 13:23:57,102 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1655 with ROHRTYP=100 GG
+2024-07-01 13:23:57,102 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1593 with ROHRTYP=100 GG
+2024-07-01 13:23:57,103 - INFO - Matching row found: ANFNAM=K0329, ENDNAM=K0329, ROHRTYP=100 GG, indices 1603 and 1593
+2024-07-01 13:23:57,105 - INFO - Matching row found: ANFNAM=K0329, ENDNAM=K0329, ROHRTYP=100 GG, indices 1655 and 1593
+2024-07-01 13:23:57,106 - INFO - KNAM value with ABGAENGE == 2: K0336 at index 1302
+2024-07-01 13:23:57,109 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1709 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,109 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1726 with ROHRTYP=150 GGG
+2024-07-01 13:23:57,110 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1727 with ROHRTYP=150 GGG
+2024-07-01 13:23:57,110 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1604 with ROHRTYP=100 GG
+2024-07-01 13:23:57,112 - INFO - KNAM value with ABGAENGE == 2: K0339 at index 1304
+2024-07-01 13:23:57,114 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1468 with ROHRTYP=DN 100
+2024-07-01 13:23:57,114 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1694 with ROHRTYP=DN 100
+2024-07-01 13:23:57,115 - INFO - Matching row found: ANFNAM=K0339, ENDNAM=K0339, ROHRTYP=DN 100, indices 1468 and 1694
+2024-07-01 13:23:57,115 - INFO - KNAM value with ABGAENGE == 2: K0340 at index 1305
+2024-07-01 13:23:57,118 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1695 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,118 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1595 with ROHRTYP=100 GGG
+2024-07-01 13:23:57,120 - INFO - Matching row found: ANFNAM=K0340, ENDNAM=K0340, ROHRTYP=100 GGG, indices 1695 and 1595
+2024-07-01 13:23:57,120 - INFO - KNAM value with ABGAENGE == 2: K0344 at index 1309
+2024-07-01 13:23:57,122 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 13:23:57,123 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1697 with ROHRTYP=DN 150
+2024-07-01 13:23:57,124 - INFO - Matching row found: ANFNAM=K0344, ENDNAM=K0344, ROHRTYP=DN 150, indices 1698 and 1697
+2024-07-01 13:23:57,124 - INFO - KNAM value with ABGAENGE == 2: K0345 at index 1310
+2024-07-01 13:23:57,125 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1699 with ROHRTYP=DN 150
+2024-07-01 13:23:57,126 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1698 with ROHRTYP=DN 150
+2024-07-01 13:23:57,127 - INFO - Matching row found: ANFNAM=K0345, ENDNAM=K0345, ROHRTYP=DN 150, indices 1699 and 1698
+2024-07-01 13:23:57,127 - INFO - KNAM value with ABGAENGE == 2: K0346 at index 1311
+2024-07-01 13:23:57,128 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1700 with ROHRTYP=100 GG
+2024-07-01 13:23:57,129 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1596 with ROHRTYP=100 GG
+2024-07-01 13:23:57,130 - INFO - Matching row found: ANFNAM=K0346, ENDNAM=K0346, ROHRTYP=100 GG, indices 1700 and 1596
+2024-07-01 13:23:57,130 - INFO - KNAM value with ABGAENGE == 2: K0347 at index 1312
+2024-07-01 13:23:57,132 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1701 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:23:57,132 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 13:23:57,133 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1429 with ROHRTYP=63 PE 100 SDR 11
+2024-07-01 13:23:57,136 - INFO - Matching row found: ANFNAM=K0347, ENDNAM=K0347, ROHRTYP=63 PE 100 SDR 11, indices 1701 and 1429
+2024-07-01 13:23:57,137 - INFO - KNAM value with ABGAENGE == 2: K0348 at index 1313
+2024-07-01 13:23:57,140 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1702 with ROHRTYP=DN 100
+2024-07-01 13:23:57,141 - INFO - KNAM value with ABGAENGE == 2: K0349 at index 1314
+2024-07-01 13:23:57,144 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1703 with ROHRTYP=DN 100
+2024-07-01 13:23:57,145 - INFO - KNAM value with ABGAENGE == 2: K0350 at index 1315
+2024-07-01 13:23:57,148 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1704 with ROHRTYP=DN 100
+2024-07-01 13:23:57,149 - INFO - KNAM value with ABGAENGE == 2: K0353 at index 1318
+2024-07-01 13:23:57,151 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1705 with ROHRTYP=DN 100
+2024-07-01 13:23:57,152 - INFO - KNAM value with ABGAENGE == 2: K0357 at index 1322
+2024-07-01 13:23:57,154 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1712 with ROHRTYP=DN 150
+2024-07-01 13:23:57,154 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 13:23:57,155 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1416 with ROHRTYP=DN 150
+2024-07-01 13:23:57,155 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1716 with ROHRTYP=DN 150
+2024-07-01 13:23:57,156 - INFO - Matching row found: ANFNAM=K0357, ENDNAM=K0357, ROHRTYP=DN 150, indices 1712 and 1416
+2024-07-01 13:23:57,157 - INFO - Matching row found: ANFNAM=K0357, ENDNAM=K0357, ROHRTYP=DN 150, indices 1712 and 1716
+2024-07-01 13:23:57,159 - INFO - KNAM value with ABGAENGE == 2: K0364 at index 1329
+2024-07-01 13:23:57,160 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1717 with ROHRTYP=125 GG
+2024-07-01 13:23:57,161 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1522 with ROHRTYP=125 GG
+2024-07-01 13:23:57,161 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1719 with ROHRTYP=150 GGG
+2024-07-01 13:23:57,162 - INFO - Matching row found: ANFNAM=K0364, ENDNAM=K0364, ROHRTYP=125 GG, indices 1717 and 1522
+2024-07-01 13:23:57,163 - INFO - KNAM value with ABGAENGE == 2: K0365 at index 1330
+2024-07-01 13:23:57,164 - INFO - Matching KNAM value found in lei_df (ANFNAM) at index 1718 with ROHRTYP=125 GG
+2024-07-01 13:23:57,165 - INFO - Matching KNAM value found in lei_df (ENDNAM) at index 1637 with ROHRTYP=125 GG
+2024-07-01 13:23:57,165 - INFO - Matching row found: ANFNAM=K0365, ENDNAM=K0365, ROHRTYP=125 GG, indices 1718 and 1637
+2024-07-01 13:23:57,167 - INFO - Data processing complete. DataFrames saved.

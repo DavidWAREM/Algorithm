@@ -58,30 +58,53 @@ class DataProcessor:
             if kno_df is not None and lei_df is not None:
                 kno_path = os.path.join(self.directory, f"{self.base_filename}_Node.csv")
                 lei_path = os.path.join(self.directory, f"{self.base_filename}_Pipes.csv")
-                kno_df.to_csv(kno_path, index=False, sep=';')
-                lei_df.to_csv(lei_path, index=False, sep=';')
+                kno_df.to_csv(kno_path, index=True, sep=';')
+                lei_df.to_csv(lei_path, index=True, sep=';')
                 logging.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
             else:
                 logging.error("DataFrames could not be saved due to an earlier error.")
         except Exception as e:
             logging.error(f"Error saving DataFrames: {e}")
 
-    def log_knam_for_abgaenge_2(self, kno_df):
+    def log_knam_for_abgaenge_2(self, kno_df, lei_df):
         """
-        Log the 'KNAM' values for rows where 'ABGAENGE' is '2' in the kno_df DataFrame.
+        Log the 'KNAM' values for rows where 'ABGAENGE' is '2' in the kno_df DataFrame,
+        and log the indices of the same 'KNAM' values in the lei_df DataFrame,
+        only if 'ANFNAM' and 'ENDNAM' match and 'ROHRTYP' also matches.
 
         Args:
             kno_df (pd.DataFrame): The DataFrame to check.
+            lei_df (pd.DataFrame): The DataFrame to search for matching 'KNAM' values.
         """
         if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
             logging.debug("ABGAENGE and KNAM columns found.")
             kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Convert to numeric
             found = False
-            for _, row in kno_df.iterrows():
+            for idx, row in kno_df.iterrows():
                 logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']}")
                 if row['ABGAENGE'] == 2:
-                    logging.info(f"KNAM value with ABGAENGE == 2: {row['KNAM']}")
+                    logging.info(f"KNAM value with ABGAENGE == 2: {row['KNAM']} at index {idx}")
                     found = True
+                    # Check for the same 'KNAM' in ANFNAM and ENDNAM columns of lei_df
+                    matching_anf_df = lei_df[lei_df['ANFNAM'] == row['KNAM']]
+                    matching_end_df = lei_df[lei_df['ENDNAM'] == row['KNAM']]
+                    for lei_idx in matching_anf_df.index:
+                        rohrtyp = matching_anf_df.at[lei_idx, 'ROHRTYP']
+                        logging.info(
+                            f"Matching KNAM value found in lei_df (ANFNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
+                    for lei_idx in matching_end_df.index:
+                        rohrtyp = matching_end_df.at[lei_idx, 'ROHRTYP']
+                        logging.info(
+                            f"Matching KNAM value found in lei_df (ENDNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
+                    # Additional loop to check for matching rows in both matching_anf_df and matching_end_df
+                    for anf_idx in matching_anf_df.index:
+                        for end_idx in matching_end_df.index:
+                            if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
+                                    matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
+                                logging.info(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
+                                             f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
+                                             f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
+                                             f"indices {anf_idx} and {end_idx}")
             if not found:
                 logging.info("No rows with ABGAENGE == 2 found.")
         else:
