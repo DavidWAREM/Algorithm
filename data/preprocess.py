@@ -66,46 +66,69 @@ class DataProcessor:
         except Exception as e:
             logging.error(f"Error saving DataFrames: {e}")
 
-    def log_knam_for_abgaenge_2(self, kno_df, lei_df):
+    def combine_connected_pipes(self, kno_df, lei_df):
         """
         Log the 'KNAM' values for rows where 'ABGAENGE' is '2' in the kno_df DataFrame,
         and log the indices of the same 'KNAM' values in the lei_df DataFrame,
         only if 'ANFNAM' and 'ENDNAM' match and 'ROHRTYP' also matches.
+        Also, save the matched pairs in a new DataFrame.
 
         Args:
             kno_df (pd.DataFrame): The DataFrame to check.
             lei_df (pd.DataFrame): The DataFrame to search for matching 'KNAM' values.
         """
         if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
-            logging.debug("ABGAENGE and KNAM columns found.")
+            logging.debug("ABGAENGE and KNAM columns found in kno_df.")
             kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Convert to numeric
             found = False
+
+            # Initialize an empty DataFrame to store the matching pairs
+            matched_pairs_df = pd.DataFrame(columns=['anf_idx', 'end_idx', 'ANFNAM', 'ENDNAM', 'ROHRTYP'])
+
             for idx, row in kno_df.iterrows():
-                logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']}")
+                logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']} at index {idx}")
                 if row['ABGAENGE'] == 2:
-                    logging.info(f"KNAM value with ABGAENGE == 2: {row['KNAM']} at index {idx}")
                     found = True
                     # Check for the same 'KNAM' in ANFNAM and ENDNAM columns of lei_df
                     matching_anf_df = lei_df[lei_df['ANFNAM'] == row['KNAM']]
                     matching_end_df = lei_df[lei_df['ENDNAM'] == row['KNAM']]
                     for lei_idx in matching_anf_df.index:
                         rohrtyp = matching_anf_df.at[lei_idx, 'ROHRTYP']
-                        logging.info(
+                        logging.debug(
                             f"Matching KNAM value found in lei_df (ANFNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
                     for lei_idx in matching_end_df.index:
                         rohrtyp = matching_end_df.at[lei_idx, 'ROHRTYP']
-                        logging.info(
+                        logging.debug(
                             f"Matching KNAM value found in lei_df (ENDNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
                     # Additional loop to check for matching rows in both matching_anf_df and matching_end_df
                     for anf_idx in matching_anf_df.index:
                         for end_idx in matching_end_df.index:
                             if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
                                     matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
-                                logging.info(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
+                                logging.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
                                              f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
                                              f"indices {anf_idx} and {end_idx}")
+                                # Adding the matched pairs to the DataFrame
+                                new_row = {
+                                    'anf_idx': anf_idx,
+                                    'end_idx': end_idx,
+                                    'ANFNAM': matching_anf_df.at[anf_idx, 'ANFNAM'],
+                                    'ENDNAM': matching_end_df.at[end_idx, 'ENDNAM'],
+                                    'ROHRTYP': matching_anf_df.at[anf_idx, 'ROHRTYP']
+                                }
+                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
+                                                             ignore_index=True)
+
             if not found:
                 logging.info("No rows with ABGAENGE == 2 found.")
+
+            # Save the DataFrame with the matched pairs
+            matched_pairs_df_path = os.path.join(self.directory, f"{self.base_filename}_matched_pairs.csv")
+            matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
+            logging.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
+
         else:
             logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
+
+
