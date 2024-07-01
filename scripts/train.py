@@ -5,26 +5,9 @@ from data.data_loader import DataLoader
 from data.preprocess import DataProcessor
 
 
-def main():
-    # Setup logging
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    log_file = os.path.join(script_dir, 'data_processing.log')
-    logging.basicConfig(filename=log_file, level=logging.INFO,
-                        format='%(asctime)s - %(levelname)s - %(message)s')
-
-    # Add console handler to log to console as well
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
-
-    logging.info("Starting data processing for file: C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB.CSV")
-
+def process_file(file_path):
+    logging.info(f"Starting data processing for file: {file_path}")
     try:
-        # Path to the CSV file
-        file_path = r'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\11_Spechbach_RNAB.CSV'
-
         # Create an instance of the DataLoader and load the data
         data_loader = DataLoader(file_path)
         data = data_loader.custom_read_csv()
@@ -40,10 +23,34 @@ def main():
         # Combine connected pipes
         data_processor.combine_connected_pipes(kno_df, lei_df)
 
-        logging.info("Data processing complete.")
+        logging.info(f"Data processing complete for file: {file_path}")
 
     except Exception as e:
-        logging.error(f"Error processing data: {e}")
+        logging.error(f"Error processing data for file {file_path}: {e}")
+
+
+def main():
+    # Setup logging
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    log_file = os.path.join(script_dir, 'data_processing.log')
+    logging.basicConfig(filename=log_file, level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
+
+    # Add console handler to log to console as well
+    console = logging.StreamHandler()
+    console.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    console.setFormatter(formatter)
+    logging.getLogger('').addHandler(console)
+
+    # Directory containing the CSV files
+    data_dir = r'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\'
+
+    # Process each file in the directory
+    for filename in os.listdir(data_dir):
+        if filename.endswith('.CSV'):
+            file_path = os.path.join(data_dir, filename)
+            process_file(file_path)
 
 
 if __name__ == "__main__":

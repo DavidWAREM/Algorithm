@@ -43,6 +43,25 @@ class DataProcessor:
             kno_df = kno_df[kno_df.iloc[:, 0] == 'KNO']
             lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
+            #Extraction of only relevant columns.
+            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'FSTATUS', 'PMESS', 'DSTATUS', 'GEOH', 'PRECH',
+                           'DP', 'XRECHTS', 'YHOCH', 'HP', 'SYMBOL', 'ABGAENGE', 'NETZNR']
+            lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
+                           'VM', 'DP', 'NETZNR', 'ZETA', 'STRASSE', 'PARALLEL', 'MATERIAL', 'STRANUM', 'BAUJAHR',
+                           'DPREL', 'ROHRTYP']
+
+            # Ensure that the columns in kno_columns are present in kno_df
+            kno_columns_present = [col for col in kno_columns if col in kno_df.columns]
+
+            # Extract the new DataFrame for kno_df
+            kno_df = kno_df[kno_columns_present]
+
+            # Ensure that the columns in lei_columns are present in lei_df
+            lei_columns_present = [col for col in lei_columns if col in lei_df.columns]
+
+            # Extract the new DataFrame for lei_df
+            lei_df = lei_df[lei_columns_present]
+
             logging.info("Data split successfully into 'KNO' and 'LEI'")
             return kno_df, lei_df
         except Exception as e:
@@ -56,8 +75,8 @@ class DataProcessor:
         try:
             kno_df, lei_df = self.split_data()
             if kno_df is not None and lei_df is not None:
-                kno_path = os.path.join(self.directory, f"{self.base_filename}_Node.csv")
-                lei_path = os.path.join(self.directory, f"{self.base_filename}_Pipes.csv")
+                kno_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Node.csv")
+                lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
                 kno_df.to_csv(kno_path, index=True, sep=';')
                 lei_df.to_csv(lei_path, index=True, sep=';')
                 logging.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
@@ -124,7 +143,7 @@ class DataProcessor:
                 logging.info("No rows with ABGAENGE == 2 found.")
 
             # Save the DataFrame with the matched pairs
-            matched_pairs_df_path = os.path.join(self.directory, f"{self.base_filename}_matched_pairs.csv")
+            matched_pairs_df_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_matched_pairs.csv")
             matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
             logging.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
 
