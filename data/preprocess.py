@@ -75,10 +75,11 @@ class DataProcessor:
         """
         if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
             logging.debug("ABGAENGE and KNAM columns found.")
+            kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Convert to numeric
             found = False
             for _, row in kno_df.iterrows():
                 logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']}")
-                if row['ABGAENGE'] == 2:  # Ensure this is not a string comparison
+                if row['ABGAENGE'] == 2:
                     logging.info(f"KNAM value with ABGAENGE == 2: {row['KNAM']}")
                     found = True
             if not found:
