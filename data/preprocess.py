@@ -125,16 +125,67 @@ class DataProcessor:
                             if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
                                     matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
                                 logging.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
-                                             f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
-                                             f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
-                                             f"indices {anf_idx} and {end_idx}")
+                                              f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
+                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
+                                              f"indices {anf_idx} and {end_idx}")
                                 # Adding the matched pairs to the DataFrame
                                 new_row = {
                                     'anf_idx': anf_idx,
                                     'end_idx': end_idx,
-                                    'ANFNAM': matching_anf_df.at[anf_idx, 'ANFNAM'],
-                                    'ENDNAM': matching_end_df.at[end_idx, 'ENDNAM'],
-                                    'ROHRTYP': matching_anf_df.at[anf_idx, 'ROHRTYP']
+                                    'ANFNAM_anf': matching_anf_df.at[anf_idx, 'ANFNAM'],
+                                    'ENDNAM_anf': matching_anf_df.at[anf_idx, 'ENDNAM'],
+                                    'ANFNAM_end': matching_end_df.at[end_idx, 'ANFNAM'],
+                                    'ENDNAM_end': matching_end_df.at[end_idx, 'ENDNAM'],
+                                    'ROHRTYP_anf': matching_anf_df.at[anf_idx, 'ROHRTYP'],
+                                    'ROHRTYP_end': matching_end_df.at[end_idx, 'ROHRTYP']
+                                }
+                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
+                                                             ignore_index=True)
+                    # Additional loop to check for matching pipes with same ANFNAM and ROHRTYP but different indices
+                    for anf_idx in matching_anf_df.index:
+                        for check_idx in matching_anf_df.index:
+                            if (anf_idx != check_idx and
+                                    matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_anf_df.at[check_idx, 'ANFNAM'] and
+                                    matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_anf_df.at[check_idx, 'ROHRTYP']):
+                                logging.debug(f"Matching row found with same ANFNAM and ROHRTYP but different indices: "
+                                              f"ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
+                                              f"ENDNAM={matching_anf_df.at[check_idx, 'ENDNAM']}, "
+                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
+                                              f"indices {anf_idx} and {check_idx}")
+                                # Adding the matched pairs to the DataFrame
+                                new_row = {
+                                    'anf_idx': anf_idx,
+                                    'end_idx': check_idx,
+                                    'ANFNAM_anf': matching_anf_df.at[anf_idx, 'ANFNAM'],
+                                    'ENDNAM_anf': matching_anf_df.at[anf_idx, 'ENDNAM'],
+                                    'ANFNAM_end': matching_anf_df.at[check_idx, 'ANFNAM'],
+                                    'ENDNAM_end': matching_anf_df.at[check_idx, 'ENDNAM'],
+                                    'ROHRTYP_anf': matching_anf_df.at[anf_idx, 'ROHRTYP'],
+                                    'ROHRTYP_end': matching_anf_df.at[check_idx, 'ROHRTYP']
+                                }
+                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
+                                                             ignore_index=True)
+                    # Additional loop to check for matching pipes with same ENDNAM and ROHRTYP but different indices
+                    for end_idx in matching_end_df.index:
+                        for check_idx in matching_end_df.index:
+                            if (end_idx != check_idx and
+                                    matching_end_df.at[end_idx, 'ENDNAM'] == matching_end_df.at[check_idx, 'ENDNAM'] and
+                                    matching_end_df.at[end_idx, 'ROHRTYP'] == matching_end_df.at[check_idx, 'ROHRTYP']):
+                                logging.debug(f"Matching row found with same ENDNAM and ROHRTYP but different indices: "
+                                              f"ANFNAM={matching_end_df.at[end_idx, 'ANFNAM']}, "
+                                              f"ENDNAM={matching_end_df.at[check_idx, 'ENDNAM']}, "
+                                              f"ROHRTYP={matching_end_df.at[end_idx, 'ROHRTYP']}, "
+                                              f"indices {end_idx} and {check_idx}")
+                                # Adding the matched pairs to the DataFrame
+                                new_row = {
+                                    'anf_idx': end_idx,
+                                    'end_idx': check_idx,
+                                    'ANFNAM_anf': matching_end_df.at[end_idx, 'ANFNAM'],
+                                    'ENDNAM_anf': matching_end_df.at[end_idx, 'ENDNAM'],
+                                    'ANFNAM_end': matching_end_df.at[check_idx, 'ANFNAM'],
+                                    'ENDNAM_end': matching_end_df.at[check_idx, 'ENDNAM'],
+                                    'ROHRTYP_anf': matching_end_df.at[end_idx, 'ROHRTYP'],
+                                    'ROHRTYP_end': matching_end_df.at[check_idx, 'ROHRTYP']
                                 }
                                 matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
                                                              ignore_index=True)
@@ -143,11 +194,13 @@ class DataProcessor:
                 logging.info("No rows with ABGAENGE == 2 found.")
 
             # Save the DataFrame with the matched pairs
-            matched_pairs_df_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_matched_pairs.csv")
+            matched_pairs_df_path = os.path.join(self.directory + '\\Zwischenspeicher',
+                                                 f"{self.base_filename}_matched_pairs.csv")
             matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
             logging.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
 
         else:
             logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
+
 
 
