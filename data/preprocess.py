@@ -101,6 +101,9 @@ class DataProcessor:
             kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Convert to numeric
             found = False
 
+            # Add additional column to the df kno_df for the GroupID
+            lei_df['GroupID'] = ''
+
             # Initialize an empty DataFrame to store the matching pairs
             matched_pairs_df = pd.DataFrame(columns=['anf_idx', 'end_idx', 'ANFNAM', 'ENDNAM', 'ROHRTYP'])
 
@@ -141,6 +144,10 @@ class DataProcessor:
                                 }
                                 matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
                                                              ignore_index=True)
+
+                                lei_df.at[anf_idx, 'GroupID'] = 'X'
+                                lei_df.at[end_idx, 'GroupID'] = 'X'
+
                     # Additional loop to check for matching pipes with same ANFNAM and ROHRTYP but different indices
                     for anf_idx in matching_anf_df.index:
                         for check_idx in matching_anf_df.index:
@@ -165,6 +172,10 @@ class DataProcessor:
                                 }
                                 matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
                                                              ignore_index=True)
+
+                                lei_df.at[anf_idx, 'GroupID'] = 'X'
+                                lei_df.at[check_idx, 'GroupID'] = 'X'
+
                     # Additional loop to check for matching pipes with same ENDNAM and ROHRTYP but different indices
                     for end_idx in matching_end_df.index:
                         for check_idx in matching_end_df.index:
@@ -190,6 +201,9 @@ class DataProcessor:
                                 matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
                                                              ignore_index=True)
 
+                                lei_df.at[end_idx, 'GroupID'] = 'X'
+                                lei_df.at[check_idx, 'GroupID'] = 'X'
+
             if not found:
                 logging.info("No rows with ABGAENGE == 2 found.")
 
@@ -198,6 +212,12 @@ class DataProcessor:
                                                  f"{self.base_filename}_matched_pairs.csv")
             matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
             logging.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
+
+            # "Re-exporting kno_df as Excel to include the new GroupID column."
+            lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
+            lei_df.to_csv(lei_path, index=True, sep=';')
+
+            return lei_df
 
         else:
             logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
