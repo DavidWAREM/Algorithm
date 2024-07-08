@@ -33,12 +33,12 @@ def main():
     # Setup logging
     script_dir = os.path.dirname(os.path.abspath(__file__))
     log_file = os.path.join(script_dir, 'data_processing.log')
-    logging.basicConfig(filename=log_file, level=logging.INFO,
+    logging.basicConfig(filename=log_file, level=logging.DEBUG,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     # Add console handler to log to console as well
     console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
+    console.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     console.setFormatter(formatter)
     logging.getLogger('').addHandler(console)

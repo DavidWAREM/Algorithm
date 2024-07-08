@@ -64,17 +64,40 @@ class DataLoader:
             DataFrame: The CSV data as a pandas DataFrame.
         """
         try:
+            # Determine the expected number of columns
             expected_columns = self.find_max_columns()
             cleaned_lines = []
+
+            # Read and clean the lines
             with open(self.file_path, 'r', encoding='ISO-8859-1') as file:
                 for line in file:
                     cleaned_lines.append(self.clean_line(line.strip(), expected_columns))
+
+            # Join the cleaned lines into a single string
             cleaned_content = "\n".join(cleaned_lines)
+
+            # Define data types for each column
             dtype_dict = {i: 'str' for i in range(expected_columns)}
+
+            # Log success message
             logging.info("CSV file read and cleaned successfully.")
-            return pd.read_csv(io.StringIO(cleaned_content), sep=';', encoding='ISO-8859-1', dtype=dtype_dict)
+
+            # Create DataFrame from cleaned content
+            df = pd.read_csv(io.StringIO(cleaned_content), sep=';', encoding='ISO-8859-1', dtype=dtype_dict)
+
+            # Export the cleaned lines to a new CSV file
+            cleaned_file_path = self.file_path.replace('.csv', '_cleaned.csv')
+            with open(cleaned_file_path, 'w', encoding='ISO-8859-1') as cleaned_file:
+                cleaned_file.write(cleaned_content)
+
+            logging.info(f"Cleaned CSV file saved to {cleaned_file_path}.")
+
+            return df
         except Exception as e:
+            # Log error message
             logging.error(f"Error reading and cleaning CSV file: {e}")
+
+            # Return an empty DataFrame in case of error
             return pd.DataFrame()
 
 
