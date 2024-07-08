@@ -107,6 +107,8 @@ class DataProcessor:
             # Initialize an empty DataFrame to store the matching pairs
             matched_pairs_df = pd.DataFrame(columns=['anf_idx', 'end_idx', 'ANFNAM', 'ENDNAM', 'ROHRTYP'])
 
+            # Initialize the start value for the counter n
+            n = 1
             for idx, row in kno_df.iterrows():
                 logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']} at index {idx}")
                 if row['ABGAENGE'] == 2:
@@ -123,86 +125,84 @@ class DataProcessor:
                         logging.debug(
                             f"Matching KNAM value found in lei_df (ENDNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
                     # Additional loop to check for matching rows in both matching_anf_df and matching_end_df
-                    for anf_idx in matching_anf_df.index:
-                        for end_idx in matching_end_df.index:
-                            if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
-                                    matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
-                                logging.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
-                                              f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
-                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
-                                              f"indices {anf_idx} and {end_idx}")
-                                # Adding the matched pairs to the DataFrame
-                                new_row = {
-                                    'anf_idx': anf_idx,
-                                    'end_idx': end_idx,
-                                    'ANFNAM_anf': matching_anf_df.at[anf_idx, 'ANFNAM'],
-                                    'ENDNAM_anf': matching_anf_df.at[anf_idx, 'ENDNAM'],
-                                    'ANFNAM_end': matching_end_df.at[end_idx, 'ANFNAM'],
-                                    'ENDNAM_end': matching_end_df.at[end_idx, 'ENDNAM'],
-                                    'ROHRTYP_anf': matching_anf_df.at[anf_idx, 'ROHRTYP'],
-                                    'ROHRTYP_end': matching_end_df.at[end_idx, 'ROHRTYP']
-                                }
-                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
-                                                             ignore_index=True)
-
-                                lei_df.at[anf_idx, 'GroupID'] = 'X'
-                                lei_df.at[end_idx, 'GroupID'] = 'X'
-
-                    # Additional loop to check for matching pipes with same ANFNAM and ROHRTYP but different indices
-                    for anf_idx in matching_anf_df.index:
-                        for check_idx in matching_anf_df.index:
-                            if (anf_idx != check_idx and
-                                    matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_anf_df.at[check_idx, 'ANFNAM'] and
-                                    matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_anf_df.at[check_idx, 'ROHRTYP']):
-                                logging.debug(f"Matching row found with same ANFNAM and ROHRTYP but different indices: "
-                                              f"ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
-                                              f"ENDNAM={matching_anf_df.at[check_idx, 'ENDNAM']}, "
-                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
-                                              f"indices {anf_idx} and {check_idx}")
-                                # Adding the matched pairs to the DataFrame
-                                new_row = {
-                                    'anf_idx': anf_idx,
-                                    'end_idx': check_idx,
-                                    'ANFNAM_anf': matching_anf_df.at[anf_idx, 'ANFNAM'],
-                                    'ENDNAM_anf': matching_anf_df.at[anf_idx, 'ENDNAM'],
-                                    'ANFNAM_end': matching_anf_df.at[check_idx, 'ANFNAM'],
-                                    'ENDNAM_end': matching_anf_df.at[check_idx, 'ENDNAM'],
-                                    'ROHRTYP_anf': matching_anf_df.at[anf_idx, 'ROHRTYP'],
-                                    'ROHRTYP_end': matching_anf_df.at[check_idx, 'ROHRTYP']
-                                }
-                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
-                                                             ignore_index=True)
-
-                                lei_df.at[anf_idx, 'GroupID'] = 'X'
-                                lei_df.at[check_idx, 'GroupID'] = 'X'
-
-                    # Additional loop to check for matching pipes with same ENDNAM and ROHRTYP but different indices
-                    for end_idx in matching_end_df.index:
+                    for end_idx in matching_anf_df.index:
                         for check_idx in matching_end_df.index:
-                            if (end_idx != check_idx and
-                                    matching_end_df.at[end_idx, 'ENDNAM'] == matching_end_df.at[check_idx, 'ENDNAM'] and
-                                    matching_end_df.at[end_idx, 'ROHRTYP'] == matching_end_df.at[check_idx, 'ROHRTYP']):
-                                logging.debug(f"Matching row found with same ENDNAM and ROHRTYP but different indices: "
-                                              f"ANFNAM={matching_end_df.at[end_idx, 'ANFNAM']}, "
+                            if (matching_anf_df.at[end_idx, 'ANFNAM'] == matching_end_df.at[check_idx, 'ENDNAM'] and
+                                    matching_anf_df.at[end_idx, 'ROHRTYP'] == matching_end_df.at[check_idx, 'ROHRTYP']):
+                                logging.debug(f"Matching row found: ANFNAM={matching_anf_df.at[end_idx, 'ANFNAM']}, "
                                               f"ENDNAM={matching_end_df.at[check_idx, 'ENDNAM']}, "
-                                              f"ROHRTYP={matching_end_df.at[end_idx, 'ROHRTYP']}, "
+                                              f"ROHRTYP={matching_anf_df.at[end_idx, 'ROHRTYP']}, "
                                               f"indices {end_idx} and {check_idx}")
                                 # Adding the matched pairs to the DataFrame
                                 new_row = {
                                     'anf_idx': end_idx,
                                     'end_idx': check_idx,
-                                    'ANFNAM_anf': matching_end_df.at[end_idx, 'ANFNAM'],
-                                    'ENDNAM_anf': matching_end_df.at[end_idx, 'ENDNAM'],
+                                    'ANFNAM_anf': matching_anf_df.at[end_idx, 'ANFNAM'],
+                                    'ENDNAM_anf': matching_anf_df.at[end_idx, 'ENDNAM'],
                                     'ANFNAM_end': matching_end_df.at[check_idx, 'ANFNAM'],
                                     'ENDNAM_end': matching_end_df.at[check_idx, 'ENDNAM'],
-                                    'ROHRTYP_anf': matching_end_df.at[end_idx, 'ROHRTYP'],
+                                    'ROHRTYP_anf': matching_anf_df.at[end_idx, 'ROHRTYP'],
                                     'ROHRTYP_end': matching_end_df.at[check_idx, 'ROHRTYP']
                                 }
                                 matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
                                                              ignore_index=True)
 
-                                lei_df.at[end_idx, 'GroupID'] = 'X'
-                                lei_df.at[check_idx, 'GroupID'] = 'X'
+                                if lei_df.at[end_idx, 'GroupID'] == '' and lei_df.at[check_idx, 'GroupID'] == '':
+                                    # If both are empty, assign the counter value n
+                                    lei_df.at[end_idx, 'GroupID'] = n
+                                    lei_df.at[check_idx, 'GroupID'] = n
+                                    n += 1  # Increment the counter for the next group
+                                    logging.debug(f"Assigned GroupID {n - 1} to both indices {end_idx} and {check_idx}")
+                                elif lei_df.at[end_idx, 'GroupID'] != '' and lei_df.at[check_idx, 'GroupID'] == '':
+                                    # If only end_idx has a value, copy it to check_idx
+                                    lei_df.at[check_idx, 'GroupID'] = lei_df.at[end_idx, 'GroupID']
+                                    logging.debug(f"Copied GroupID from {end_idx} to {check_idx}")
+                                elif lei_df.at[end_idx, 'GroupID'] == '' and lei_df.at[check_idx, 'GroupID'] != '':
+                                    # If only check_idx has a value, copy it to end_idx
+                                    lei_df.at[end_idx, 'GroupID'] = lei_df.at[check_idx, 'GroupID']
+                                    logging.debug(f"Copied GroupID from {check_idx} to {end_idx}")
+                                # If both have values, do nothing
+
+                    # Additional loop to check for matching pipes with same ANFNAM and ROHRTYP but different indices
+                    for end_idx in matching_anf_df.index:
+                        for check_idx in matching_anf_df.index:
+                            if (end_idx != check_idx and
+                                    matching_anf_df.at[end_idx, 'ANFNAM'] == matching_anf_df.at[check_idx, 'ANFNAM'] and
+                                    matching_anf_df.at[end_idx, 'ROHRTYP'] == matching_anf_df.at[check_idx, 'ROHRTYP']):
+                                logging.debug(f"Matching row found with same ANFNAM and ROHRTYP but different indices: "
+                                              f"ANFNAM={matching_anf_df.at[end_idx, 'ANFNAM']}, "
+                                              f"ENDNAM={matching_anf_df.at[check_idx, 'ENDNAM']}, "
+                                              f"ROHRTYP={matching_anf_df.at[end_idx, 'ROHRTYP']}, "
+                                              f"indices {end_idx} and {check_idx}")
+                                # Adding the matched pairs to the DataFrame
+                                new_row = {
+                                    'anf_idx': end_idx,
+                                    'end_idx': check_idx,
+                                    'ANFNAM_anf': matching_anf_df.at[end_idx, 'ANFNAM'],
+                                    'ENDNAM_anf': matching_anf_df.at[end_idx, 'ENDNAM'],
+                                    'ANFNAM_end': matching_anf_df.at[check_idx, 'ANFNAM'],
+                                    'ENDNAM_end': matching_anf_df.at[check_idx, 'ENDNAM'],
+                                    'ROHRTYP_anf': matching_anf_df.at[end_idx, 'ROHRTYP'],
+                                    'ROHRTYP_end': matching_anf_df.at[check_idx, 'ROHRTYP']
+                                }
+                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
+                                                             ignore_index=True)
+
+                                if lei_df.at[end_idx, 'GroupID'] == '' and lei_df.at[check_idx, 'GroupID'] == '':
+                                    # If both are empty, assign the counter value n
+                                    lei_df.at[end_idx, 'GroupID'] = n
+                                    lei_df.at[check_idx, 'GroupID'] = n
+                                    n += 1  # Increment the counter for the next group
+                                    logging.debug(f"Assigned GroupID {n - 1} to both indices {end_idx} and {check_idx}")
+                                elif lei_df.at[end_idx, 'GroupID'] != '' and lei_df.at[check_idx, 'GroupID'] == '':
+                                    # If only end_idx has a value, copy it to check_idx
+                                    lei_df.at[check_idx, 'GroupID'] = lei_df.at[end_idx, 'GroupID']
+                                    logging.debug(f"Copied GroupID from {end_idx} to {check_idx}")
+                                elif lei_df.at[end_idx, 'GroupID'] == '' and lei_df.at[check_idx, 'GroupID'] != '':
+                                    # If only check_idx has a value, copy it to end_idx
+                                    lei_df.at[end_idx, 'GroupID'] = lei_df.at[check_idx, 'GroupID']
+                                    logging.debug(f"Copied GroupID from {check_idx} to {end_idx}")
+                                # If both have values, do nothing
 
             if not found:
                 logging.info("No rows with ABGAENGE == 2 found.")
@@ -219,8 +219,8 @@ class DataProcessor:
 
             return lei_df
 
+
         else:
             logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
-
 
 
