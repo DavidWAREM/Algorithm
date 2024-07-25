@@ -1,6 +1,7 @@
 import pandas as pd
 import io
 import logging
+import os
 
 class DataLoader:
     def __init__(self, file_path):
@@ -85,8 +86,17 @@ class DataLoader:
             # Create DataFrame from cleaned content
             df = pd.read_csv(io.StringIO(cleaned_content), sep=';', encoding='ISO-8859-1', dtype=dtype_dict)
 
-            # Export the cleaned lines to a new CSV file
-            cleaned_file_path = self.file_path.replace('.csv', '_cleaned.csv')
+            # Determine the directory of the original file and the new directory for cleaned files
+            original_dir = os.path.dirname(self.file_path)
+            cleaned_dir = os.path.join(original_dir, 'Zwischenspeicher')
+
+            # Create the new directory if it doesn't exist
+            os.makedirs(cleaned_dir, exist_ok=True)
+
+            # Generate the path for the cleaned file
+            cleaned_file_path = os.path.join(cleaned_dir, os.path.basename(self.file_path).replace('.csv', '_cleaned.csv'))
+
+            # Export the cleaned lines to the new CSV file
             with open(cleaned_file_path, 'w', encoding='ISO-8859-1') as cleaned_file:
                 cleaned_file.write(cleaned_content)
 
@@ -99,5 +109,3 @@ class DataLoader:
 
             # Return an empty DataFrame in case of error
             return pd.DataFrame()
-
-
