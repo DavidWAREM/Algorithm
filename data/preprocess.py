@@ -47,8 +47,7 @@ class DataProcessor:
             kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'FSTATUS', 'PMESS', 'DSTATUS', 'GEOH', 'PRECH',
                            'DP', 'XRECHTS', 'YHOCH', 'HP', 'SYMBOL', 'ABGAENGE', 'NETZNR']
             lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
-                           'VM', 'DP', 'NETZNR', 'ZETA', 'STRASSE', 'PARALLEL', 'MATERIAL', 'STRANUM', 'BAUJAHR',
-                           'DPREL', 'ROHRTYP']
+                           'VM', 'DP', 'DPREL', 'ROHRTYP', 'RAISE']
 
             # Ensure that the columns in kno_columns are present in kno_df
             kno_columns_present = [col for col in kno_columns if col in kno_df.columns]
