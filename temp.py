@@ -1,30 +1,45 @@
-import pandas as pd
 import numpy as np
-import os
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
 
+# Generiere synthetische Daten
+np.random.seed(0)
+X = np.random.rand(100, 1) * 10  # 100 Datenpunkte zwischen 0 und 10
+y = 2 * X**2 + 3 * X + 5 + np.random.randn(100, 1) * 10  # Quadratische Beziehung mit etwas Rauschen
 
-# Funktion zum Erstellen eines Excel-Dateis
-def create_excel_file(file_name, num_rows=100):
-    # Erstellen zufälliger Daten für Spalte A
-    data = np.random.rand(num_rows)
+# Lineares Modell ohne polynomiale Features
+model_linear = LinearRegression()
+model_linear.fit(X, y)
+y_pred_linear = model_linear.predict(X)
 
-    # Berechnen der Werte für Spalte B
-    results = data * 0.5
+# Lineares Modell mit polynomialen Features (Grad 2)
+poly = PolynomialFeatures(degree=2, include_bias=False)
+X_poly = poly.fit_transform(X)
+model_poly = LinearRegression()
+model_poly.fit(X_poly, y)
+y_pred_poly = model_poly.predict(X_poly)
 
-    # Erstellen eines DataFrame
-    df = pd.DataFrame({'A': data, 'B': results})
+# Visualisierung der Daten und der Modellanpassungen
+plt.figure(figsize=(14, 7))
 
-    # Speichern des DataFrame in einer Excel-Datei
-    df.to_excel(file_name, index=False)
+# Originaldaten und lineare Anpassung
+plt.subplot(1, 2, 1)
+plt.scatter(X, y, color='blue', label='Daten')
+plt.plot(X, y_pred_linear, color='red', linewidth=2, label='Lineare Anpassung')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title('Lineares Modell ohne polynomiale Features')
+plt.legend()
 
+# Originaldaten und polynomiale Anpassung
+plt.subplot(1, 2, 2)
+plt.scatter(X, y, color='blue', label='Daten')
+plt.plot(X, y_pred_poly, color='red', linewidth=2, label='Polynomiale Anpassung (Grad 2)')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title('Lineares Modell mit polynomialen Features')
+plt.legend()
 
-# Ordner erstellen, in dem die Dateien gespeichert werden
-output_folder = "generated_excel_files"
-os.makedirs(output_folder, exist_ok=True)
-
-# Erstellen und Speichern der 10 Excel-Dateien
-for i in range(1, 101):
-    file_name = os.path.join(output_folder, f"file_{i}.xlsx")
-    create_excel_file(file_name)
-
-print(f"10 Excel files have been created in the folder '{output_folder}'")
+plt.tight_layout()
+plt.show()

@@ -6515,3 +6515,67 @@
 2024-07-26 12:45:05,992 - INFO - GradientBoostingRegressor - Root Mean Squared Error (RMSE): 0.17816751598901095
 2024-07-26 12:45:05,992 - INFO - GradientBoostingRegressor - R^2 Score: 0.9167314470774579
 2024-07-26 12:45:17,588 - INFO - Model evaluation and plotting complete.
+2024-07-26 12:47:40,654 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,659 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_1_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,663 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_2_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,667 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_3_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,671 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_4_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,675 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_5_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,680 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_6_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,685 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_8_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,689 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_9_Pipes.csv with shape (358, 15)
+2024-07-26 12:47:40,691 - INFO - Combined data shape: (3222, 15)
+2024-07-26 12:47:40,695 - INFO - Feature engineering complete with polynomial features of degree 2
+2024-07-26 12:47:40,698 - INFO - Data split into training and testing sets with test size 20%
+2024-07-26 12:47:40,699 - INFO - Data scaling complete using StandardScaler
+2024-07-26 12:47:40,699 - INFO - Starting refined GridSearchCV for RandomForestRegressor
+2024-07-26 12:49:27,311 - INFO - Completed refined GridSearchCV for RandomForestRegressor with best parameters: {'max_depth': 20, 'max_features': 1.0, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 150}
+2024-07-26 12:49:27,311 - INFO - Starting refined GridSearchCV for GradientBoostingRegressor
+2024-07-26 12:56:00,153 - INFO - Completed refined GridSearchCV for GradientBoostingRegressor with best parameters: {'learning_rate': 0.15, 'max_depth': 5, 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200, 'subsample': 0.9}
+2024-07-26 12:56:00,168 - INFO - RandomForestRegressor - Mean Squared Error (MSE): 0.06674303279116561
+2024-07-26 12:56:00,168 - INFO - RandomForestRegressor - Root Mean Squared Error (RMSE): 0.2583467297860873
+2024-07-26 12:56:00,168 - INFO - RandomForestRegressor - R^2 Score: 0.8249226742916429
+2024-07-26 12:56:00,169 - INFO - GradientBoostingRegressor - Mean Squared Error (MSE): 0.02594918660454357
+2024-07-26 12:56:00,169 - INFO - GradientBoostingRegressor - Root Mean Squared Error (RMSE): 0.1610875122551204
+2024-07-26 12:56:00,169 - INFO - GradientBoostingRegressor - R^2 Score: 0.9319312592634844
+2024-07-26 12:59:03,316 - INFO - Model evaluation and plotting complete.
+2024-07-26 13:02:57,986 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:57,992 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_1_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:57,997 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_2_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,002 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_3_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,007 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_4_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,012 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_5_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,017 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_6_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,021 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_8_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,026 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_9_Pipes.csv with shape (358, 15)
+2024-07-26 13:02:58,028 - INFO - Combined data shape: (3222, 15)
+2024-07-26 13:02:58,034 - INFO - Feature engineering complete with polynomial features of degree 2
+2024-07-26 13:02:58,037 - INFO - Data split into training and testing sets with test size 20%
+2024-07-26 13:02:58,039 - INFO - Data scaling complete using StandardScaler
+2024-07-26 13:02:58,039 - INFO - Starting refined GridSearchCV for RandomForestRegressor
+2024-07-26 13:04:42,341 - INFO - Completed refined GridSearchCV for RandomForestRegressor with best parameters: {'max_depth': 15, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 150}
+2024-07-26 13:04:42,341 - INFO - Starting refined GridSearchCV for GradientBoostingRegressor
+2024-07-26 13:11:09,911 - INFO - Completed refined GridSearchCV for GradientBoostingRegressor with best parameters: {'learning_rate': 0.15, 'max_depth': 3, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 200, 'subsample': 0.8}
+2024-07-26 13:11:09,912 - INFO - Refined best parameters for RandomForestRegressor: {'max_depth': 15, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 150}
+2024-07-26 13:11:09,912 - INFO - Refined best parameters for GradientBoostingRegressor: {'learning_rate': 0.15, 'max_depth': 3, 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 200, 'subsample': 0.8}
+2024-07-26 13:11:09,930 - INFO - RandomForestRegressor - Mean Squared Error (MSE): 19578.816954281487
+2024-07-26 13:11:09,930 - INFO - RandomForestRegressor - Root Mean Squared Error (RMSE): 139.92432581321052
+2024-07-26 13:11:09,930 - INFO - RandomForestRegressor - R^2 Score: -2.820201609395468
+2024-07-26 13:11:09,931 - INFO - GradientBoostingRegressor - Mean Squared Error (MSE): 40438.30602098921
+2024-07-26 13:11:09,931 - INFO - GradientBoostingRegressor - Root Mean Squared Error (RMSE): 201.092779634151
+2024-07-26 13:11:09,931 - INFO - GradientBoostingRegressor - R^2 Score: -6.8902868392580405
+2024-07-26 14:16:20,195 - INFO - Model evaluation and plotting complete.
+2024-07-26 14:30:21,932 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,938 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_1_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,942 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_2_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,949 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_3_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,954 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_4_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,959 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_5_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,965 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_6_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,970 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_8_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,976 - INFO - Loaded data from C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten\export_results_13_Spechbach_RNAB.TXT_9_Pipes.csv with shape (358, 15)
+2024-07-26 14:30:21,987 - INFO - Combined data shape: (3222, 15)
+2024-07-26 14:30:21,992 - INFO - Feature engineering complete with polynomial features of degree 2
+2024-07-26 14:30:21,995 - INFO - Data split into training and testing sets with test size 20%
+2024-07-26 14:30:21,996 - INFO - Data scaling complete using StandardScaler
+2024-07-26 14:30:21,996 - INFO - Starting refined GridSearchCV for RandomForestRegressor with degree 2
