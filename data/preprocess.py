@@ -32,23 +32,22 @@ class DataProcessor:
 
             # Use the rows immediately before these indices as headers and create the DataFrames
             kno_header_index = kno_index - 1 if kno_index > 0 else kno_index
-            kno_df = self.dataframe.iloc[kno_index + 1:].copy()
+            kno_df = self.dataframe.iloc[kno_index:].copy()
             kno_df.columns = self.dataframe.iloc[kno_header_index]
 
             lei_header_index = lei_index - 1 if lei_index > 0 else lei_index
-            lei_df = self.dataframe.iloc[lei_index + 1:].copy()
+            lei_df = self.dataframe.iloc[lei_index:].copy()
             lei_df.columns = self.dataframe.iloc[lei_header_index]
 
             # Filter rows where the first column is 'KNO' or 'LEI'
             kno_df = kno_df[kno_df.iloc[:, 0] == 'KNO']
             lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
-            #Extraction of only relevant columns.
+            # Extraction of only relevant columns.
             kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'FSTATUS', 'PMESS', 'DSTATUS', 'GEOH', 'PRECH',
                            'DP', 'XRECHTS', 'YHOCH', 'HP', 'SYMBOL', 'ABGAENGE', 'NETZNR']
             lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
-                           'VM', 'DP', 'NETZNR', 'ZETA', 'STRASSE', 'PARALLEL', 'MATERIAL', 'STRANUM', 'BAUJAHR',
-                           'DPREL', 'ROHRTYP']
+                           'VM', 'DP', 'DPREL', 'ROHRTYP', 'RAISE']
 
             # Ensure that the columns in kno_columns are present in kno_df
             kno_columns_present = [col for col in kno_columns if col in kno_df.columns]
@@ -77,8 +76,8 @@ class DataProcessor:
             if kno_df is not None and lei_df is not None:
                 kno_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Node.csv")
                 lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
-                kno_df.to_csv(kno_path, index=True, sep=';')
-                lei_df.to_csv(lei_path, index=True, sep=';')
+                kno_df.to_csv(kno_path, index=False, sep=';')
+                lei_df.to_csv(lei_path, index=False, sep=';')
                 logging.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
             else:
                 logging.error("DataFrames could not be saved due to an earlier error.")
@@ -254,12 +253,9 @@ class DataProcessor:
 
             # "Re-exporting kno_df as Excel to include the new GroupID column."
             lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
-            lei_df.to_csv(lei_path, index=True, sep=';')
+            lei_df.to_csv(lei_path, index=False, sep=';')
 
             return lei_df
 
-
         else:
             logging.warning("'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")
-
-
