@@ -2,11 +2,10 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression, Ridge, Lasso, ElasticNet
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 import logging
 
 # Setup logging
@@ -26,7 +25,7 @@ all_data = []
 
 # Iterate through all CSV files in the folder
 for file_name in os.listdir(folder_path):
-    if file_name.endswith('.csv'):
+    if file_name.endswith('_Pipes.csv'):  # Only process files ending with '_Pipes.csv'
         file_path = os.path.join(folder_path, file_name)
         data = load_data_from_csv(file_path)
 
@@ -57,11 +56,8 @@ X_combined_poly = poly.fit_transform(X_combined)
 y_combined = combined_data['RAU']
 logging.info(f"Feature engineering complete with polynomial features of degree 2")
 
-# Use a smaller sample of the data for training
-X_combined_poly_sample, _, y_combined_sample, _ = train_test_split(X_combined_poly, y_combined, test_size=0.9, random_state=42)
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_combined_poly_sample, y_combined_sample, test_size=0.2, random_state=42)
+# Split the data into training and testing sets without sampling
+X_train, X_test, y_train, y_test = train_test_split(X_combined_poly, y_combined, test_size=0.2, random_state=42)
 logging.info(f"Data split into training and testing sets with test size 20%")
 
 # Initialize StandardScaler
@@ -72,52 +68,61 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 logging.info(f"Data scaling complete using StandardScaler")
 
-# Define models to test
-models = {
-    'Linear Regression': LinearRegression(),
-    'Ridge Regression': Ridge(),
-    'Lasso Regression': Lasso(),
-    'ElasticNet Regression': ElasticNet(),
-    'Random Forest': RandomForestRegressor(random_state=42, n_estimators=100),
-    'Gradient Boosting': GradientBoostingRegressor(random_state=42, n_estimators=100)
+# Define the best Gradient Boosting model with the found hyperparameters
+best_params = {
+    'learning_rate': 0.2,
+    'max_depth': 5,
+    'min_samples_leaf': 4,
+    'min_samples_split': 2,
+    'n_estimators': 300,
+    'subsample': 1.0
 }
 
-# Function to evaluate a model
-def evaluate_model(model, X_train, X_test, y_train, y_test):
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y_test, y_pred)
-    return mse, rmse, r2
+# Use the best parameters to train the final model
+best_gb = GradientBoostingRegressor(**best_params, random_state=42)
+best_gb.fit(X_train_scaled, y_train)
+y_pred = best_gb.predict(X_test_scaled)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, y_pred)
 
-# Evaluate all models and store results
-results = {}
-for name, model in models.items():
-    logging.info(f"Evaluating model: {name}")
-    mse, rmse, r2 = evaluate_model(model, X_train_scaled, X_test_scaled, y_train, y_test)
-    results[name] = {'MSE': mse, 'RMSE': rmse, 'R2': r2}
-    logging.info(f"{name} - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+# Perform cross-validation on the best Gradient Boosting model
+cv_scores = cross_val_score(best_gb, X_train_scaled, y_train, cv=5, scoring='neg_mean_squared_error')
+cv_mse = -cv_scores.mean()
+cv_rmse = np.sqrt(cv_mse)
 
-# Find the best model
-best_model_name = min(results, key=lambda x: results[x]['MSE'])
-best_model = models[best_model_name]
-logging.info(f"Best model: {best_model_name} with MSE: {results[best_model_name]['MSE']}")
+logging.info(f"Best Gradient Boosting Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+logging.info(f"Cross-Validation - MSE: {cv_mse}, RMSE: {cv_rmse}")
 
 # Plot the results of the best model
-y_pred = best_model.predict(X_test_scaled)
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, y_pred, color='black', label='Actual vs Predicted')
 plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='blue', linewidth=2, label='Ideal Fit')
 plt.xlabel('Actual RAU')
 plt.ylabel('Predicted RAU')
-plt.title(f'Results for {best_model_name}')
+plt.title('Results for Best Gradient Boosting Model')
 plt.legend()
 plt.show()
 
 # Output the results
 print("Model Evaluation Results:")
-for name, metrics in results.items():
-    print(f"{name}: MSE={metrics['MSE']}, RMSE={metrics['RMSE']}, R2={metrics['R2']}")
+print(f"Best Gradient Boosting Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+print(f"Cross-Validation - MSE: {cv_mse}, RMSE: {cv_rmse}")
 
-print(f"Best model: {best_model_name} with MSE: {results[best_model_name]['MSE']}")
+# Residual Analysis
+residuals = y_test - y_pred
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, residuals, color='red')
+plt.axhline(y=0, color='blue', linewidth=2)
+plt.xlabel('Actual Values')
+plt.ylabel('Residuals')
+plt.title('Residual Analysis')
+plt.show()
+
+# Evaluate model performance on large values
+large_values_mask = y_test > y_test.quantile(0.75)
+mse_large_values = mean_squared_error(y_test[large_values_mask], y_pred[large_values_mask])
+rmse_large_values = np.sqrt(mse_large_values)
+logging.info(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
+
+print(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
