@@ -1,8 +1,31 @@
 import os
 import logging
+import yaml
 import pandas as pd
-from data.data_loader import DataLoader
-from data.preprocess import DataProcessor
+from data.rawdata_loader import DataLoader
+from data.rawdata_preprocess import DataProcessor
+from scr.logging_config import setup_logging  # Import the logging setup function
+
+def load_config(config_file='config/config.yaml'):
+    """
+    Load configuration from a YAML file.
+
+    Args:
+        config_file (str): Path to the configuration file.
+
+    Returns:
+        dict: Configuration dictionary.
+    """
+    # Get the directory of the script being executed
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Move up one level to the project root
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    # Construct the full path to the config file
+    config_path = os.path.join(project_root, config_file)
+
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
 def process_file(file_path, file_name):
     logging.info(f"Starting data processing for file: {file_name}")
@@ -28,26 +51,11 @@ def process_file(file_path, file_name):
         logging.error(f"Error processing data for file {file_name}: {e}")
 
 def main():
-    # Get the directory of the script being executed
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    log_file = os.path.join(script_dir, 'data_processing.log')
-
-    # Setup logging
-    logging.basicConfig(
-        level=logging.DEBUG,  # Set the root logger level to DEBUG
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_file, mode='w', encoding='utf-8'),  # Ensure UTF-8 encoding for the file handler
-            logging.StreamHandler()  # Console handler
-        ]
-    )
-
-    # Set specific levels for handlers
-    logging.getLogger().handlers[0].setLevel(logging.DEBUG)  # FileHandler
-    logging.getLogger().handlers[1].setLevel(logging.INFO)   # StreamHandler
+    # Load configuration
+    config = load_config()
 
     # Directory containing the CSV files
-    data_dir = r'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\'
+    data_dir = config['paths']['folder_path_rawdata']
 
     # Process each file in the directory
     for file_name in os.listdir(data_dir):

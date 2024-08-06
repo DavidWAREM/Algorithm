@@ -1,0 +1,9 @@
+paths:
+  folder_path_rawdata: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten'
+  save_path_rawdata: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher'
+  folder_path: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher'
+  save_path: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher\\saved_data'
+  knoten_file: 'export_results_13_Spechbach_RNAB.TXT_0_Node.csv'
+  leitungen_file: 'export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv'
+  log_file: 'C:\\Users\\d.muehlfeld\\PycharmProjects\\temp\\logs\\verify_graph.log'
+  create_dataset_log_file: 'C:\\Users\\d.muehlfeld\\PycharmProjects\\temp\\logs\\create_dataset.log'
