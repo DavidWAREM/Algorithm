@@ -47,6 +47,10 @@ def setup_logging(
     if log_dir and not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
+    # Prevent double logging setup
+    if len(logging.getLogger().handlers) > 0:
+        return
+
     path = default_path
     value = os.getenv(env_key, None)
     if value:

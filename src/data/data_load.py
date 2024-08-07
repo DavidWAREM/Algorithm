@@ -23,7 +23,7 @@ class CSVDataLoader:
 
     def load_data_from_csv(self, file_path):
         data = pd.read_csv(file_path, sep=';')
-        logging.info(f"Loaded data from {file_path} with shape {data.shape}")
+        logging.debug(f"Loaded data from {file_path} with shape {data.shape}")
         return data
 
     def load_all_data(self):
