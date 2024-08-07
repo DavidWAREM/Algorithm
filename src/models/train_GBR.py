@@ -1,5 +1,5 @@
+import os
 import logging
-import numpy as np
 import joblib
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error, r2_score
@@ -36,25 +36,35 @@ class GradientBoostingModel:
         """
         self.model.fit(X_train, y_train)
 
-    def save_model(self, file_path):
+    def save_model(self, file_name="gradient_boosting_model.joblib"):
         """
-        Save the trained model to a file.
+        Save the trained model to a file in the 'results/models' directory.
 
         Parameters:
-        file_path (str): Path to the file where the model will be saved.
+        file_name (str): Name of the file where the model will be saved.
         """
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'models')
+        os.makedirs(results_dir, exist_ok=True)
+        file_path = os.path.join(results_dir, file_name)
         joblib.dump(self.model, file_path)
         logging.info(f"Model saved to {file_path}")
 
-    def load_model(self, file_path):
+    def load_model(self, file_name="gradient_boosting_model.joblib"):
         """
-        Load a trained model from a file.
+        Load a trained model from a file in the 'results/models' directory.
 
         Parameters:
-        file_path (str): Path to the file where the model is saved.
+        file_name (str): Name of the file where the model is saved.
+
+        Returns:
+        model: The loaded model.
         """
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        file_path = os.path.join(project_root, 'results', 'models', file_name)
         self.model = joblib.load(file_path)
         logging.info(f"Model loaded from {file_path}")
+        return self.model
 
 
 if __name__ == "__main__":
@@ -72,11 +82,10 @@ if __name__ == "__main__":
     gb_model.train(X_train, y_train)
 
     # Save the trained model
-    model_file_path = "gradient_boosting_model.joblib"
-    gb_model.save_model(model_file_path)
+    gb_model.save_model()
 
     # Load the trained model
-    gb_model.load_model(model_file_path)
+    gb_model.load_model()
 
     # Make predictions and evaluate the model
     y_pred = gb_model.model.predict(X_test)

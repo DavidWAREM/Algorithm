@@ -5,7 +5,7 @@ from unittest.mock import patch, mock_open
 import pandas as pd
 import yaml
 import logging
-from src.data.load_data import CSVDataLoader
+from src.data.data_load import CSVDataLoader
 
 
 class TestCSVDataLoader(unittest.TestCase):

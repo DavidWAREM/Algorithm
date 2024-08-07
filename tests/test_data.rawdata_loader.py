@@ -3,7 +3,7 @@ from unittest.mock import mock_open, patch
 import logging
 import pandas as pd
 import io
-from data.rawdata_loader import DataLoader  # Adjust the import according to your file structure
+from data.rawdata_load import DataLoader  # Adjust the import according to your file structure
 
 class TestDataLoader(unittest.TestCase):
     def setUp(self):

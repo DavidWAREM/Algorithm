@@ -11,7 +11,7 @@ class CSVDataLoader:
         config_file = os.path.join(project_root, 'config', 'config.yaml')
 
         self.config = self.load_main_config(config_file)
-        self.folder_path = self.config['paths']['folder_path']
+        self.folder_path = self.config['paths']['folder_path_data']
         self.required_columns = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']
         self.all_data = []
         self.load_all_data()
