@@ -1,10 +1,9 @@
 import os
 import logging
 import yaml
-import pandas as pd
 from data.rawdata_loader import DataLoader
 from data.rawdata_preprocess import DataProcessor
-from scr.logging_config import setup_logging  # Import the logging setup function
+
 
 def load_config(config_file='config/config.yaml'):
     """
