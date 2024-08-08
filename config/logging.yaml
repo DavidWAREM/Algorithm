@@ -1,13 +1,10 @@
 version: 1
-# This setting disables existing loggers to avoid duplicate log messages.
 disable_existing_loggers: False
 
-# Define the formatters for log messages. Formatters specify the layout of log messages.
 formatters:
   simple:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
-# Define the handlers that determine where the log messages will go.
 handlers:
   console:
     class: logging.StreamHandler
@@ -19,16 +16,14 @@ handlers:
     class: logging.FileHandler
     level: DEBUG
     formatter: simple
-    filename: logs/app.log
+    filename: logs/logging.log
 
-# Define loggers that will use the handlers. Loggers are used to log messages in different parts of the application.
 loggers:
   my_module:
     level: DEBUG
     handlers: [console, file_handler]
     propagate: no
 
-# The root logger configuration. The root logger is the default logger used by the application.
 root:
   level: DEBUG
   handlers: [console, file_handler]

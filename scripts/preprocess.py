@@ -3,6 +3,7 @@ import logging
 import yaml
 from data.rawdata_load import DataLoader
 from data.rawdata_preprocess import DataProcessor
+from src.logging_config import setup_logging
 
 
 def load_config(config_file='config/config.yaml'):
@@ -50,6 +51,8 @@ def process_file(file_path, file_name):
         logging.error(f"Error processing data for file {file_name}: {e}")
 
 def main():
+    setup_logging()
+    logger = logging.getLogger(__name__)
     # Load configuration
     config = load_config()
 

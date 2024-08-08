@@ -1,8 +1,9 @@
 paths:
   folder_path_rawdata: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten'
   folder_path_data: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher'
+  folder_path_data_predicted: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Predicted'
+  folder_path_data_results: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Results'
   save_path: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher\\saved_data'
   knoten_file: 'export_results_13_Spechbach_RNAB.TXT_0_Node.csv'
   leitungen_file: 'export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv'
   log_file: 'C:\\Users\\d.muehlfeld\\PycharmProjects\\temp\\logs\\verify_graph.log'
-  folder_path_model: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Model'
