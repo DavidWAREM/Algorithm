@@ -7,6 +7,8 @@ from src.data.data_load import CSVDataLoader
 from src.data.data_preprocess import FeatureEngineer
 from src.models.train_GBR import GradientBoostingModel
 from src.evaluation.evaluation_GBR import ModelEvaluator
+from src.models.train_ANN import ANNModel
+from src.evaluation.evaluation_ANN import ModelEvaluator
 
 def main():
     setup_logging()
@@ -42,6 +44,8 @@ def main():
 
         # Evaluate the model
         ModelEvaluator.evaluate_and_visualize(X_test, y_test)
+    if args.algorithm == 'ANN':
+        model =
 
     logger.info("Training and evaluation completed successfully")
 
