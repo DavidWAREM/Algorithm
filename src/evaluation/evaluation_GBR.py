@@ -7,7 +7,7 @@ from sklearn.datasets import make_regression
 from src.prediction.predictions_GBR import GradientBoostingPrediction
 
 
-class ModelEvaluator:
+class GBRModelEvaluator:
     @staticmethod
     def evaluate_and_visualize(X_test, y_test):
         """
@@ -54,4 +54,4 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Evaluate and visualize the model
-    ModelEvaluator.evaluate_and_visualize(X_test, y_test)
+    GBRModelEvaluator.evaluate_and_visualize(X_test, y_test)

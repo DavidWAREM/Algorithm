@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from src.models.train_ANN import ANNModel  # Importing ANNModel from train_ANN
 from src.prediction.predictions_ANN import ANNPrediction
 
-class ModelEvaluator:
+class ANNModelEvaluator:
     @staticmethod
     def evaluate_and_visualize(X_test, y_test):
         """
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     ann_model.train(X_train_scaled, y_train)
 
     # Evaluate and visualize the model
-    ModelEvaluator.evaluate_and_visualize(ann_model, X_test_scaled, y_test)
+    ANNModelEvaluator.evaluate_and_visualize(ann_model, X_test_scaled, y_test)

@@ -6,9 +6,9 @@ from src.logging_config import setup_logging
 from src.data.data_load import CSVDataLoader
 from src.data.data_preprocess import FeatureEngineer
 from src.models.train_GBR import GradientBoostingModel
-from src.evaluation.evaluation_GBR import ModelEvaluator
+from src.evaluation.evaluation_GBR import GBRModelEvaluator
 from src.models.train_ANN import ANNModel
-from src.evaluation.evaluation_ANN import ModelEvaluator
+from src.evaluation.evaluation_ANN import ANNModelEvaluator
 
 def main():
     setup_logging()
@@ -43,9 +43,16 @@ def main():
         model.save_model()
 
         # Evaluate the model
-        ModelEvaluator.evaluate_and_visualize(X_test, y_test)
+        GBRModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
     if args.algorithm == 'ANN':
-        model =
+        model = ANNModel
+        model.train(X_train, y_train)
+        model.save_model()
+
+        # Evaluate the model
+        ANNModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
 
     logger.info("Training and evaluation completed successfully")
 

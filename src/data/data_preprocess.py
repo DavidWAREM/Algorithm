@@ -48,7 +48,7 @@ class FeatureEngineer:
         logging.debug(f"Data split completed. X_train shape: {X_train.shape}, X_test shape: {X_test.shape}, y_train shape: {y_train.shape}, y_test shape: {y_test.shape}")
         return X_train, X_test, y_train, y_test
 
-    def scale_data(self, X_train, X_test):
+    def scale_data(self, X_train, X_test):z7
         self.scaler = StandardScaler()
         self.X_train_scaled = self.scaler.fit_transform(X_train)
         self.X_test_scaled = self.scaler.transform(X_test)
