@@ -3,6 +3,7 @@ paths:
   folder_path_data: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher'
   folder_path_data_predicted: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Predicted'
   folder_path_data_results: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Results'
+  folder_path_data_GNN_dataset: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\GNN Dataset'
   save_path: 'C:\\Users\\d.muehlfeld\\Berechnungsdaten\\Zwischenspeicher\\saved_data'
   knoten_file: 'export_results_13_Spechbach_RNAB.TXT_0_Node.csv'
   leitungen_file: 'export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv'

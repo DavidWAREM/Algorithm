@@ -9,6 +9,7 @@ from src.models.train_GBR import GradientBoostingModel
 from src.evaluation.evaluation_GBR import GBRModelEvaluator
 from src.models.train_ANN import ANNModel
 from src.evaluation.evaluation_ANN import ANNModelEvaluator
+from src.data.create_dataset_GNN import GraphDataset
 
 def main():
     setup_logging()
@@ -52,6 +53,11 @@ def main():
 
         # Evaluate the model
         ANNModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    if args.algorithm == 'GNN':
+        folder_path_data = config['path']['folder_path_data']
+        folder_path_data_GNN_dataset = config['path']['folder_path_data_GNN_dataset']
+        graph_dataset = GraphDataset(folder_path_data, folder_path_data_GNN_dataset)
 
 
     logger.info("Training and evaluation completed successfully")

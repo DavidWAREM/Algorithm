@@ -12,7 +12,7 @@ class DataLoader:
             file_path (str): Path to the CSV file.
         """
         self.file_path = file_path
-        logging.info(f"DataLoader initialized with file path: {file_path}")
+        logging.debug(f"DataLoader initialized with file path: {file_path}")
 
     """The functions `def find_max_columns`, `def clean_lines`, and `def custom_read_csv` were introduced because the
         raw data from STANET in CSV format caused errors when being read into Python. Issues included varying numbers
@@ -33,7 +33,7 @@ class DataLoader:
                     num_columns = len(line.split(';'))
                     if num_columns > max_columns:
                         max_columns = num_columns
-            logging.info(f"Maximum number of columns found: {max_columns}")
+            logging.debug(f"Maximum number of columns found: {max_columns}")
         except Exception as e:
             logging.error(f"Error finding max columns: {e}")
         return max_columns
@@ -81,7 +81,7 @@ class DataLoader:
             dtype_dict = {i: 'str' for i in range(expected_columns)}
 
             # Log success message
-            logging.info("CSV file read and cleaned successfully.")
+            logging.debug("CSV file read and cleaned successfully.")
 
             # Create DataFrame from cleaned content
             df = pd.read_csv(io.StringIO(cleaned_content), sep=';', encoding='ISO-8859-1', dtype=dtype_dict)
@@ -100,7 +100,7 @@ class DataLoader:
             with open(cleaned_file_path, 'w', encoding='ISO-8859-1') as cleaned_file:
                 cleaned_file.write(cleaned_content)
 
-            logging.info(f"Cleaned CSV file saved to {cleaned_file_path}.")
+            logging.debug(f"Cleaned CSV file saved to {cleaned_file_path}.")
 
             return df
         except Exception as e:
