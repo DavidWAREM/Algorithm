@@ -1,133 +1,194 @@
 import os
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+import torch
+from torch_geometric.data import DataLoader
+from torch_geometric.nn import GCNConv, global_mean_pool, BatchNorm
+from torch.nn import Linear, ReLU, Dropout
+from torch.optim import AdamW
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures
-from sklearn.model_selection import train_test_split
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping
+import matplotlib.pyplot as plt
 import logging
+from create_dataset import GraphDataset, GraphDataLoader
 
 # Setup logging
-logging.basicConfig(filename='model_comparison.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    filename='gnn_model.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filemode='w'  # Overwrite the log file each time
+)
 
-# Function to load data from a CSV file
-def load_data_from_csv(file_path):
-    data = pd.read_csv(file_path, sep=';')
-    logging.info(f"Loaded data from {file_path} with shape {data.shape}")
-    return data
+# Load the datasets using GraphDataset
+folder_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher'
+graph_dataset = GraphDataset(folder_path, save_path='graph_data.pt')
 
-# Path to the folder with the CSV files
-folder_path = r"C:\Users\d.muehlfeld\Berechnungsdaten\Trainingsdaten"
+# Ensure the dataset is not empty
+if not graph_dataset.data_list:
+    logging.error("No datasets loaded. Exiting.")
+    print("No datasets loaded. Exiting.")
+    exit(1)
 
-# List to store data from all CSV files
-all_data = []
+# Split the data into training and testing datasets
+train_size = int(0.8 * len(graph_dataset.data_list))
+test_size = len(graph_dataset.data_list) - train_size
+train_data_list, test_data_list = torch.utils.data.random_split(graph_dataset.data_list, [train_size, test_size])
 
-# Iterate through all CSV files in the folder
-for file_name in os.listdir(folder_path):
-    if file_name.endswith('_Pipes.csv'):  # Only process files ending with '_Pipes.csv'
-        file_path = os.path.join(folder_path, file_name)
-        data = load_data_from_csv(file_path)
+# Create DataLoader instances for training and testing
+train_loader = DataLoader(train_data_list, batch_size=1, shuffle=True)
+test_loader = DataLoader(test_data_list, batch_size=1, shuffle=False)
 
-        # Log the columns of the file for debugging purposes
-        logging.debug(f"Columns in {file_name}: {data.columns.tolist()}")
 
-        # Check if required columns are present
-        required_columns = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']
-        if not all(column in data.columns for column in required_columns):
-            logging.warning(f"Required columns not found in file: {file_name}")
+class ImprovedGNN(torch.nn.Module):
+    def __init__(self, input_dim):
+        super(ImprovedGNN, self).__init__()
+        self.conv1 = GCNConv(input_dim, 32)
+        self.bn1 = BatchNorm(32)
+        self.conv2 = GCNConv(32, 64)
+        self.bn2 = BatchNorm(64)
+        self.conv3 = GCNConv(64, 32)
+        self.bn3 = BatchNorm(32)
+        self.fc1 = Linear(32, 16)
+        self.fc2 = Linear(16, 1)
+        self.relu = ReLU()
+        self.dropout = Dropout(0.5)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.conv1(x, edge_index)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.conv2(x, edge_index)
+        x = self.bn2(x)
+        x = self.relu(x)
+        x = self.conv3(x, edge_index)
+        x = self.bn3(x)
+        x = self.relu(x)
+        x = global_mean_pool(x, data.batch)
+        x = self.dropout(x)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        return x
+
+
+# Extract input dimensions from the dataset
+input_dim = graph_dataset.data_list[0].num_features
+
+# Instantiate the model, define the loss function and the optimizer
+model = ImprovedGNN(input_dim=input_dim)
+optimizer = AdamW(model.parameters(), lr=0.001, weight_decay=1e-5)
+criterion = torch.nn.MSELoss()
+
+
+def train():
+    model.train()
+    total_loss = 0
+    for data in train_loader:
+        optimizer.zero_grad()
+        output = model(data)
+        target = data.y.mean(dim=0).view(1, -1)  # Average the target values
+        if target.size() != output.size():
+            logging.error(f"Target size {target.size()} does not match output size {output.size()}")
             continue
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        total_loss += loss.item()
+    return total_loss / len(train_loader)
 
-        all_data.append((file_name, data))
 
-# Raise an error if no valid CSV files are found
-if not all_data:
-    logging.error("No valid CSV files found with the required columns.")
-    raise ValueError("No valid CSV files found with the required columns.")
+def test(loader):
+    model.eval()
+    total_loss = 0
+    with torch.no_grad():
+        for data in loader:
+            output = model(data)
+            target = data.y.mean(dim=0).view(1, -1)  # Average the target values
+            if target.size() != output.size():
+                logging.error(f"Target size {target.size()} does not match output size {output.size()}")
+                continue
+            loss = criterion(output, target)
+            total_loss += loss.item()
+    return total_loss / len(loader)
 
-# Combine all data for feature engineering
-combined_data = pd.concat([data for _, data in all_data])
-logging.info(f"Combined data shape: {combined_data.shape}")
 
-# Feature Engineering: Adding polynomial features
-poly = PolynomialFeatures(degree=2, include_bias=False)
-X_combined = combined_data[['RORL', 'DM', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']]
-X_combined_poly = poly.fit_transform(X_combined)
-y_combined = combined_data['RAU']
-logging.info(f"Feature engineering complete with polynomial features of degree 2")
+# Training loop
+epochs = 50
+train_losses = []
+test_losses = []
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X_combined_poly, y_combined, test_size=0.2, random_state=42)
-logging.info(f"Data split into training and testing sets with test size 20%")
-
-# Initialize StandardScaler
-scaler = StandardScaler()
-
-# Scale the data
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-logging.info(f"Data scaling complete using StandardScaler")
-
-# Build the ANN model
-def build_ann_model(input_shape):
-    model = Sequential()
-    model.add(Dense(64, activation='relu', input_shape=(input_shape,)))
-    model.add(Dropout(0.2))
-    model.add(Dense(32, activation='relu'))
-    model.add(Dense(1, activation='linear'))
-    model.compile(optimizer=Adam(learning_rate=0.001), loss='mse')
-    return model
-
-# Build and compile the model
-model = build_ann_model(X_train_scaled.shape[1])
-
-# Define early stopping
-early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-
-# Train the model
-history = model.fit(X_train_scaled, y_train, validation_split=0.2, epochs=100, batch_size=32, callbacks=[early_stopping], verbose=1)
+for epoch in range(epochs):
+    train_loss = train()
+    test_loss = test(test_loader)
+    train_losses.append(train_loss)
+    test_losses.append(test_loss)
+    logging.info(f"Epoch {epoch + 1}/{epochs}, Train Loss: {train_loss}, Test Loss: {test_loss}")
+    print(f"Epoch {epoch + 1}/{epochs}, Train Loss: {train_loss}, Test Loss: {test_loss}")
 
 # Predict on the test set
-y_pred = model.predict(X_test_scaled).flatten()
+model.eval()
+y_pred = []
+y_test_actual = []
 
-# Calculate metrics
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
-r2 = r2_score(y_test, y_pred)
+with torch.no_grad():
+    for data in test_loader:
+        output = model(data)
+        y_pred.extend(output.cpu().numpy().flatten())
+        y_test_actual.extend(data.y.mean(dim=0).cpu().numpy().flatten())
 
-logging.info(f"ANN Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+# Ensure y_pred and y_test_actual are consistent in length
+if len(y_pred) != len(y_test_actual):
+    logging.error(f"Mismatch in length of predictions and actual values: {len(y_pred)} vs {len(y_test_actual)}")
+    print(f"Mismatch in length of predictions and actual values: {len(y_pred)} vs {len(y_test_actual)}")
+else:
+    # Convert to numpy arrays
+    y_pred = np.array(y_pred)
+    y_test_actual = np.array(y_test_actual)
 
-# Plot the results of the model
-plt.figure(figsize=(10, 6))
-plt.scatter(y_test, y_pred, color='black', label='Actual vs Predicted')
-plt.plot([min(y_test), max(y_test)], [min(y_test), max(y_test)], color='blue', linewidth=2, label='Ideal Fit')
-plt.xlabel('Actual RAU')
-plt.ylabel('Predicted RAU')
-plt.title('Results for ANN Model')
-plt.legend()
-plt.show()
+    # Calculate metrics
+    mse = mean_squared_error(y_test_actual, y_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_test_actual, y_pred)
 
-# Output the results
-print("Model Evaluation Results:")
-print(f"ANN Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+    logging.info(f"GNN Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
 
-# Residual Analysis
-residuals = y_test - y_pred
-plt.figure(figsize=(10, 6))
-plt.scatter(y_test, residuals, color='red')
-plt.axhline(y=0, color='blue', linewidth=2)
-plt.xlabel('Actual Values')
-plt.ylabel('Residuals')
-plt.title('Residual Analysis')
-plt.show()
+    # Print results to console
+    print("Model Evaluation Results:")
+    print(f"GNN Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
 
-# Evaluate model performance on large values
-large_values_mask = y_test > y_test.quantile(0.75)
-mse_large_values = mean_squared_error(y_test[large_values_mask], y_pred[large_values_mask])
-rmse_large_values = np.sqrt(mse_large_values)
-logging.info(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
+    # Plot the results of the model
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_test_actual, y_pred, color='black', label='Actual vs Predicted')
+    plt.plot([min(y_test_actual), max(y_test_actual)], [min(y_test_actual), max(y_test_actual)], color='blue',
+             linewidth=2, label='Ideal Fit')
+    plt.xlabel('Actual RAU')
+    plt.ylabel('Predicted RAU')
+    plt.title('Results for GNN Model')
+    plt.legend()
+    plt.show()
 
-print(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
+    # Residual Analysis
+    residuals = y_test_actual - y_pred
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_test_actual, residuals, color='red')
+    plt.axhline(y=0, color='blue', linewidth=2)
+    plt.xlabel('Actual Values')
+    plt.ylabel('Residuals')
+    plt.title('Residual Analysis')
+    plt.show()
+
+    # Evaluate model performance on large values
+    large_values_mask = y_test_actual > np.quantile(y_test_actual, 0.75)
+    mse_large_values = mean_squared_error(y_test_actual[large_values_mask], y_pred[large_values_mask])
+    rmse_large_values = np.sqrt(mse_large_values)
+
+    logging.info(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
+    print(f"Performance on large values - MSE: {mse_large_values}, RMSE: {rmse_large_values}")
+
+    # Display predicted and actual values for a dataset
+    print("\nPredicted vs Actual values:")
+    for i, (pred, actual) in enumerate(zip(y_pred, y_test_actual)):
+        print(f"Sample {i + 1}: Predicted = {pred:.4f}, Actual = {actual:.4f}")
+
+
+# test
