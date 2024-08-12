@@ -28,7 +28,7 @@ class ANNModel:
         model.add(Dropout(0.2))
         model.add(Dense(32, activation='relu'))
         model.add(Dense(1, activation='linear'))
-        model.compile(optimizer=Adam(learning_rate=learning_rate), loss='mse')
+        model.compile(optimizer=Adam(learning_rate=learning_rate), loss='mean_squared_error')
         logging.info("ANN model built and compiled successfully.")
         return model
 

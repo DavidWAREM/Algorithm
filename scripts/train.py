@@ -46,7 +46,7 @@ def main():
         GBRModelEvaluator.evaluate_and_visualize(X_test, y_test)
 
     if args.algorithm == 'ANN':
-        model = ANNModel
+        model = ANNModel(input_shape=X_train.shape[1])
         model.train(X_train, y_train)
         model.save_model()
 
