@@ -28,24 +28,24 @@ def load_config(config_file='config/config.yaml'):
     return config
 
 def process_file(file_path, file_name):
-    logging.info(f"Starting data processing for file: {file_name}")
+    logging.debug(f"Starting data processing for file: {file_name}")
     try:
         # Create an instance of the DataLoader and load the data
         data_loader = DataLoader(file_path)
         data = data_loader.custom_read_csv()
-        logging.info("Data loaded successfully.")
+        logging.debug("Data loaded successfully.")
 
         # Create an instance of the DataProcessor and process the data
         data_processor = DataProcessor(data, file_path)
         kno_df, lei_df = data_processor.split_data()
 
-        logging.info("Data split successfully.")
+        logging.debug("Data split successfully.")
         data_processor.save_dataframes()
 
         # Combine connected pipes
         data_processor.combine_connected_pipes(kno_df, lei_df)
 
-        logging.info(f"Data processing complete for file: {file_name}")
+        logging.debug(f"Data processing complete for file: {file_name}")
 
     except Exception as e:
         logging.error(f"Error processing data for file {file_name}: {e}")

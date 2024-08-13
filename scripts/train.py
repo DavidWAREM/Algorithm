@@ -9,7 +9,8 @@ from src.models.train_GBR import GradientBoostingModel
 from src.evaluation.evaluation_GBR import GBRModelEvaluator
 from src.models.train_ANN import ANNModel
 from src.evaluation.evaluation_ANN import ANNModelEvaluator
-from src.data.create_dataset_GNN import GraphDataset
+from src.data.datapreperation_GNN import GraphDataset
+from src.models.train_GNN import GNNModel
 
 def main():
     setup_logging()
@@ -30,15 +31,17 @@ def main():
 
     logger.info(f"Training with algorithm: {args.algorithm}")
 
-    # Load and preprocess data
-    data_loader = CSVDataLoader(config_file=config_path)
-    all_data = data_loader.get_data()
 
-    feature_engineer = FeatureEngineer(all_data)
-    feature_engineer.process_features()
-    X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
 
     if args.algorithm == 'gradient_boosting':
+        # Load and preprocess data
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
         model = GradientBoostingModel()
         model.train(X_train, y_train)
         model.save_model()
@@ -47,6 +50,14 @@ def main():
         GBRModelEvaluator.evaluate_and_visualize(X_test, y_test)
 
     if args.algorithm == 'ANN':
+        # Load and preprocess data
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
         model = ANNModel(input_shape=X_train.shape[1])
         model.train(X_train, y_train)
         model.save_model()
@@ -55,10 +66,13 @@ def main():
         ANNModelEvaluator.evaluate_and_visualize(X_test, y_test)
 
     if args.algorithm == 'GNN':
-        folder_path_data = config['path']['folder_path_data']
-        folder_path_data_GNN_dataset = config['path']['folder_path_data_GNN_dataset']
+        folder_path_data = config['paths']['folder_path_data']
+        folder_path_data_GNN_dataset = config['paths']['folder_path_data_GNN_dataset']
         graph_dataset = GraphDataset(folder_path_data, folder_path_data_GNN_dataset)
-
+        gnn_model = GNNModel(folder_path=folder_path_data, save_path=folder_path_data_GNN_dataset)
+        gnn_model.run_training()
+        gnn_model.evaluate()
+        gnn_model.save_model()
 
     logger.info("Training and evaluation completed successfully")
 

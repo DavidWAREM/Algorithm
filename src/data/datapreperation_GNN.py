@@ -42,7 +42,7 @@ class GraphDataset:
         Returns:
         - DataFrame containing the loaded data.
         """
-        logging.info(f"Loading data from {file_path}")
+        logging.debug(f"Loading data from {file_path}")
         try:
             data = pd.read_csv(file_path, sep=';', encoding='latin1')  # Adjust encoding as needed
             logging.debug(f"Successfully loaded data from {file_path} with shape {data.shape}")
@@ -68,7 +68,7 @@ class GraphDataset:
             if matching_leitungen_file in leitungen_files:
                 matching_pairs.append((knoten_file, matching_leitungen_file))
 
-        logging.info(f"Found {len(matching_pairs)} matching pairs of Knoten and Leitungen files")
+        logging.debug(f"Found {len(matching_pairs)} matching pairs of Knoten and Leitungen files")
         return matching_pairs
 
     def create_data_object(self, knoten_data, leitungen_data):
@@ -104,7 +104,7 @@ class GraphDataset:
         # Add the positional data as attributes to the Data object
         graph_data.pos = torch.tensor(knoten_data[['XRECHTS', 'YHOCH', 'GEOH']].values, dtype=torch.float)
 
-        logging.info(
+        logging.debug(
             f"Created Data object with {len(edge_index[0]) // 2} edges, {len(missing_nodes)} missing nodes, {len(self_connections)} self-connections, and {len(duplicate_edges)} duplicate edges.")
         return graph_data
 
@@ -184,7 +184,7 @@ class GraphDataset:
         matching_pairs = self.get_matching_files()
 
         for knoten_file, leitungen_file in matching_pairs:
-            logging.info(f"Processing pair: {knoten_file}, {leitungen_file}")
+            logging.debug(f"Processing pair: {knoten_file}, {leitungen_file}")
             try:
                 # Construct paths to node and pipe files
                 knoten_file_path = os.path.join(self.folder_path, knoten_file)
@@ -199,7 +199,7 @@ class GraphDataset:
 
                 # Append the Data object to the list
                 self.data_list.append(graph_data)
-                logging.info(f"Successfully created Data object for {knoten_file} and {leitungen_file}")
+                logging.debug(f"Successfully created Data object for {knoten_file} and {leitungen_file}")
 
             except Exception as e:
                 logging.error(f"Failed to process pair: {knoten_file}, {leitungen_file}: {e}")
@@ -212,7 +212,7 @@ class GraphDataset:
         for i, data in enumerate(self.data_list):
             file_path = os.path.join(self.save_path, f"data_{i}.pt")
             torch.save(data, file_path)
-            logging.info(f"Saved Data object to {file_path}")
+            logging.debug(f"Saved Data object to {file_path}")
 
 class GraphDataLoader:
     """
@@ -231,9 +231,9 @@ class GraphDataLoader:
         Parameters:
         - data_list: List of PyTorch Geometric Data objects.
         """
-        logging.info(f"Number of datasets: {len(data_list)}")
+        logging.debug(f"Number of datasets: {len(data_list)}")
         for i, data in enumerate(data_list):
-            logging.info(f"Dataset {i + 1} - Data object: {data}")
+            logging.debug(f"Dataset {i + 1} - Data object: {data}")
 
     def get_dataloader(self):
         """
@@ -261,27 +261,29 @@ class GraphDataLoader:
                 file_path = os.path.join(save_path, file_name)
                 data = torch.load(file_path)
                 data_list.append(data)
-                logging.info(f"Loaded Data object from {file_path}")
+                logging.debug(f"Loaded Data object from {file_path}")
         return data_list
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-# Usage example
-folder_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher'
-save_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher\saved_data'
+    # Usage example
+    folder_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher'
+    save_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher\saved_data'
 
-# Create and save datasets
-graph_dataset = GraphDataset(folder_path, save_path)
+    # Create and save datasets
+    graph_dataset = GraphDataset(folder_path, save_path)
 
-# Load datasets from saved files
-loaded_data_list = GraphDataLoader.load_saved_datasets(save_path)
-data_loader = GraphDataLoader(loaded_data_list)
+    # Load datasets from saved files
+    loaded_data_list = GraphDataLoader.load_saved_datasets(save_path)
+    data_loader = GraphDataLoader(loaded_data_list)
 
-# Output to console as well
-print(f"Number of datasets: {len(graph_dataset.data_list)}")
-for i, data in enumerate(graph_dataset.data_list):
-    print(f"Dataset {i + 1} - Data object: {data}")
+
+
+    # Output to console as well
+    print(f"Number of datasets: {len(graph_dataset.data_list)}")
+    for i, data in enumerate(graph_dataset.data_list):
+        print(f"Dataset {i + 1} - Data object: {data}")
 
 
