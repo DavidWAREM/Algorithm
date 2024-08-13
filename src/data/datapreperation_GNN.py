@@ -3,16 +3,10 @@ import pandas as pd
 import torch
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
 import logging
 
-# Setup logging to create a log file named 'create_dataset.log'
-logging.basicConfig(
-    filename='create_dataset.log',
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filemode='w'  # Overwrite the log file each time
-)
+
 
 # Constants for column names
 KNOTEN_NUMERICAL_COLUMNS = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP', 'XRECHTS', 'YHOCH', 'GEOH']
@@ -24,10 +18,13 @@ class GraphDataset:
     from CSV files to create PyTorch Geometric Data objects.
     """
 
-    def __init__(self, folder_path, save_path):
+    def __init__(self, folder_path, save_path, normalize=False, standardize=False):
         self.folder_path = folder_path
         self.save_path = save_path
         self.data_list = []
+        self.normalize = normalize
+        self.standardize = standardize
+        self.scaler = None
         self.load_datasets()
         self.save_datasets()
 
@@ -72,18 +69,20 @@ class GraphDataset:
         return matching_pairs
 
     def create_data_object(self, knoten_data, leitungen_data):
-        """
-        Create a PyTorch Geometric Data object from node and edge data.
-
-        Parameters:
-        - knoten_data: DataFrame containing node data.
-        - leitungen_data: DataFrame containing edge data.
-
-        Returns:
-        - PyTorch Geometric Data object.
-        """
         X_knoten = self.process_numerical_data(knoten_data, KNOTEN_NUMERICAL_COLUMNS)
         X_leitungen = self.process_numerical_data(leitungen_data, LEITUNGEN_NUMERICAL_COLUMNS)
+
+        # Normalize or standardize the data if specified
+        if self.normalize:
+            logging.debug("Applying MinMaxScaler to normalize the data.")
+            scaler = MinMaxScaler()
+            X_knoten = scaler.fit_transform(X_knoten)
+            X_leitungen = scaler.fit_transform(X_leitungen)
+        elif self.standardize:
+            logging.debug("Applying StandardScaler to standardize the data.")
+            scaler = StandardScaler()
+            X_knoten = scaler.fit_transform(X_knoten)
+            X_leitungen = scaler.fit_transform(X_leitungen)
 
         # Combine node features using PolynomialFeatures
         poly = PolynomialFeatures(degree=2, include_bias=False)
@@ -92,14 +91,18 @@ class GraphDataset:
         # Convert node features to a tensor
         X_knoten_tensor = torch.tensor(X_knoten_poly, dtype=torch.float)
 
+        # Convert edge features to a tensor
+        X_leitungen_tensor = torch.tensor(X_leitungen, dtype=torch.float)
+
         # Create edge index based on edge data
-        edge_index, missing_nodes, self_connections, duplicate_edges = self.create_edge_index(knoten_data, leitungen_data)
+        edge_index, missing_nodes, self_connections, duplicate_edges = self.create_edge_index(knoten_data,
+                                                                                              leitungen_data)
 
         # Extract target variable (assume 'RAU' as the target variable, adjust as necessary)
-        y = torch.tensor(knoten_data['PRECH'].values, dtype=torch.float).view(-1, 1)
+        y = torch.tensor(leitungen_data['RAU'].values, dtype=torch.float).view(-1, 1)
 
         # Create PyTorch Geometric Data object
-        graph_data = Data(x=X_knoten_tensor, edge_index=edge_index, y=y)
+        graph_data = Data(x=X_knoten_tensor, edge_index=edge_index, edge_attr=X_leitungen_tensor, y=y)
 
         # Add the positional data as attributes to the Data object
         graph_data.pos = torch.tensor(knoten_data[['XRECHTS', 'YHOCH', 'GEOH']].values, dtype=torch.float)
@@ -107,6 +110,7 @@ class GraphDataset:
         logging.debug(
             f"Created Data object with {len(edge_index[0]) // 2} edges, {len(missing_nodes)} missing nodes, {len(self_connections)} self-connections, and {len(duplicate_edges)} duplicate edges.")
         return graph_data
+
 
     def process_numerical_data(self, data, numerical_columns):
         """
@@ -214,56 +218,6 @@ class GraphDataset:
             torch.save(data, file_path)
             logging.debug(f"Saved Data object to {file_path}")
 
-class GraphDataLoader:
-    """
-    This class handles creating and managing the DataLoader for PyTorch Geometric Data objects.
-    """
-
-    def __init__(self, data_list, batch_size=1, shuffle=True):
-        self.dataloader = DataLoader(data_list, batch_size=batch_size, shuffle=shuffle)
-        self.log_dataset_info(data_list)
-
-    @staticmethod
-    def log_dataset_info(data_list):
-        """
-        Log information about the datasets.
-
-        Parameters:
-        - data_list: List of PyTorch Geometric Data objects.
-        """
-        logging.debug(f"Number of datasets: {len(data_list)}")
-        for i, data in enumerate(data_list):
-            logging.debug(f"Dataset {i + 1} - Data object: {data}")
-
-    def get_dataloader(self):
-        """
-        Get the DataLoader.
-
-        Returns:
-        - DataLoader object.
-        """
-        return self.dataloader
-
-    @staticmethod
-    def load_saved_datasets(save_path):
-        """
-        Load saved datasets from files.
-
-        Parameters:
-        - save_path: Path to the directory containing saved dataset files.
-
-        Returns:
-        - List of loaded PyTorch Geometric Data objects.
-        """
-        data_list = []
-        for file_name in os.listdir(save_path):
-            if file_name.endswith('.pt'):
-                file_path = os.path.join(save_path, file_name)
-                data = torch.load(file_path)
-                data_list.append(data)
-                logging.debug(f"Loaded Data object from {file_path}")
-        return data_list
-
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -273,17 +227,13 @@ if __name__ == "__main__":
     save_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher\saved_data'
 
     # Create and save datasets
-    graph_dataset = GraphDataset(folder_path, save_path)
+    graph_dataset = GraphDataset(folder_path, save_path, normalize=True, standardize=False)
 
     # Load datasets from saved files
     loaded_data_list = GraphDataLoader.load_saved_datasets(save_path)
     data_loader = GraphDataLoader(loaded_data_list)
 
-
-
     # Output to console as well
     print(f"Number of datasets: {len(graph_dataset.data_list)}")
     for i, data in enumerate(graph_dataset.data_list):
         print(f"Dataset {i + 1} - Data object: {data}")
-
-

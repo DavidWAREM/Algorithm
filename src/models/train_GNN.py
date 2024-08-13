@@ -22,6 +22,19 @@ class GNNModel:
         self.graph_dataset = GraphDataset(folder_path, save_path=save_path)
         logging.debug("Graph dataset loaded successfully.")
 
+        # Print the first 10 rows of the first dataset with headers
+        if len(self.graph_dataset.data_list) > 0:
+            first_data = self.graph_dataset.data_list[0]
+            print("First 10 rows of the first dataset with headers:")
+
+            # Define the column names (headers) for the dataset
+            feature_names = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP', 'XRECHTS', 'YHOCH', 'GEOH']  # Adjust as necessary
+            print(" | ".join(feature_names))  # Print headers
+            for row in first_data.x[:10]:
+                print(" | ".join(f"{value:.4f}" for value in row))  # Print each row with formatted values
+        else:
+            logging.error("No datasets found to display.")
+
         # Ensure the dataset is not empty
         if not self.graph_dataset.data_list:
             logging.error("No datasets loaded. Exiting.")
@@ -166,6 +179,11 @@ class GNNModel:
         # Print results to console
         print("Model Evaluation Results:")
         print(f"GNN Model - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+
+        # Print the first 20 predictions along with the actual values
+        print("\nFirst 20 Predictions vs Actual Values:")
+        for i in range(min(20, len(y_pred))):
+            print(f"Prediction {i + 1}: Predicted = {y_pred[i]:.4f}, Actual = {y_test_actual[i]:.4f}")
 
         # Plot the results of the model
         plt.figure(figsize=(10, 6))
