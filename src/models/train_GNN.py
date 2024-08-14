@@ -19,7 +19,7 @@ class GNNModel:
         self.learning_rate = learning_rate
 
         # Load the datasets
-        self.graph_dataset = GraphDataset(folder_path, save_path=save_path)
+        self.graph_dataset = GraphDataset(folder_path, save_path=save_path, normalize=True, standardize=False)
         logging.debug("Graph dataset loaded successfully.")
 
         # Print the first 10 rows of the first dataset with headers

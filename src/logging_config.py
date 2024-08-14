@@ -25,7 +25,7 @@ def load_main_config(config_file='config/config.yaml'):
 
 def setup_logging(
         default_path='config/logging.yaml',
-        default_level=logging.INFO,
+        default_level=logging.DEBUG,
         env_key='LOG_CFG'
 ):
     """

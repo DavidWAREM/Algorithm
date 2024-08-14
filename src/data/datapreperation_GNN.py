@@ -6,18 +6,11 @@ from torch_geometric.loader import DataLoader
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler, MinMaxScaler
 import logging
 
-
-
 # Constants for column names
 KNOTEN_NUMERICAL_COLUMNS = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP', 'XRECHTS', 'YHOCH', 'GEOH']
 LEITUNGEN_NUMERICAL_COLUMNS = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE']
 
 class GraphDataset:
-    """
-    This class handles loading and processing of node and edge data
-    from CSV files to create PyTorch Geometric Data objects.
-    """
-
     def __init__(self, folder_path, save_path, normalize=False, standardize=False):
         self.folder_path = folder_path
         self.save_path = save_path
@@ -30,15 +23,6 @@ class GraphDataset:
 
     @staticmethod
     def load_data_from_csv(file_path):
-        """
-        Load data from a CSV file.
-
-        Parameters:
-        - file_path: Path to the CSV file.
-
-        Returns:
-        - DataFrame containing the loaded data.
-        """
         logging.debug(f"Loading data from {file_path}")
         try:
             data = pd.read_csv(file_path, sep=';', encoding='latin1')  # Adjust encoding as needed
@@ -49,12 +33,6 @@ class GraphDataset:
             raise
 
     def get_matching_files(self):
-        """
-        Find and pair matching node and edge CSV files in the specified folder.
-
-        Returns:
-        - List of tuples containing matching pairs of node and edge filenames.
-        """
         knoten_files = [f for f in os.listdir(self.folder_path) if f.endswith('_Node.csv')]
         leitungen_files = [f for f in os.listdir(self.folder_path) if f.endswith('_Pipes.csv')]
 
@@ -94,54 +72,28 @@ class GraphDataset:
         # Convert edge features to a tensor
         X_leitungen_tensor = torch.tensor(X_leitungen, dtype=torch.float)
 
-        # Create edge index based on edge data
-        edge_index, missing_nodes, self_connections, duplicate_edges = self.create_edge_index(knoten_data,
-                                                                                              leitungen_data)
+        # Create directed edge index based on edge data
+        edge_index, missing_nodes, self_connections, duplicate_edges = self.create_edge_index(knoten_data, leitungen_data)
 
         # Extract target variable (assume 'RAU' as the target variable, adjust as necessary)
         y = torch.tensor(leitungen_data['RAU'].values, dtype=torch.float).view(-1, 1)
 
-        # Create PyTorch Geometric Data object
+        # Create PyTorch Geometric Data object with directed edges
         graph_data = Data(x=X_knoten_tensor, edge_index=edge_index, edge_attr=X_leitungen_tensor, y=y)
 
         # Add the positional data as attributes to the Data object
         graph_data.pos = torch.tensor(knoten_data[['XRECHTS', 'YHOCH', 'GEOH']].values, dtype=torch.float)
 
         logging.debug(
-            f"Created Data object with {len(edge_index[0]) // 2} edges, {len(missing_nodes)} missing nodes, {len(self_connections)} self-connections, and {len(duplicate_edges)} duplicate edges.")
+            f"Created directed Data object with {len(edge_index[0])} edges, {len(missing_nodes)} missing nodes, {len(self_connections)} self-connections, and {len(duplicate_edges)} duplicate edges.")
         return graph_data
 
-
     def process_numerical_data(self, data, numerical_columns):
-        """
-        Process numerical data by selecting relevant columns and handling missing values.
-
-        Parameters:
-        - data: DataFrame containing the data.
-        - numerical_columns: List of numerical columns to select.
-
-        Returns:
-        - Processed DataFrame with numerical data.
-        """
         X = data[numerical_columns]
-        # Handle missing values by filling with zeros or another strategy
         X = X.replace('?', 0).astype(float)
         return X
 
     def create_edge_index(self, knoten_data, leitungen_data):
-        """
-        Create edge index tensor from node and edge data.
-
-        Parameters:
-        - knoten_data: DataFrame containing node data.
-        - leitungen_data: DataFrame containing edge data.
-
-        Returns:
-        - edge_index: Tensor containing edge indices.
-        - missing_nodes: Set of missing node IDs.
-        - self_connections: Set of nodes with self-connections.
-        - duplicate_edges: Set of duplicate edges.
-        """
         edges = []
         missing_nodes = set()
         duplicate_edges = set()
@@ -151,7 +103,6 @@ class GraphDataset:
             start_node = row['ANFNAM']
             end_node = row['ENDNAM']
 
-            # Check if both start and end nodes exist in the node data
             if start_node not in knoten_data['KNAM'].values:
                 missing_nodes.add(start_node)
                 logging.warning(f"Missing start node: {start_node}")
@@ -174,34 +125,31 @@ class GraphDataset:
                 logging.warning(f"Duplicate edge found between nodes: {start_node} and {end_node}")
                 continue
 
-            edges.append([start_index, end_index])
-            edges.append([end_index, start_index])  # Assuming undirected graph
+            edges.append([start_index, end_index])  # Directed edge
             duplicate_edges.add(edge)
 
         edge_index = torch.tensor(edges, dtype=torch.long).t().contiguous()
         return edge_index, missing_nodes, self_connections, duplicate_edges
 
     def load_datasets(self):
-        """
-        Load and process datasets, creating PyTorch Geometric Data objects.
-        """
         matching_pairs = self.get_matching_files()
 
         for knoten_file, leitungen_file in matching_pairs:
             logging.debug(f"Processing pair: {knoten_file}, {leitungen_file}")
             try:
-                # Construct paths to node and pipe files
                 knoten_file_path = os.path.join(self.folder_path, knoten_file)
                 leitungen_file_path = os.path.join(self.folder_path, leitungen_file)
 
-                # Load data from CSV files
                 knoten_data = self.load_data_from_csv(knoten_file_path)
                 leitungen_data = self.load_data_from_csv(leitungen_file_path)
 
-                # Create Data object
+                logging.debug(f"Loaded knoten_data shape: {knoten_data.shape}")
+                logging.debug(f"knoten_data head: \n{knoten_data.head()}")
+                logging.debug(f"Loaded leitungen_data shape: {leitungen_data.shape}")
+                logging.debug(f"leitungen_data head: \n{leitungen_data.head()}")
+
                 graph_data = self.create_data_object(knoten_data, leitungen_data)
 
-                # Append the Data object to the list
                 self.data_list.append(graph_data)
                 logging.debug(f"Successfully created Data object for {knoten_file} and {leitungen_file}")
 
@@ -209,31 +157,77 @@ class GraphDataset:
                 logging.error(f"Failed to process pair: {knoten_file}, {leitungen_file}: {e}")
 
     def save_datasets(self):
-        """
-        Save the processed datasets to files for future use.
-        """
         os.makedirs(self.save_path, exist_ok=True)
         for i, data in enumerate(self.data_list):
             file_path = os.path.join(self.save_path, f"data_{i}.pt")
             torch.save(data, file_path)
             logging.debug(f"Saved Data object to {file_path}")
 
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    # Usage example
     folder_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher'
     save_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher\saved_data'
 
     # Create and save datasets
-    graph_dataset = GraphDataset(folder_path, save_path, normalize=True, standardize=False)
+    graph_dataset = GraphDataset(folder_path, save_path, normalize=False, standardize=False)
 
-    # Load datasets from saved files
-    loaded_data_list = GraphDataLoader.load_saved_datasets(save_path)
-    data_loader = GraphDataLoader(loaded_data_list)
-
-    # Output to console as well
     print(f"Number of datasets: {len(graph_dataset.data_list)}")
     for i, data in enumerate(graph_dataset.data_list):
         print(f"Dataset {i + 1} - Data object: {data}")
+
+    # Visualize the first Data object
+    first_data = graph_dataset.data_list[0]
+
+    # Print basic info about the first data object
+    print("\nFirst Data Object:")
+    print(f"Number of nodes: {first_data.num_nodes}")
+    print(f"Number of edges: {first_data.num_edges}")
+    print(f"Node feature dimension: {first_data.x.size(1)}")
+    print(f"Edge feature dimension: {first_data.edge_attr.size(1)}")
+    print(f"Number of targets: {first_data.y.size(0)}")
+
+    # Visualize the edge index
+    print("\nEdge Index:")
+    print(first_data.edge_index)
+
+    # Visualize the node features (first 10 nodes)
+    print("\nNode Features (First 10 nodes):")
+    print(first_data.x[:10])
+
+    import networkx as nx
+    import matplotlib.pyplot as plt
+    from torch_geometric.utils import to_networkx
+
+
+    # Function to visualize the graph
+    def visualize_graph(data, show_labels=True):
+        # Convert PyTorch Geometric data to a NetworkX graph
+        G = to_networkx(data, to_undirected=False, edge_attrs=['edge_attr'], node_attrs=['x'])
+
+        # Set up the plot
+        plt.figure(figsize=(10, 10))
+
+        # Get node positions
+        pos = {i: (data.pos[i, 0].item(), data.pos[i, 1].item()) for i in range(data.num_nodes)}
+
+        # Draw the graph
+        nx.draw(G, pos, with_labels=show_labels, node_size=500, node_color='lightblue', font_size=10,
+                font_weight='bold')
+
+        # Draw node labels for easier interpretation
+        if show_labels:
+            labels = {i: f"Node {i}" for i in range(data.num_nodes)}
+            nx.draw_networkx_labels(G, pos, labels, font_size=12)
+
+        # Draw edge labels if any (e.g., edge attributes)
+        edge_labels = {(u, v): f"{data.edge_attr[idx].item():.2f}" for idx, (u, v) in enumerate(G.edges())}
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red', font_size=8)
+
+        plt.title("Graph Network Visualization")
+        plt.show()
+
+
+    # Assuming you have already created your GraphDataset instance and loaded datasets
+    # Visualize the first data object in the list
+    visualize_graph(first_data)
