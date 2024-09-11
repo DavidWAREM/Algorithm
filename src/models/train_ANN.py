@@ -32,7 +32,7 @@ class ANNModel:
         logging.info("ANN model built and compiled successfully.")
         return model
 
-    def train(self, X_train, y_train, validation_split=0.2, epochs=10, batch_size=32, patience=10):
+    def train(self, X_train, y_train, validation_split=0.2, epochs=100, batch_size=32, patience=10):
         """
         Train the ANN model.
 
