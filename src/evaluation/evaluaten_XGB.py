@@ -9,14 +9,14 @@ import os  # Added to handle paths
 
 class XGBoostModelEvaluator:
     @staticmethod
-    def evaluate_and_visualize(X_test, y_test, model_file="xgboost_model.model"):
+    def evaluate_and_visualize(X_test, y_test, model_file="xgboost_model.json"):
         """
         Loads a saved XGBoost model, makes predictions, and evaluates the model performance using test data.
 
         Args:
             X_test (np.array): Features of the test data.
             y_test (np.array): True values (target) for the test data.
-            model_file (str): Name of the saved XGBoost model file (default: "xgboost_model.model").
+            model_file (str): Name of the saved XGBoost model file (default: "xgboost_model.json").
 
         This method performs the following tasks:
         1. Loads the saved XGBoost model.
@@ -24,8 +24,9 @@ class XGBoostModelEvaluator:
         3. Evaluates the model performance using metrics such as MSE, RMSE, and R².
         4. Visualizes the true vs predicted values with a scatter plot.
         """
-        # Construct the path to the model file in the results/models directory
-        model_path = os.path.join('results', 'models', model_file)
+
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        model_path = os.path.join(project_root, 'results', 'models', model_file)
 
         # Check if the model file exists
         if not os.path.exists(model_path):
@@ -75,14 +76,14 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Initialize and train a dummy XGBoost model for demonstration purposes
-    model = xgb.XGBRegressor(objective="reg:squarederror")
+    model = xgb.XGBRegressor(objective="reg:squarederror", tree_method="hist", device='cuda')
     model.fit(X_train, y_train)
 
     # Ensure the results/models directory exists
     os.makedirs('results/models', exist_ok=True)
 
-    # Save the trained model in the results/models directory
-    model.save_model(os.path.join('results', 'models', 'xgboost_model.model'))
+    # Save the trained model in the results/models directory with a specific file extension
+    model.save_model(os.path.join('results', 'models', 'xgboost_model.json'))  # Save as JSON for clarity
 
     # Evaluate and visualize using the saved model
     XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)

@@ -16,7 +16,8 @@ class XGBoostModel:
         # Parameters for the XGBoost model using GPU for training.
         self.params = {
             'objective': 'reg:squarederror',
-            'tree_method': 'gpu_hist',  # Use GPU for training
+            'tree_method': 'hist',  # Use hist for tree_method
+            'device': 'cuda',  # Use GPU for training with CUDA
             'colsample_bytree': 0.8,
             'learning_rate': 0.1,
             'max_depth': 7,
@@ -51,7 +52,7 @@ class XGBoostModel:
         self.model.fit(X_train, y_train)
         logging.info("Training completed.")
 
-    def save_model(self, file_name="xgboost_model.model"):
+    def save_model(self, file_name="xgboost_model.json"):
         logging.info(f"Saving model to file: {file_name}")
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
         results_dir = os.path.join(project_root, 'results', 'models')
@@ -60,7 +61,7 @@ class XGBoostModel:
         self.model.save_model(file_path)
         logging.info(f"Model saved to {file_path}")
 
-    def load_model(self, file_name="xgboost_model.model"):
+    def load_model(self, file_name="xgboost_model.json"):
         logging.info(f"Loading model from file: {file_name}")
         try:
             project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -92,6 +93,6 @@ if __name__ == "__main__":
     # Ensure you have training data here before running these methods
     # model.hyperparameter_tuning(X_train, y_train)
     # model.train(X_train, y_train)
-    model.save_model("xgboost_model.model")
-    model.load_model("xgboost_model.model")
+    model.save_model("xgboost_model.json")
+    model.load_model("xgboost_model.json")
     # model.evaluate(X_test, y_test)
