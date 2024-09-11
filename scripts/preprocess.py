@@ -1,5 +1,7 @@
 import os
 import logging
+from venv import logger
+
 import yaml
 from data.rawdata_load import DataLoader  # Custom class to load raw data
 from data.rawdata_preprocess import DataProcessor  # Custom class to process raw data
@@ -46,20 +48,20 @@ def process_file(file_path, file_name):
     This function handles the entire data processing pipeline for a single file.
     It loads the file, preprocesses the data, splits the data into two DataFrames, and then processes them further (e.g., combining pipes).
     """
-    logging.debug(f"Starting data processing for file: {file_name}")  # Log the start of the file processing
+    logger.debug(f"Starting data processing for file: {file_name}")  # Log the start of the file processing
 
     try:
         # Create an instance of DataLoader to read the CSV data
         data_loader = DataLoader(file_path)
         data = data_loader.custom_read_csv()  # Load the CSV data using a custom method
-        logging.debug("Data loaded successfully.")  # Log successful data loading
+        logger.debug("Data loaded successfully.")  # Log successful data loading
 
         # Create an instance of DataProcessor to handle the loaded data
         data_processor = DataProcessor(data, file_path)
 
         # Split the data into two DataFrames: 'KNO' and 'LEI'
         kno_df, lei_df = data_processor.split_data()
-        logging.debug("Data split successfully.")  # Log successful data split
+        logger.debug("Data split successfully.")  # Log successful data split
 
         # Save the split DataFrames to separate files
         data_processor.save_dataframes()
@@ -67,11 +69,11 @@ def process_file(file_path, file_name):
         # Process and combine connected pipes
         data_processor.combine_connected_pipes(kno_df, lei_df)
 
-        logging.debug(f"Data processing complete for file: {file_name}")  # Log completion of processing
+        logger.debug(f"Data processing complete for file: {file_name}")  # Log completion of processing
 
     except Exception as e:
         # Log any errors that occur during processing
-        logging.error(f"Error processing data for file {file_name}: {e}")
+        logger.error(f"Error processing data for file {file_name}: {e}")
 
 
 def main():
@@ -82,12 +84,14 @@ def main():
     """
     setup_logging()  # Set up the logging configuration
     logger = logging.getLogger(__name__)  # Create a logger for this script
+    logger.info('Logger startet')
 
     # Load configuration settings from the YAML file
     config = load_config()
 
     # Directory containing the raw CSV files
     data_dir = config['paths']['folder_path_rawdata']
+    logger.info(f"Processing files from directory: {data_dir}")
 
     # Loop through all files in the directory and process each CSV file
     for file_name in os.listdir(data_dir):

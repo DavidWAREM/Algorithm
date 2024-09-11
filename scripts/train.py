@@ -12,7 +12,7 @@ from src.evaluation.evaluation_ANN import ANNModelEvaluator  # Model evaluator f
 from src.data.datapreperation_GNN import GraphDataset  # Graph data preparation for GNN
 from src.models.train_GNN import GNNModel  # GNN model class for training
 from src.models.train_XGB import XGBoostModel  # XGBoost model class for training
-from src.evaluation.evaluate_XGB import XGBoostModelEvaluator  # XGBoost model evaluator
+from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator  # XGBoost model evaluator
 
 
 def main():
