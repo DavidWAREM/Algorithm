@@ -52,8 +52,8 @@ class DataProcessor:
             lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
             # Define relevant columns for each DataFrame.
-            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'FSTATUS', 'PMESS', 'DSTATUS', 'GEOH', 'PRECH',
-                           'DP', 'XRECHTS', 'YHOCH', 'HP', 'SYMBOL', 'ABGAENGE', 'NETZNR']
+            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'PMESS', 'GEOH', 'PRECH',
+                           'DP', 'XRECHTS', 'YHOCH', 'HP']
             lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
                            'VM', 'DP', 'DPREL', 'ROHRTYP', 'RAISE']
 

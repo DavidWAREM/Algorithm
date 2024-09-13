@@ -215,8 +215,8 @@ class GraphDataset:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    folder_path = r'C:/Users/d.muehlfeld/Berechnungsdaten/Zwischenspeicher/Beispieldaten'
-    save_path = r'C:\Users\d.muehlfeld\Berechnungsdaten\Zwischenspeicher\saved_data'
+    folder_path = r'C:\Users\D.Muehlfeld\Documents\Berechnungsdaten\Zwischenspeicher\Beispieldaten'
+    save_path = r'C:\Users\D.Muehlfeld\Documents\Berechnungsdaten\Zwischenspeicher\Beispieldaten\saved_data'
 
     # Create and save datasets
     graph_dataset = GraphDataset(folder_path, save_path, normalize=False, standardize=False)
