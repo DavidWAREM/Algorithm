@@ -75,9 +75,14 @@ for i in range(1, 10000):
     data, y = load_data(node_file, edge_file)
     datasets.append((data, y))
 
-# Train-Test-Split
-train_data = datasets[:2]  # 2 Datensätze für das Training
-test_data = datasets[2:]  # 1 Datensatz für das Testen
+
+# Teile die Daten in 80% Training und 20% Testen auf
+train_data, test_data = train_test_split(datasets, test_size=0.2, random_state=42)
+
+# Überprüfe die Größe der aufgeteilten Datensätze
+print(f"Anzahl der Trainingsdatensätze: {len(train_data)}")
+print(f"Anzahl der Testdatensätze: {len(test_data)}")
+
 
 # Initialisiere das Modell
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -103,13 +108,19 @@ for data, y in test_data:
     total_mse += test(data, y, model)
 print(f'Total MSE: {total_mse:.4f}')
 
-# Verzeichnis erstellen und das Modell speichern
 
+
+# Holen des Wurzelverzeichnisses des Pycharm-Projekts (2 Ebenen über der aktuellen Datei)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-results_dir = os.path.join(project_root, 'results', 'models')
-model_save_path = 'results/models/'
-os.makedirs(results_dir, exist_ok=True)  # Erstelle das Verzeichnis, falls es nicht existiert
-model_file = os.path.join(model_save_path, 'edge_gcn_model.pth')
 
+# Erstelle das results/models Verzeichnis im Projektverzeichnis
+results_dir = os.path.join(project_root, 'results', 'models')
+os.makedirs(results_dir, exist_ok=True)  # Erstelle das Verzeichnis, falls es nicht existiert
+
+# Dateipfad zum Speichern des Modells
+model_file = os.path.join(results_dir, 'edge_gcn_model.pth')
+
+# Speichere das Modell
 torch.save(model.state_dict(), model_file)
+
 print(f'Modell wurde gespeichert unter {model_file}')
