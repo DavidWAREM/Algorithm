@@ -1,126 +1,190 @@
+import logging
+import argparse
+import yaml
 import os
-import pandas as pd
-import numpy as np
-import torch
-import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
-from torch_geometric.data import Data
-from sklearn.model_selection import train_test_split
+from src.logging_config import setup_logging  # Custom logging setup
+from src.data.data_load import CSVDataLoader  # Custom class for loading CSV data
+from src.data.data_preprocess import FeatureEngineer  # Feature engineering utility for data preprocessing
+from src.models.train_GBR import GradientBoostingModel  # Gradient Boosting model class for training
+from src.evaluation.evaluation_GBR import GBRModelEvaluator  # Model evaluator for Gradient Boosting
+from src.models.train_ANN import ANNModel  # ANN model class for training
+from src.evaluation.evaluation_ANN import ANNModelEvaluator  # Model evaluator for ANN
+from src.data.datapreperation_GNN import GraphDataset  # Graph data preparation for GNN
+from src.models.train_GNN import GNNModel  # GNN model class for training
+from src.models.train_XGB import XGBoostModel  # XGBoost model class for training
+from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator  # XGBoost model evaluator
 
-# Funktion zum Laden der Daten
-def load_data(node_file, edge_file):
-    nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
-    edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
-
-    node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
-    edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
-    edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
-
-    edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
-    node_features = nodes_df.drop(columns=['KNAM']).values
-    edge_labels = edges_df['RAU'].values
-
-    x = torch.tensor(node_features, dtype=torch.float)
-    y = torch.tensor(edge_labels, dtype=torch.float)
-    edge_index = torch.tensor(edge_index, dtype=torch.long)
-    data = Data(x=x, edge_index=edge_index)
-
-    return data, y
-
-# GCN-Modell für Kantenregression
-class EdgeGCN(torch.nn.Module):
-    def __init__(self, num_node_features, output_dim):
-        super(EdgeGCN, self).__init__()
-        self.conv1 = GCNConv(num_node_features, 16)
-        self.conv2 = GCNConv(16, 16)
-        self.fc_edge = torch.nn.Linear(32, output_dim)
-
-    def forward(self, data):
-        x, edge_index = data.x, data.edge_index
-        x = self.conv1(x, edge_index)
-        x = F.relu(x)
-        x = F.dropout(x, training=self.training)
-        x = self.conv2(x, edge_index)
-        edge_embeddings = torch.cat([x[edge_index[0]], x[edge_index[1]]], dim=1)
-        edge_predictions = self.fc_edge(edge_embeddings).squeeze()
-        return edge_predictions
-
-# Trainingsfunktion
-def train(data, y, model, optimizer):
-    model.train()
-    optimizer.zero_grad()
-    out = model(data)
-    loss = F.mse_loss(out, y)
-    loss.backward()
-    optimizer.step()
-    return loss.item()
-
-# Testfunktion
-def test(data, y, model):
-    model.eval()
-    with torch.no_grad():
-        out = model(data)
-        mse = F.mse_loss(out, y)
-    return mse.item()
-
-# Lade mehrere Datensätze (z.B. 10 Datensätze für das Training)
-datasets = []
-
-# Verzeichnis für die Dateien angeben
-directory = r'C:/Users/D.Muehlfeld/Documents/Berechnungsdaten/Zwischenspeicher/'
-
-for i in range(1, 10000):
-    node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
-    edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
-    data, y = load_data(node_file, edge_file)
-    datasets.append((data, y))
+# Import for GCN-specific logic
+from data_load_GCN import load_data  # GCN data loading
+from data_preprocess_GCN import preprocess_data  # GCN data preprocessing
+from train_GCN import EdgeGCN, train  # GCN model and training function
+from evaluaten_GCN import test  # GCN evaluation function
+from predictions_GCN import load_model, make_predictions  # GCN model loading and predictions
 
 
-# Teile die Daten in 80% Training und 20% Testen auf
-train_data, test_data = train_test_split(datasets, test_size=0.2, random_state=42)
+def main():
+    """
+    Main function for running the training process for various machine learning models.
 
-# Überprüfe die Größe der aufgeteilten Datensätze
-print(f"Anzahl der Trainingsdatensätze: {len(train_data)}")
-print(f"Anzahl der Testdatensätze: {len(test_data)}")
+    This function sets up logging, loads the configuration file, and parses the command-line arguments
+    to select which algorithm (e.g., Gradient Boosting, ANN, GNN, XGBoost) will be trained and evaluated.
+    """
+    setup_logging()  # Initialize logging configuration
+    logger = logging.getLogger(__name__)  # Create a logger for this script
+
+    # Get the absolute path to the configuration file
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))  # Move up one level to the project root
+    config_path = os.path.join(project_root, 'config', 'config.yaml')  # Path to the configuration file
+
+    # Load the YAML configuration file
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+
+    # Parse command-line arguments to choose the algorithm for training
+    parser = argparse.ArgumentParser(description='Train a model')
+    parser.add_argument('--algorithm', type=str, required=True,
+                        help='Algorithm to train (e.g., gradient_boosting, XGB, XGB Hyperparameter)')
+    args = parser.parse_args()
+
+    # Log the algorithm selected for training
+    logger.info(f"Training with algorithm: {args.algorithm}")
+
+    # Conditional logic based on the selected algorithm from the command-line arguments
+    if args.algorithm == 'gradient_boosting':
+        # Load and preprocess data for Gradient Boosting
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        # Perform feature engineering
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
+        # Initialize and train the Gradient Boosting model
+        model = GradientBoostingModel()
+        model.train(X_train, y_train)
+        model.save_model()  # Save the trained model
+
+        # Evaluate the Gradient Boosting model and visualize results
+        GBRModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    elif args.algorithm == 'ANN':
+        # Load and preprocess data for Artificial Neural Network (ANN)
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        # Perform feature engineering
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
+        # Initialize and train the ANN model
+        model = ANNModel(input_shape=X_train.shape[1])  # Input shape based on the number of features
+        model.train(X_train, y_train)
+        model.save_model()  # Save the trained model
+
+        # Evaluate the ANN model and visualize results
+        ANNModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    elif args.algorithm == 'GNN':
+        # Train a Graph Neural Network (GNN)
+        folder_path_data = config['paths']['folder_path_data']
+        folder_path_data_GNN_dataset = config['paths']['folder_path_data_GNN_dataset']
+
+        # Prepare the graph dataset
+        graph_dataset = GraphDataset(folder_path_data, folder_path_data_GNN_dataset)
+
+        # Initialize, train, and evaluate the GNN model
+        gnn_model = GNNModel(folder_path=folder_path_data, save_path=folder_path_data_GNN_dataset)
+        gnn_model.run_training()
+        gnn_model.evaluate()
+        gnn_model.save_model()
+
+    elif args.algorithm == 'XGB':
+        # Load and preprocess data for XGBoost
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        # Perform feature engineering
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
+        # Initialize and train the XGBoost model
+        model = XGBoostModel()
+        model.train(X_train, y_train)
+        model.save_model()  # Save the trained model
+
+        # Evaluate the XGBoost model and visualize results
+        XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    elif args.algorithm == 'XGB Hyperparameter':
+        # Load and preprocess data for XGBoost with hyperparameter tuning
+        data_loader = CSVDataLoader(config_file=config_path)
+        all_data = data_loader.get_data()
+
+        # Perform feature engineering
+        feature_engineer = FeatureEngineer(all_data)
+        feature_engineer.process_features()
+        X_train, X_test, y_train, y_test = feature_engineer.get_processed_data()
+
+        # Perform hyperparameter tuning, train, and evaluate the XGBoost model
+        model = XGBoostModel()
+        model.hyperparameter_tuning(X_train, y_train)  # Tune the hyperparameters
+        model.train(X_train, y_train)
+        model.save_model()  # Save the trained model
+
+        # Evaluate the XGBoost model with tuned hyperparameters
+        XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    elif args.algorithm == 'GCN':
+        # Load and preprocess data for Graph Convolutional Network (GCN)
+        folder_path_data = config['paths']['folder_path_data']
+
+        datasets = []
+        for i in range(1, 10000):
+            node_file = f'{folder_path_data}/SyntheticData-Spechbach_Roughness_{i}_Node.csv'
+            edge_file = f'{folder_path_data}/SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
+            nodes_df, edges_df = load_data(node_file, edge_file)
+            data, y = preprocess_data(nodes_df, edges_df)
+            datasets.append((data, y))
+
+        # Split the data into 80% training and 20% testing
+        train_data, test_data = train_test_split(datasets, test_size=0.2, random_state=42)
+
+        # Initialize and train the GCN model
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = EdgeGCN(num_node_features=train_data[0][0].x.shape[1], output_dim=1).to(device)
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+
+        for epoch in range(100):
+            total_loss = 0
+            for data, y in train_data:
+                data = data.to(device)
+                y = y.to(device)
+                total_loss += train(data, y, model, optimizer)
+            if epoch % 10 == 0:
+                logger.info(f'Epoch {epoch:03d}, Loss: {total_loss:.4f}')
+
+        # Test the GCN model
+        total_mse = 0
+        for data, y in test_data:
+            data = data.to(device)
+            y = y.to(device)
+            total_mse += test(data, y, model)
+        logger.info(f'Total MSE: {total_mse:.4f}')
+
+        # Save the GCN model
+        results_dir = os.path.join(project_root, 'results', 'models')
+        os.makedirs(results_dir, exist_ok=True)
+        model_file = os.path.join(results_dir, 'edge_gcn_model.pth')
+        torch.save(model.state_dict(), model_file)
+        logger.info(f'Modell wurde gespeichert unter {model_file}')
+
+    # Log the completion of training and evaluation
+    logger.info("Training and evaluation completed successfully")
 
 
-# Initialisiere das Modell
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = EdgeGCN(num_node_features=train_data[0][0].x.shape[1], output_dim=1).to(device)
-
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
-
-# Trainiere das Modell auf den Trainingsdatensätzen
-for epoch in range(100):
-    total_loss = 0
-    for data, y in train_data:
-        data = data.to(device)
-        y = y.to(device)
-        total_loss += train(data, y, model, optimizer)
-    if epoch % 10 == 0:
-        print(f'Epoch {epoch:03d}, Loss: {total_loss:.4f}')
-
-# Teste das Modell
-total_mse = 0
-for data, y in test_data:
-    data = data.to(device)
-    y = y.to(device)
-    total_mse += test(data, y, model)
-print(f'Total MSE: {total_mse:.4f}')
-
-
-
-# Holen des Wurzelverzeichnisses des Pycharm-Projekts (2 Ebenen über der aktuellen Datei)
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-# Erstelle das results/models Verzeichnis im Projektverzeichnis
-results_dir = os.path.join(project_root, 'results', 'models')
-os.makedirs(results_dir, exist_ok=True)  # Erstelle das Verzeichnis, falls es nicht existiert
-
-# Dateipfad zum Speichern des Modells
-model_file = os.path.join(results_dir, 'edge_gcn_model.pth')
-
-# Speichere das Modell
-torch.save(model.state_dict(), model_file)
-
-print(f'Modell wurde gespeichert unter {model_file}')
+if __name__ == '__main__':
+    main()  # Entry point: run the main function if this script is executed directly

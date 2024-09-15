@@ -2,6 +2,7 @@ import logging
 import argparse
 import yaml
 import os
+import torch
 from src.logging_config import setup_logging  # Custom logging setup
 from src.data.data_load import CSVDataLoader  # Custom class for loading CSV data
 from src.data.data_preprocess import FeatureEngineer  # Feature engineering utility for data preprocessing
@@ -13,6 +14,11 @@ from src.data.datapreperation_GNN import GraphDataset  # Graph data preparation 
 from src.models.train_GNN import GNNModel  # GNN model class for training
 from src.models.train_XGB import XGBoostModel  # XGBoost model class for training
 from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator  # XGBoost model evaluator
+from src.data.data_load_GCN import GCNDataLoader
+from src.data.data_preprocess_GCN import GCNDataPreprocessor
+from src.models.train_GCN import GCNTrainer, GCNModel
+from src.evaluation.evaluation_GCN import GCNTester
+
 
 
 def main():
@@ -130,6 +136,40 @@ def main():
 
         # Evaluate the XGBoost model with tuned hyperparameters
         XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)
+
+    elif args.algorithm == "GCN":
+        folder_path_data = config['paths']['folder_path_data']
+
+        # 1. Lade alle Datensätze
+        data_loader = GCNDataLoader(folder_path_data, num_datasets=100)
+        datasets = data_loader.load_all_data()
+
+        # 2. Preprocess und splitte die Daten in Trainings- und Testdatensätze
+        preprocessor = GCNDataPreprocessor()
+        train_data, test_data = preprocessor.split_data(datasets, test_size=0.2)
+
+        # 3. Initialisiere das Modell
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = GCNModel(num_node_features=train_data[0][0].x.shape[1], output_dim=1)
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+
+        # 4. Trainiere das Modell
+        trainer = GCNTrainer(model=model, optimizer=optimizer, device=device)
+        trainer.train_model(train_data)
+
+        # 5. Teste das Modell
+        # Teste das Modell
+        tester = GCNTester(model=model, device=device)
+        total_mse, rmse, r2 = tester.test_model(test_data)
+        # Logge die MSE, RMSE und R²-Werte
+        logger.info(f'Total MSE: {total_mse:.4f}, RMSE: {rmse:.4f}, R²: {r2:.4f}')
+
+        # Speichern des Modells
+        results_dir = os.path.join(project_root, 'results', 'models')
+        os.makedirs(results_dir, exist_ok=True)
+        model_file = os.path.join(results_dir, 'edge_gcn_model.pth')
+        torch.save(model.state_dict(), model_file)
+        logger.info(f'Modell wurde gespeichert unter {model_file}')
 
     # Log the completion of training and evaluation
     logger.info("Training and evaluation completed successfully")
