@@ -1,46 +1,45 @@
 import os
 import pandas as pd
 import torch
+import numpy as np
 from torch_geometric.data import Data, DataLoader
-from torch_geometric.nn import GCNConv
+from torch_geometric.nn import GCNConv, GATConv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-import numpy as np
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
 
-# Function to load data with additional node features
+# Function to load data with One-Hot Encoding for 'ROHRTYP'
 def load_data(node_file, edge_file):
-    # Load node and edge data
     nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
     edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
 
-    # Create a mapping for node names to indices
     node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
     edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
     edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
-    # One-hot encode the 'ROHRTYP' column in the edge data
+    # One-Hot Encoding on 'ROHRTYP'
     edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP')
 
-    # Create the edge index tensor
     edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
+    node_features = nodes_df.drop(columns=['KNAM']).values
 
-    # Use node features: Geographic features (XRECHTS, YHOCH, GEOH) + Physical properties (ZUFLUSS, PMESS, PRECH, DP, HP)
-    geographic_features = ['XRECHTS', 'YHOCH', 'GEOH']
-    physical_features = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
-    node_features = nodes_df[geographic_features + physical_features].values
+    # Concatenating new physical properties
+    node_features = nodes_df[['ZUFLUSS', 'PMESS', 'GEOH', 'PRECH', 'DP', 'XRECHTS', 'YHOCH', 'HP']].values
 
-    # Use edge attributes (RORL, DM, FLUSS, etc.)
-    edge_attributes = edges_df[
-        ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)].values
-
-    # Standardize the node and edge features
+    # Standardize physical properties
     scaler = StandardScaler()
     node_features = scaler.fit_transform(node_features)
-    edge_attributes = scaler.fit_transform(edge_attributes)
 
-    # Convert the data to tensors
+    edge_attributes = edges_df[[
+                                   'RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] +
+                               list(edges_df.filter(like='ROHRTYP').columns)
+                               ].values
+
+    edge_attributes = edge_attributes.astype(float)
+
     x = torch.tensor(node_features, dtype=torch.float)
     edge_index = torch.tensor(edge_index, dtype=torch.long)
     edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
@@ -51,12 +50,12 @@ def load_data(node_file, edge_file):
     return data
 
 
-# GCN Model for edge regression
-class EdgeGCN(torch.nn.Module):
-    def __init__(self, num_node_features, num_edge_features, hidden_dim=16, output_dim=1):
-        super(EdgeGCN, self).__init__()
-        self.conv1 = GCNConv(num_node_features, hidden_dim)
-        self.conv2 = GCNConv(hidden_dim, hidden_dim)
+# GAT Model for Edge Prediction
+class EdgeGAT(torch.nn.Module):
+    def __init__(self, num_node_features, num_edge_features, hidden_dim=78, output_dim=1, dropout=0.205):
+        super(EdgeGAT, self).__init__()
+        self.conv1 = GATConv(num_node_features, hidden_dim, dropout=dropout)
+        self.conv2 = GATConv(hidden_dim, hidden_dim, dropout=dropout)
         self.edge_mlp = torch.nn.Sequential(
             torch.nn.Linear(num_edge_features, hidden_dim),
             torch.nn.ReLU(),
@@ -72,6 +71,7 @@ class EdgeGCN(torch.nn.Module):
         x = self.conv2(x, edge_index)
 
         edge_features = self.edge_mlp(edge_attr)
+
         edge_embeddings = torch.cat([x[edge_index[0]], x[edge_index[1]], edge_features], dim=1)
         edge_predictions = self.fc_edge(edge_embeddings).squeeze()
 
@@ -100,16 +100,17 @@ def plot_predictions(y_true, y_pred):
     plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], '--r', linewidth=2)
     plt.xlabel('True Values')
     plt.ylabel('Predicted Values')
-    plt.title('GCN - True vs Predicted')
+    plt.title('GAT - True vs Predicted')
     plt.show()
 
 
-# Main function for the training process
+# Main function with hyperparameter tuning, learning rate scheduler, and early stopping
 def main():
     directory = r'C:/Users/D.Muehlfeld/Documents/Berechnungsdaten/Zwischenspeicher/'
 
     datasets = []
-    for i in range(1, 1000):  # Load data for 10 networks
+
+    for i in range(1, 10000):
         node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
         data = load_data(node_file, edge_file)
@@ -118,15 +119,33 @@ def main():
     loader = DataLoader(datasets, batch_size=32, shuffle=True)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = EdgeGCN(num_node_features=datasets[0].x.shape[1], num_edge_features=datasets[0].edge_attr.shape[1]).to(
+    model = EdgeGAT(num_node_features=datasets[0].x.shape[1], num_edge_features=datasets[0].edge_attr.shape[1]).to(
         device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.0088, weight_decay=2.9e-5)
+
+    # Learning rate scheduler
+    scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, verbose=True)
 
     num_epochs = 100
+    best_loss = float('inf')
+    early_stop_counter = 0
+
     for epoch in range(num_epochs):
         loss = train(loader, model, optimizer, device)
-        if epoch % 10 == 0:
-            print(f'Epoch {epoch:03d}, Training Loss: {loss:.4f}')
+        print(f'Epoch {epoch:03d}, Training Loss: {loss:.4f}')
+
+        # Early stopping based on best validation loss
+        scheduler.step(loss)
+        if loss < best_loss:
+            best_loss = loss
+            early_stop_counter = 0
+            torch.save(model.state_dict(), 'best_model.pth')
+        else:
+            early_stop_counter += 1
+
+        if early_stop_counter > 10:
+            print("Early stopping due to no improvement")
+            break
 
     # Get predictions for plotting
     model.eval()
@@ -145,7 +164,6 @@ def main():
     plot_predictions(y_true, y_pred)
 
     model_path = os.path.join(directory, 'edge_gcn_model.pth')
-    torch.save(model.state_dict(), model_path)
     print(f'Model saved at: {model_path}')
 
 
