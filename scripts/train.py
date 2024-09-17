@@ -3,47 +3,42 @@ import argparse
 import yaml
 import os
 import torch
-from src.logging_config import setup_logging  # Custom logging setup
-from src.data.data_load import CSVDataLoader  # Custom class for loading CSV data
-from src.data.data_preprocess import FeatureEngineer  # Feature engineering utility for data preprocessing
-from src.models.train_GBR import GradientBoostingModel  # Gradient Boosting model class for training
-from src.evaluation.evaluation_GBR import GBRModelEvaluator  # Model evaluator for Gradient Boosting
-from src.models.train_ANN import ANNModel  # ANN model class for training
-from src.evaluation.evaluation_ANN import ANNModelEvaluator  # Model evaluator for ANN
-from src.data.datapreperation_GNN import GraphDataset  # Graph data preparation for GNN
-from src.models.train_GNN import GNNModel  # GNN model class for training
-from src.models.train_XGB import XGBoostModel  # XGBoost model class for training
-from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator  # XGBoost model evaluator
+import optuna
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+
+from Erstellung_Beispieldatensatz import num_edges
+from src.logging_config import setup_logging
+from src.data.data_load import CSVDataLoader
+from src.data.data_preprocess import FeatureEngineer
+from src.models.train_GBR import GradientBoostingModel
+from src.evaluation.evaluation_GBR import GBRModelEvaluator
+from src.models.train_ANN import ANNModel
+from src.evaluation.evaluation_ANN import ANNModelEvaluator
+from src.data.datapreperation_GNN import GraphDataset
+from src.models.train_GNN import GNNModel
+from src.models.train_XGB import XGBoostModel
+from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator
 from src.data.data_load_GCN import GCNDataLoader
 from src.data.data_preprocess_GCN import GCNDataPreprocessor
 from src.models.train_GCN import GCNTrainer, GCNModel
 from src.evaluation.evaluation_GCN import GCNTester
 
 
-
 def main():
-    """
-    Main function for running the training process for various machine learning models.
+    setup_logging()
+    logger = logging.getLogger(__name__)
 
-    This function sets up logging, loads the configuration file, and parses the command-line arguments
-    to select which algorithm (e.g., Gradient Boosting, ANN, GNN, XGBoost) will be trained and evaluated.
-    """
-    setup_logging()  # Initialize logging configuration
-    logger = logging.getLogger(__name__)  # Create a logger for this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))
+    config_path = os.path.join(project_root, 'config', 'config.yaml')
 
-    # Get the absolute path to the configuration file
-    script_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the script
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir))  # Move up one level to the project root
-    config_path = os.path.join(project_root, 'config', 'config.yaml')  # Path to the configuration file
-
-    # Load the YAML configuration file
     with open(config_path, 'r') as file:
         config = yaml.safe_load(file)
 
-    # Parse command-line arguments to choose the algorithm for training
+    # Verwende einen einzigen Argumentparser
     parser = argparse.ArgumentParser(description='Train a model')
-    parser.add_argument('--algorithm', type=str, required=True,
-                        help='Algorithm to train (e.g., gradient_boosting, XGB, XGB Hyperparameter)')
+    parser.add_argument('--algorithm', type=str, required=True, help='Algorithm to train (e.g., GCN, XGB)')
+    parser.add_argument('--hyperparameter_search', action='store_true', help='Run hyperparameter search with Optuna')
     args = parser.parse_args()
 
     # Log the algorithm selected for training
@@ -140,40 +135,71 @@ def main():
     elif args.algorithm == "GCN":
         folder_path_data = config['paths']['folder_path_data']
 
-        # 1. Lade alle Datensätze
-        data_loader = GCNDataLoader(folder_path_data, num_datasets=100)
+        # Initialize data loader and load all datasets
+        data_loader = GCNDataLoader(folder_path_data, num_datasets=10)
         datasets = data_loader.load_all_data()
 
-        # 2. Preprocess und splitte die Daten in Trainings- und Testdatensätze
+        # Initialize the preprocessor (with scaling of both node and edge data)
         preprocessor = GCNDataPreprocessor()
         train_data, test_data = preprocessor.split_data(datasets, test_size=0.2)
 
-        # 3. Initialisiere das Modell
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model = GCNModel(num_node_features=train_data[0][0].x.shape[1], output_dim=1)
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 
-        # 4. Trainiere das Modell
+        # Debugging: print structure of train_data
+        print(f"Structure of train_data[0]: {train_data[0]}")
+
+
+
+
+        if args.hyperparameter_search:
+            def objective(trial):
+                hidden_dim = trial.suggest_int('hidden_dim', 16, 128)
+                lr = trial.suggest_loguniform('lr', 1e-5, 1e-2)
+                weight_decay = trial.suggest_loguniform('weight_decay', 1e-6, 1e-2)
+
+                # Initialize model with trial parameters and pass num_edge_features
+                model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
+                                 output_dim=1, hidden_dim=hidden_dim)
+                optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+
+                # Train and test model
+                trainer = GCNTrainer(model=model, optimizer=optimizer, device=device)
+                trainer.train_model(train_data)
+                tester = GCNTester(model=model, device=device)
+                total_mse, rmse, r2 = tester.test_model(test_data)
+                return total_mse
+
+            # Run hyperparameter tuning with Optuna
+            study = optuna.create_study(direction='minimize')
+            study.optimize(objective, n_trials=50)
+
+            logger.info(f"Best trial: {study.best_params}")
+            best_params = study.best_params
+
+            # Use the best hyperparameters for final evaluation
+            model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
+                             output_dim=1, hidden_dim=best_params['hidden_dim'])
+            optimizer = torch.optim.Adam(model.parameters(), lr=best_params['lr'],
+                                         weight_decay=best_params['weight_decay'])
+
+        else:
+
+            num_edge_features = train_data[0][1]# Use default hyperparameters
+            model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
+                             output_dim=1, hidden_dim=27)
+            optimizer = torch.optim.Adam(model.parameters(), lr=9.63e-05, weight_decay=6.81e-05)
+
+        # Train the model
         trainer = GCNTrainer(model=model, optimizer=optimizer, device=device)
         trainer.train_model(train_data)
 
-        # 5. Teste das Modell
-        # Teste das Modell
+        # Test and evaluate the model
         tester = GCNTester(model=model, device=device)
         total_mse, rmse, r2 = tester.test_model(test_data)
-        # Logge die MSE, RMSE und R²-Werte
         logger.info(f'Total MSE: {total_mse:.4f}, RMSE: {rmse:.4f}, R²: {r2:.4f}')
 
-        # Speichern des Modells
-        results_dir = os.path.join(project_root, 'results', 'models')
-        os.makedirs(results_dir, exist_ok=True)
-        model_file = os.path.join(results_dir, 'edge_gcn_model.pth')
-        torch.save(model.state_dict(), model_file)
-        logger.info(f'Modell wurde gespeichert unter {model_file}')
-
-    # Log the completion of training and evaluation
     logger.info("Training and evaluation completed successfully")
 
 
 if __name__ == '__main__':
-    main()  # Entry point: run the main function if this script is executed directly
+    main()

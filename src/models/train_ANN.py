@@ -1,6 +1,7 @@
 import logging
 import os
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.optimizers import Adam
@@ -8,21 +9,12 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
+
 class ANNModel:
     def __init__(self, input_shape, learning_rate=0.001):
         self.model = self.build_ann_model(input_shape, learning_rate)
 
     def build_ann_model(self, input_shape, learning_rate):
-        """
-        Build and compile the ANN model.
-
-        Parameters:
-        input_shape (int): The number of input features.
-        learning_rate (float): Learning rate for the optimizer.
-
-        Returns:
-        model: Compiled Keras model.
-        """
         model = Sequential()
         model.add(Dense(64, activation='relu', input_shape=(input_shape,)))
         model.add(Dropout(0.2))
@@ -33,32 +25,12 @@ class ANNModel:
         return model
 
     def train(self, X_train, y_train, validation_split=0.2, epochs=100, batch_size=32, patience=10):
-        """
-        Train the ANN model.
-
-        Parameters:
-        X_train (array): Scaled training features.
-        y_train (array): Training targets.
-        validation_split (float): Fraction of the training data to be used as validation data.
-        epochs (int): Number of epochs to train the model.
-        batch_size (int): Number of samples per gradient update.
-        patience (int): Number of epochs with no improvement after which training will be stopped.
-
-        Returns:
-        history: Training history.
-        """
         early_stopping = EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True)
         history = self.model.fit(X_train, y_train, validation_split=validation_split, epochs=epochs, batch_size=batch_size, callbacks=[early_stopping], verbose=1)
         logging.info("Model training completed.")
         return history
 
     def save_model(self, file_name="ann_model.h5"):
-        """
-        Save the trained model to a file in the 'results/models' directory.
-
-        Parameters:
-        file_name (str): Name of the file where the model will be saved.
-        """
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
         results_dir = os.path.join(project_root, 'results', 'models')
         os.makedirs(results_dir, exist_ok=True)
@@ -68,15 +40,6 @@ class ANNModel:
 
     @staticmethod
     def load_model(file_name="ann_model.h5"):
-        """
-        Load a trained ANN model from a file in the 'results/models' directory.
-
-        Parameters:
-        file_name (str): Name of the file where the model is saved.
-
-        Returns:
-        model: The loaded Keras model.
-        """
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
         results_dir = os.path.join(project_root, 'results', 'models')
         file_path = os.path.join(results_dir, file_name)
