@@ -169,7 +169,7 @@ def main():
     edge_scaler.fit(edges_df_first[edge_columns])
 
     # Load all datasets with scaling and positional encoding
-    for i in range(1, 11):  # Limiting to 10 datasets for faster execution
+    for i in range(1, 10000):  # Limiting to 10 datasets for faster execution
         node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
         data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler)
