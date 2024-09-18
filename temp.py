@@ -7,10 +7,11 @@ from torch_geometric.nn import GATConv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import mean_squared_error, r2_score
 
 
-# Funktion zum Laden der Daten mit One-Hot-Encoding für 'ROHRTYP'
-def load_data(node_file, edge_file, physical_scaler, geo_scaler):
+# Funktion zum Laden der Daten mit One-Hot-Encoding für 'ROHRTYP' und Skalierung von Knoten- und Kantenmerkmalen
+def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
     edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
 
@@ -18,12 +19,14 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler):
     edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
     edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
+    # One-Hot-Encoding for ROHRTYP column (categorical data)
     edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP')
 
+    # Prepare edge index and node features
     edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
     node_features = nodes_df.drop(columns=['KNAM']).values
 
-    # Skalierung der physikalischen und geografischen Daten
+    # Skalierung der physikalischen und geografischen Daten (numerical data)
     physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
@@ -32,11 +35,14 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler):
 
     node_features = nodes_df.drop(columns=['KNAM']).values
 
-    edge_attributes = edges_df[
-        ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)].values
+    # Skalierung der Kantenattribute (numerical data)
+    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE']
+    numerical_edge_attributes = edge_scaler.transform(edges_df[edge_columns])
 
-    edge_attributes = edge_attributes.astype(float)
+    # Combine numerical edge attributes with one-hot encoded ROHRTYP
+    edge_attributes = np.concatenate([numerical_edge_attributes, edges_df.filter(like='ROHRTYP').values], axis=1)
 
+    # Convert everything to PyTorch tensors
     x = torch.tensor(node_features, dtype=torch.float)
     edge_index = torch.tensor(edge_index, dtype=torch.long)
     edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
@@ -115,25 +121,29 @@ def main():
     # Physikalische und geografische Spalten
     physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
+    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE']
 
     # Lade die erste Datei, um die Skaler zu fitten
     node_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Node.csv'
     edge_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Pipes.csv'
 
     nodes_df_first = pd.read_csv(node_file_first, delimiter=';', decimal='.')
+    edges_df_first = pd.read_csv(edge_file_first, delimiter=';', decimal='.')
 
     # Fitte die StandardScaler für physikalische und geografische Daten
     physical_scaler = StandardScaler()
     geo_scaler = MinMaxScaler()
+    edge_scaler = StandardScaler()
 
     physical_scaler.fit(nodes_df_first[physical_columns])
     geo_scaler.fit(nodes_df_first[geo_columns])
+    edge_scaler.fit(edges_df_first[edge_columns])
 
-    # Lade alle Datensätze mit den Skalierten Werten
-    for i in range(1, 10000):
+    # Lade alle Datensätze mit den skalierten Werten
+    for i in range(1, 10000):  # Limiting to 10 datasets for faster execution
         node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
-        data = load_data(node_file, edge_file, physical_scaler, geo_scaler)
+        data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler)
         datasets.append(data)
 
     loader = DataLoader(datasets, batch_size=32, shuffle=True)
@@ -165,7 +175,16 @@ def main():
     # Plot true vs predicted values
     plot_predictions(y_true, y_pred)
 
-    model_path = os.path.join(directory, 'edge_gcn_model.pth')
+    # Berechne MSE, RMSE und R²
+    mse = mean_squared_error(y_true, y_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_true, y_pred)
+
+    print(f'Test MSE: {mse:.4f}')
+    print(f'Test RMSE: {rmse:.4f}')
+    print(f'R² Score: {r2:.4f}')
+
+    model_path = os.path.join(directory, 'edge_gat_model.pth')
     torch.save(model.state_dict(), model_path)
     print(f'Modell wurde gespeichert unter: {model_path}')
 
