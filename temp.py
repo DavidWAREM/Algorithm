@@ -8,9 +8,18 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.metrics import mean_squared_error, r2_score
+from math import pi
 
 
-# Funktion zum Laden der Daten mit One-Hot-Encoding für 'ROHRTYP' und Skalierung von Knoten- und Kantenmerkmalen
+# Function to add positional encodings using sine and cosine for geographic coordinates
+def add_positional_encoding(df, columns, max_value=10000):
+    for col in columns:
+        df[f'{col}_sin'] = np.sin(df[col] * (2 * pi / max_value))
+        df[f'{col}_cos'] = np.cos(df[col] * (2 * pi / max_value))
+    return df
+
+
+# Function to load data with One-Hot-Encoding for 'ROHRTYP' and scaling of node/edge features
 def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
     edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
@@ -19,30 +28,30 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
     edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
-    # One-Hot-Encoding for ROHRTYP column (categorical data)
     edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP')
 
-    # Prepare edge index and node features
     edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
     node_features = nodes_df.drop(columns=['KNAM']).values
 
-    # Skalierung der physikalischen und geografischen Daten (numerical data)
+    # Scale physical and geographical data
     physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
+    # Apply scaling
     nodes_df[physical_columns] = physical_scaler.transform(nodes_df[physical_columns])
     nodes_df[geo_columns] = geo_scaler.transform(nodes_df[geo_columns])
 
+    # Add positional encoding for geographic columns
+    nodes_df = add_positional_encoding(nodes_df, geo_columns)
+
     node_features = nodes_df.drop(columns=['KNAM']).values
 
-    # Skalierung der Kantenattribute (numerical data)
-    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE']
-    numerical_edge_attributes = edge_scaler.transform(edges_df[edge_columns])
+    # Scale edge attributes
+    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
+    edges_df[edge_columns] = edge_scaler.transform(edges_df[edge_columns])
 
-    # Combine numerical edge attributes with one-hot encoded ROHRTYP
-    edge_attributes = np.concatenate([numerical_edge_attributes, edges_df.filter(like='ROHRTYP').values], axis=1)
+    edge_attributes = edges_df[edge_columns].values
 
-    # Convert everything to PyTorch tensors
     x = torch.tensor(node_features, dtype=torch.float)
     edge_index = torch.tensor(edge_index, dtype=torch.long)
     edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
@@ -53,7 +62,7 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     return data
 
 
-# GAT-Modell für Kantenregression
+# GAT model with edge regression
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=16, output_dim=1, dropout=0.2):
         super(EdgeGAT, self).__init__()
@@ -81,8 +90,8 @@ class EdgeGAT(torch.nn.Module):
         return edge_predictions
 
 
-# Trainingsfunktion
-def train(loader, model, optimizer, device, early_stopping=None):
+# Training function
+def train(loader, model, optimizer, device):
     model.train()
     total_loss = 0
     for batch in loader:
@@ -93,12 +102,26 @@ def train(loader, model, optimizer, device, early_stopping=None):
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
-
-    # Early stopping if provided
-    if early_stopping:
-        early_stopping(total_loss)
-
     return total_loss / len(loader)
+
+
+# Test function
+def test(loader, model, device):
+    model.eval()
+    total_mse = 0
+    y_true_list = []
+    y_pred_list = []
+    with torch.no_grad():
+        for batch in loader:
+            batch = batch.to(device)
+            out = model(batch)
+            total_mse += F.mse_loss(out, batch.y).item()
+            y_true_list.append(batch.y.cpu().numpy())
+            y_pred_list.append(out.cpu().numpy())
+
+    y_true = np.concatenate(y_true_list)
+    y_pred = np.concatenate(y_pred_list)
+    return total_mse / len(loader), y_true, y_pred
 
 
 # Plot true vs predicted values
@@ -112,35 +135,41 @@ def plot_predictions(y_true, y_pred):
     plt.show()
 
 
-# Hauptfunktion für den Trainingsprozess
+# Main function with extended training and early stopping
 def main():
     directory = r'C:/Users/D.Muehlfeld/Documents/Berechnungsdaten/Zwischenspeicher/'
 
     datasets = []
 
-    # Physikalische und geografische Spalten
+    # Physical and geographic columns
     physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
-    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE']
 
-    # Lade die erste Datei, um die Skaler zu fitten
+    # Load the first dataset for scaling
     node_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Node.csv'
     edge_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Pipes.csv'
 
     nodes_df_first = pd.read_csv(node_file_first, delimiter=';', decimal='.')
     edges_df_first = pd.read_csv(edge_file_first, delimiter=';', decimal='.')
 
-    # Fitte die StandardScaler für physikalische und geografische Daten
+    # Apply one-hot encoding to 'ROHRTYP' column
+    edges_df_first = pd.get_dummies(edges_df_first, columns=['ROHRTYP'], prefix='ROHRTYP')
+
+    # Fit scalers for physical and geographical data
     physical_scaler = StandardScaler()
     geo_scaler = MinMaxScaler()
     edge_scaler = StandardScaler()
 
     physical_scaler.fit(nodes_df_first[physical_columns])
     geo_scaler.fit(nodes_df_first[geo_columns])
+
+    # Update edge_columns to include 'ROHRTYP' dummy variables
+    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df_first.filter(like='ROHRTYP').columns)
+
     edge_scaler.fit(edges_df_first[edge_columns])
 
-    # Lade alle Datensätze mit den skalierten Werten
-    for i in range(1, 10000):  # Limiting to 10 datasets for faster execution
+    # Load all datasets with scaling and positional encoding
+    for i in range(1, 11):  # Limiting to 10 datasets for faster execution
         node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
         data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler)
@@ -153,40 +182,50 @@ def main():
                     hidden_dim=78, dropout=0.205).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0088, weight_decay=2.9e-05)
 
-    num_epochs = 100
+    # Learning rate scheduler
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+
+    num_epochs = 300  # Extended training
+    best_loss = float('inf')
+    patience = 10
+    patience_counter = 0
+
     for epoch in range(num_epochs):
+        # Training step
         loss = train(loader, model, optimizer, device)
+
+        # Check learning rate schedule
+        scheduler.step(loss)
+
         if epoch % 10 == 0:
             print(f'Epoch {epoch:03d}, Training Loss: {loss:.4f}')
 
-    # Get predictions for plotting
-    model.eval()
-    y_true_list = []
-    y_pred_list = []
-    with torch.no_grad():
-        for batch in loader:
-            batch = batch.to(device)
-            y_true_list.append(batch.y.cpu().numpy())
-            y_pred_list.append(model(batch).cpu().numpy())
+        # Check early stopping condition
+        if loss < best_loss:
+            best_loss = loss
+            patience_counter = 0  # Reset patience counter if loss improves
+        else:
+            patience_counter += 1
 
-    y_true = np.concatenate(y_true_list)
-    y_pred = np.concatenate(y_pred_list)
+        if patience_counter >= patience:
+            print(f"Early stopping at epoch {epoch}.")
+            break
+
+    # Get predictions and test metrics
+    test_mse, y_true, y_pred = test(loader, model, device)
+    test_rmse = np.sqrt(test_mse)
+    test_r2 = r2_score(y_true, y_pred)
+
+    print(f'Test MSE: {test_mse:.4f}')
+    print(f'Test RMSE: {test_rmse:.4f}')
+    print(f'R² Score: {test_r2:.4f}')
 
     # Plot true vs predicted values
     plot_predictions(y_true, y_pred)
 
-    # Berechne MSE, RMSE und R²
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y_true, y_pred)
-
-    print(f'Test MSE: {mse:.4f}')
-    print(f'Test RMSE: {rmse:.4f}')
-    print(f'R² Score: {r2:.4f}')
-
-    model_path = os.path.join(directory, 'edge_gat_model.pth')
+    model_path = os.path.join(directory, 'edge_gat_model_positional_encoding.pth')
     torch.save(model.state_dict(), model_path)
-    print(f'Modell wurde gespeichert unter: {model_path}')
+    print(f'Model saved at: {model_path}')
 
 
 if __name__ == "__main__":
