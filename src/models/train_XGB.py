@@ -1,9 +1,10 @@
+import logging
+import numpy as np
 import os
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
-import numpy as np
-import logging
+
 
 
 class XGBoostModel:
@@ -12,7 +13,7 @@ class XGBoostModel:
     """
 
     def __init__(self):
-        logging.info("Initializing XGBoost model with predefined parameters.")
+#        logging.info("Initializing XGBoost model with predefined parameters.")
         # Parameters for the XGBoost model using GPU for training.
         self.params = {
             'objective': 'reg:squarederror',
@@ -24,7 +25,7 @@ class XGBoostModel:
             'n_estimators': 600,
             'subsample': 0.9
         }
-        logging.debug(f"XGBoost parameters: {self.params}")
+#        logging.debug(f"XGBoost parameters: {self.params}")
         self.model = xgb.XGBRegressor(**self.params)
 
     def hyperparameter_tuning(self, X_train, y_train):

@@ -5,8 +5,6 @@ import os
 import torch
 import optuna
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
-from Erstellung_Beispieldatensatz import num_edges
 from src.logging_config import setup_logging
 from src.data.data_load import CSVDataLoader
 from src.data.data_preprocess import FeatureEngineer
@@ -17,7 +15,7 @@ from src.evaluation.evaluation_ANN import ANNModelEvaluator
 from src.data.datapreperation_GNN import GraphDataset
 from src.models.train_GNN import GNNModel
 from src.models.train_XGB import XGBoostModel
-from src.evaluation.evaluaten_XGB import XGBoostModelEvaluator
+from src.evaluation.evaluation_XGB import XGBoostModelEvaluator
 from src.data.data_load_GCN import GCNDataLoader
 from src.data.data_preprocess_GCN import GCNDataPreprocessor
 from src.models.train_GCN import GCNTrainer, GCNModel
