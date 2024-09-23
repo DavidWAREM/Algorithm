@@ -51,8 +51,12 @@ class XGBoostModel:
 
     def train(self, X_train, y_train):
         self.logger.info("Starting training.")
-        self.model.fit(X_train, y_train)
-        self.logger.info("Training completed.")
+        try:
+            self.logger.debug(f"Training data shape: {X_train.shape}, Target shape: {y_train.shape}")
+            self.model.fit(X_train, y_train)
+            self.logger.info("Training completed.")
+        except Exception as e:
+            self.logger.error(f"Error during training: {str(e)}", exc_info=True)
 
     def save_model(self, file_name="xgboost_model.json"):
         self.logger.info(f"Saving model to file: {file_name}")

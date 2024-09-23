@@ -4,6 +4,7 @@ import xgboost as xgb
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, r2_score
+from datetime import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_regression
 
@@ -36,9 +37,6 @@ class XGBoostModelEvaluator:
         rmse = np.sqrt(mse)  # Root Mean Squared Error
         r2 = r2_score(y_test, y_pred)  # R-squared (coefficient of determination)
 
-        # Log the evaluation metrics
-        logger.info(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
-
         # Plot the true vs predicted values
         plt.figure(figsize=(10, 5))
         plt.scatter(y_test, y_pred, alpha=0.7)
@@ -46,6 +44,31 @@ class XGBoostModelEvaluator:
         plt.xlabel('True Values')
         plt.ylabel('Predicted Values')
         plt.title('XGBoost - True vs Predicted')
+
+        # Add the metrics to the plot as text
+        metrics_text = f"MSE: {mse:.4f}\nRMSE: {rmse:.4f}\nR²: {r2:.4f}"
+        plt.text(0.05, 0.95, metrics_text, transform=plt.gca().transAxes, fontsize=12, verticalalignment='top',
+                 bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white'))
+
+        # Remove legend if not needed
+        # plt.legend()  # Remove this line if no labels are explicitly added to the plot
+
+        # Generate the directory path for saving the plot
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'results')
+        os.makedirs(results_dir, exist_ok=True)
+
+        # Create a filename with the current date and time
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"XGB_{timestamp}.png"
+        file_path = os.path.join(results_dir, file_name)
+
+        # Save the plot
+        plt.savefig(file_path)
+        logger.info(f"Plot saved to {file_path}")
+
+        # Show the plot
         plt.show()
 
-
+        # Print the evaluation metrics to the console
+        print(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
