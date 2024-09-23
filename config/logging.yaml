@@ -1,29 +1,30 @@
-version: 1
-disable_existing_loggers: False
+version: 1  # Version number of the logging configuration schema
+disable_existing_loggers: False  # Do not disable existing loggers (allows logging from other modules)
 
-formatters:
-  simple:
-    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+formatters:  # Formatters define the layout of log messages
+  simple:  # A simple formatter
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'  # Specifies the format: timestamp, logger name, log level, and the log message
 
-handlers:
-  console:
-    class: logging.StreamHandler
-    level: INFO
-    formatter: simple
-    stream: ext://sys.stdout
+handlers:  # Handlers define where log messages are sent (e.g., console, files)
+  console:  # Handler for logging to the console (stdout)
+    class: logging.StreamHandler  # Specifies logging to the console
+    level: INFO  # Only log messages with level INFO or higher (e.g., INFO, WARNING, ERROR)
+    formatter: simple  # Use the "simple" formatter defined above
+    stream: ext://sys.stdout  # Output stream is the console (stdout)
 
-  file_handler:
-    class: logging.FileHandler
-    level: DEBUG
-    formatter: simple
-    filename: logs/logging.log
+  file_handler:  # Handler for logging to a file
+    class: logging.FileHandler  # Specifies logging to a file
+    level: DEBUG  # Log messages with level DEBUG or higher (e.g., DEBUG, INFO, WARNING, ERROR)
+    formatter: simple  # Use the "simple" formatter
+    filename: logs/logging.log  # Log file path
+    mode: 'w' # Overwrite the log file every time the progrum runs
 
-loggers:
-  my_module:
-    level: DEBUG
-    handlers: [console, file_handler]
-    propagate: no
+loggers:  # Custom loggers for specific modules or libraries
+  my_module:  # Custom logger for the module "my_module"
+    level: DEBUG  # Log messages with level DEBUG or higher for this logger
+    handlers: [console, file_handler]  # Use both console and file handlers for this logger
+    propagate: no  # Prevent the logger from propagating messages to higher-level loggers (e.g., root logger)
 
-root:
-  level: DEBUG
-  handlers: [console, file_handler]
+root:  # The root logger (used by all modules if no custom logger is specified)
+  level: DEBUG  # Log messages with level DEBUG or higher
+  handlers: [console, file_handler]  # Use both console and file handlers for the root logger

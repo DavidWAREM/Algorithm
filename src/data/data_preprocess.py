@@ -200,41 +200,4 @@ class PredictionPreprocessor:
         return self.processed_data  # Return the preprocessed data
 
 
-# Example usage for training data
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    logging.info("Starting FeatureEngineer example usage.")
-
-    # Simulated data loading process
-    all_data = [
-        ('file1.csv', pd.DataFrame(
-            {'RORL': [1, 2, 3], 'DM': [1, 2, 3], 'RAU': [1, 2, 3], 'FLUSS': [1, 2, 3], 'VM': [1, 2, 3],
-             'DPREL': [1, 2, 3], 'RAISE': [1, 2, 3], 'DP': [1, 2, 3]})),
-        ('file2.csv', pd.DataFrame(
-            {'RORL': [4, 5, 6], 'DM': [4, 5, 6], 'RAU': [4, 5, 6], 'FLUSS': [4, 5, 6], 'VM': [4, 5, 6],
-             'DPREL': [4, 5, 6], 'RAISE': [4, 5, 6], 'DP': [4, 5, 6]}))
-    ]
-
-    # Initialize and run the FeatureEngineer for the simulated data
-    engineer = FeatureEngineer(all_data)
-    engineer.process_features()  # Run feature engineering
-    X_train, X_test, y_train, y_test = engineer.get_processed_data()  # Retrieve processed data
-    logging.info(f"Training data shape: {X_train.shape}")
-    logging.info(f"Testing data shape: {X_test.shape}")
-    logging.info(f"Training target shape: {y_train.shape}")
-    logging.info(f"Testing target shape: {y_test.shape}")
-    logging.info("FeatureEngineer example usage completed.")
-
-    # Example usage for prediction data
-    new_data = pd.DataFrame(
-        {'RORL': [7, 8, 9], 'DM': [7, 8, 9], 'FLUSS': [7, 8, 9], 'VM': [7, 8, 9], 'DPREL': [7, 8, 9],
-         'RAISE': [7, 8, 9], 'DP': [7, 8, 9]}
-    )
-
-    # Initialize and run the PredictionPreprocessor for new data
-    prediction_preprocessor = PredictionPreprocessor(new_data)
-    prediction_preprocessor.load_transformers()  # Load transformers
-    processed_new_data = prediction_preprocessor.preprocess()  # Preprocess the new data
-    logging.info(f"Processed new data shape: {processed_new_data.shape}")
-    logging.info("PredictionPreprocessor example usage completed.")

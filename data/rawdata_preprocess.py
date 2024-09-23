@@ -15,12 +15,12 @@ class DataProcessor:
         The constructor sets up the necessary attributes such as the DataFrame to process and the file path details.
         It also extracts the base filename and directory to use for saving output files.
         """
+        self.logger = logging.getLogger(__name__)  # Initialize logger
         self.dataframe = dataframe  # The DataFrame provided for processing.
         self.original_file_path = original_file_path  # The original file's path, used for saving files.
         self.directory = os.path.dirname(original_file_path)  # The directory where the file is located.
-        self.base_filename = os.path.splitext(os.path.basename(original_file_path))[
-            0]  # Extract the base filename without extension.
-        logging.info(f"DataProcessor initialized with file path: {original_file_path}")
+        self.base_filename = os.path.splitext(os.path.basename(original_file_path))[0]  # Extract the base filename without extension.
+        self.logger.info(f"DataProcessor initialized with file path: {original_file_path}")
 
     def split_data(self):
         """
@@ -65,10 +65,10 @@ class DataProcessor:
             lei_columns_present = [col for col in lei_columns if col in lei_df.columns]
             lei_df = lei_df[lei_columns_present]
 
-            logging.info("Data split successfully into 'KNO' and 'LEI'")
+            self.logger.info("Data split successfully into 'KNO' and 'LEI'")
             return kno_df, lei_df  # Return the split DataFrames.
         except Exception as e:
-            logging.error(f"Error splitting data: {e}")  # Log the error if splitting fails.
+            self.logger.error(f"Error splitting data: {e}")  # Log the error if splitting fails.
             return None, None  # Return None for both DataFrames in case of error.
 
     def save_dataframes(self):
@@ -88,11 +88,11 @@ class DataProcessor:
                 # Save 'LEI' DataFrame as CSV.
                 lei_df.to_csv(lei_path, index=False, sep=';')
 
-                logging.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
+                self.logger.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
             else:
-                logging.error("DataFrames could not be saved due to an earlier error.")
+                self.logger.error("DataFrames could not be saved due to an earlier error.")
         except Exception as e:
-            logging.error(f"Error saving DataFrames: {e}")  # Log any errors encountered during saving.
+            self.logger.error(f"Error saving DataFrames: {e}")  # Log any errors encountered during saving.
 
     def combine_connected_pipes(self, kno_df, lei_df):
         """
@@ -108,7 +108,7 @@ class DataProcessor:
         It groups pipes that share the same 'ANFNAM' or 'ENDNAM' and have the same 'ROHRTYP', assigning a 'GroupID' to them.
         """
         if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
-            logging.debug("ABGAENGE and KNAM columns found in kno_df.")
+            self.logger.debug("ABGAENGE and KNAM columns found in kno_df.")
             kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Ensure 'ABGAENGE' is numeric.
             found = False  # Flag to check if any matches are found.
 
@@ -123,7 +123,7 @@ class DataProcessor:
 
             # Iterate over each row in 'kno_df' where 'ABGAENGE' equals 2 (indicating a connection point).
             for idx, row in kno_df.iterrows():
-                logging.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']} at index {idx}")
+                self.logger.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']} at index {idx}")
                 if row['ABGAENGE'] == 2:
                     found = True  # Set the flag to true when a match is found.
 
@@ -134,12 +134,12 @@ class DataProcessor:
                     # Log and process matches from 'ANFNAM' and 'ENDNAM' columns.
                     for lei_idx in matching_anf_df.index:
                         rohrtyp = matching_anf_df.at[lei_idx, 'ROHRTYP']
-                        logging.debug(
+                        self.logger.debug(
                             f"Matching KNAM value found in lei_df (ANFNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
 
                     for lei_idx in matching_end_df.index:
                         rohrtyp = matching_end_df.at[lei_idx, 'ROHRTYP']
-                        logging.debug(
+                        self.logger.debug(
                             f"Matching KNAM value found in lei_df (ENDNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
 
                     # Further match pipes by comparing 'ANFNAM', 'ENDNAM', and 'ROHRTYP'.
@@ -147,10 +147,10 @@ class DataProcessor:
                         for end_idx in matching_end_df.index:
                             if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
                                     matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
-                                logging.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
-                                              f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
-                                              f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
-                                              f"indices {anf_idx} and {end_idx}")
+                                self.logger.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
+                                                  f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
+                                                  f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
+                                                  f"indices {anf_idx} and {end_idx}")
 
                                 # Store the matched rows in a new row of the DataFrame.
                                 new_row = {
@@ -171,22 +171,22 @@ class DataProcessor:
                                     lei_df.at[anf_idx, 'GroupID'] = n
                                     lei_df.at[end_idx, 'GroupID'] = n
                                     n += 1  # Increment the group counter for the next group.
-                                    logging.debug(f"Assigned GroupID {n - 1} to both indices {anf_idx} and {end_idx}")
+                                    self.logger.debug(f"Assigned GroupID {n - 1} to both indices {anf_idx} and {end_idx}")
                                 elif lei_df.at[anf_idx, 'GroupID'] != '' and lei_df.at[end_idx, 'GroupID'] == '':
                                     lei_df.at[end_idx, 'GroupID'] = lei_df.at[anf_idx, 'GroupID']
-                                    logging.debug(f"Copied GroupID from {anf_idx} to {end_idx}")
+                                    self.logger.debug(f"Copied GroupID from {anf_idx} to {end_idx}")
                                 elif lei_df.at[anf_idx, 'GroupID'] == '' and lei_df.at[end_idx, 'GroupID'] != '':
                                     lei_df.at[anf_idx, 'GroupID'] = lei_df.at[end_idx, 'GroupID']
-                                    logging.debug(f"Copied GroupID from {end_idx} to {anf_idx}")
+                                    self.logger.debug(f"Copied GroupID from {end_idx} to {anf_idx}")
 
             if not found:
-                logging.info("No rows with ABGAENGE == 2 found.")  # Log if no matching rows were found.
+                self.logger.info("No rows with ABGAENGE == 2 found.")  # Log if no matching rows were found.
 
             # Save the DataFrame with the matched pairs.
             matched_pairs_df_path = os.path.join(self.directory + '\\Zwischenspeicher',
                                                  f"{self.base_filename}_matched_pairs.csv")
             matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
-            logging.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
+            self.logger.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
 
             # Save the updated 'lei_df' with 'GroupID' column back to a CSV file.
             lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
@@ -195,5 +195,5 @@ class DataProcessor:
             return lei_df  # Return the updated 'lei_df' with 'GroupID'.
 
         else:
-            logging.warning(
+            self.logger.warning(
                 "'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")  # Log warning if columns are missing.

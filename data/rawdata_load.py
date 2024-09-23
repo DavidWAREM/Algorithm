@@ -11,8 +11,9 @@ class DataLoader:
         Args:
             file_path (str): Path to the CSV file.
         """
+        self.logger = logging.getLogger(__name__)  # Initialize the logger
         self.file_path = file_path
-        logging.debug(f"DataLoader initialized with file path: {file_path}")
+        self.logger.debug(f"DataLoader initialized with file path: {file_path}")
 
     """The functions `def find_max_columns`, `def clean_lines`, and `def custom_read_csv` were introduced because the
         raw data from STANET in CSV format caused errors when being read into Python. Issues included varying numbers
@@ -33,9 +34,9 @@ class DataLoader:
                     num_columns = len(line.split(';'))
                     if num_columns > max_columns:
                         max_columns = num_columns
-            logging.debug(f"Maximum number of columns found: {max_columns}")
+            self.logger.debug(f"Maximum number of columns found: {max_columns}")
         except Exception as e:
-            logging.error(f"Error finding max columns: {e}")
+            self.logger.error(f"Error finding max columns: {e}")
         return max_columns
 
     def clean_line(self, line, expected_columns):
@@ -53,7 +54,7 @@ class DataLoader:
         if len(fields) < expected_columns:
             fields += [''] * (expected_columns - len(fields))
         cleaned_line = ';'.join(fields[:expected_columns])
-        logging.debug(f"Cleaned line: {cleaned_line}")
+        self.logger.debug(f"Cleaned line: {cleaned_line}")
         return cleaned_line
 
     def custom_read_csv(self):
@@ -81,7 +82,7 @@ class DataLoader:
             dtype_dict = {i: 'str' for i in range(expected_columns)}
 
             # Log success message
-            logging.debug("CSV file read and cleaned successfully.")
+            self.logger.debug("CSV file read and cleaned successfully.")
 
             # Create DataFrame from cleaned content
             df = pd.read_csv(io.StringIO(cleaned_content), sep=';', encoding='ISO-8859-1', dtype=dtype_dict)
@@ -100,12 +101,12 @@ class DataLoader:
             with open(cleaned_file_path, 'w', encoding='ISO-8859-1') as cleaned_file:
                 cleaned_file.write(cleaned_content)
 
-            logging.debug(f"Cleaned CSV file saved to {cleaned_file_path}.")
+            self.logger.debug(f"Cleaned CSV file saved to {cleaned_file_path}.")
 
             return df
         except Exception as e:
             # Log error message
-            logging.error(f"Error reading and cleaning CSV file: {e}")
+            self.logger.error(f"Error reading and cleaning CSV file: {e}")
 
             # Return an empty DataFrame in case of error
             return pd.DataFrame()

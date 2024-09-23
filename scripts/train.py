@@ -43,7 +43,7 @@ def main():
     logger.info(f"Training with algorithm: {args.algorithm}")
 
     # Conditional logic based on the selected algorithm from the command-line arguments
-    if args.algorithm == 'gradient_boosting':
+    if args.algorithm == 'GBR':
         # Load and preprocess data for Gradient Boosting
         data_loader = CSVDataLoader(config_file=config_path)
         all_data = data_loader.get_data()
@@ -78,20 +78,6 @@ def main():
 
         # Evaluate the ANN model and visualize results
         ANNModelEvaluator.evaluate_and_visualize(X_test, y_test)
-
-    elif args.algorithm == 'GNN':
-        # Train a Graph Neural Network (GNN)
-        folder_path_data = config['paths']['folder_path_data']
-        folder_path_data_GNN_dataset = config['paths']['folder_path_data_GNN_dataset']
-
-        # Prepare the graph dataset
-        graph_dataset = GraphDataset(folder_path_data, folder_path_data_GNN_dataset)
-
-        # Initialize, train, and evaluate the GNN model
-        gnn_model = GNNModel(folder_path=folder_path_data, save_path=folder_path_data_GNN_dataset)
-        gnn_model.run_training()
-        gnn_model.evaluate()
-        gnn_model.save_model()
 
     elif args.algorithm == 'XGB':
         # Load and preprocess data for XGBoost

@@ -16,6 +16,11 @@ class CSVDataLoader:
         This class is responsible for loading CSV files from a specified folder, ensuring that they contain the required columns,
         and storing them for further processing.
         """
+
+        # Initialize get logger for data_load
+        self.logger = logging.getLogger(__name__)
+        self.logger.info("Logger set for data_load")
+
         # Get the absolute path to the config file relative to the project root
         script_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))  # Two levels up
@@ -35,6 +40,7 @@ class CSVDataLoader:
 
         # Load all valid CSV files from the folder
         self.load_all_data()
+
 
     def load_main_config(self, config_file):
         """
@@ -65,7 +71,7 @@ class CSVDataLoader:
         This function reads the CSV file and logs its shape for debugging purposes.
         """
         data = pd.read_csv(file_path, sep=';')  # Load CSV with ';' as the separator
-        logging.debug(f"Loaded data from {file_path} with shape {data.shape}")  # Log the shape of the loaded data
+        self.logger.debug(f"Loaded data from {file_path} with shape {data.shape}")  # Log the shape of the loaded data
         return data
 
     def load_all_data(self):
@@ -74,6 +80,8 @@ class CSVDataLoader:
 
         This function iterates over all files in the folder, filters those ending with '_Pipes.csv',
         and checks if they contain the required columns. If valid, the data is stored in a list.
+
+        Cave: Beachte, das ich hier aktuell nur die Rohre, nicht die Knoten lade!!
         """
         # Iterate through all files in the folder
         for file_name in os.listdir(self.folder_path):
@@ -82,11 +90,11 @@ class CSVDataLoader:
                 data = self.load_data_from_csv(file_path)  # Load the data from the CSV file
 
                 # Log the columns present in the current CSV file for debugging
-                logging.debug(f"Columns in {file_name}: {data.columns.tolist()}")
+                self.logger.debug(f"Columns in {file_name}: {data.columns.tolist()}")
 
                 # Check if all required columns are present in the DataFrame
                 if not all(column in data.columns for column in self.required_columns):
-                    logging.warning(
+                    self.logger.warning(
                         f"Required columns not found in file: {file_name}")  # Log a warning if columns are missing
                     continue  # Skip this file if required columns are missing
 
@@ -95,9 +103,11 @@ class CSVDataLoader:
 
         # If no valid files are found, raise an error
         if not self.all_data:
-            logging.error(
+            self.logger.error(
                 "No valid CSV files found with the required columns.")  # Log an error if no valid files are found
             raise ValueError("No valid CSV files found with the required columns.")  # Raise an exception
+
+        self.logger.info("All Data loaded.")
 
     def get_data(self):
         """
