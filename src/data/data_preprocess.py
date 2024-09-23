@@ -5,9 +5,6 @@ from sklearn.model_selection import train_test_split
 import joblib
 import os
 
-# Setup logging for the script with INFO level and a specific format
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 
 class FeatureEngineer:
     def __init__(self, all_data):
@@ -20,6 +17,7 @@ class FeatureEngineer:
         This class is responsible for handling feature engineering tasks, including combining data,
         generating polynomial features, scaling, and splitting the data into training and testing sets.
         """
+        self.logger = logging.getLogger(__name__)  # Initialize logger
         self.all_data = all_data  # Input data consisting of multiple DataFrames
         # Define paths for saving the polynomial transformer and scaler
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -34,7 +32,7 @@ class FeatureEngineer:
         self.y_test = None
         self.poly = None
         self.scaler = None
-        logging.debug("FeatureEngineer initialized with provided data.")
+        self.logger.debug("FeatureEngineer initialized with provided data.")
 
     def combine_data(self):
         """
@@ -43,8 +41,8 @@ class FeatureEngineer:
         This method concatenates multiple DataFrames into one and stores the result in `self.combined_data`.
         """
         self.combined_data = pd.concat([data for _, data in self.all_data])  # Combine all DataFrames
-        logging.info(f"Combined data shape: {self.combined_data.shape}")  # Log the shape of the combined data
-        logging.debug("Data combined successfully.")
+        self.logger.info(f"Combined data shape: {self.combined_data.shape}")  # Log the shape of the combined data
+        self.logger.debug("Data combined successfully.")
 
     def add_polynomial_features(self):
         """
@@ -62,13 +60,13 @@ class FeatureEngineer:
         X_combined = self.combined_data[['RORL', 'DM', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']]
         X_combined_poly = self.poly.fit_transform(X_combined)  # Generate polynomial features
         y_combined = self.combined_data['RAU']  # Target variable
-        logging.info("Feature engineering complete with polynomial features of degree 2")
-        logging.debug(
+        self.logger.info("Feature engineering complete with polynomial features of degree 2")
+        self.logger.debug(
             f"Polynomial features added. X_combined shape: {X_combined.shape}, X_combined_poly shape: {X_combined_poly.shape}")
 
         # Save the polynomial transformer to disk
         joblib.dump(self.poly, self.poly_save_path)
-        logging.info(f"Polynomial features transformer saved to {self.poly_save_path}")
+        self.logger.info(f"Polynomial features transformer saved to {self.poly_save_path}")
 
         return X_combined_poly, y_combined
 
@@ -90,8 +88,8 @@ class FeatureEngineer:
         """
         # Split the data into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X_combined_poly, y_combined, test_size=0.2, random_state=42)
-        logging.info("Data split into training and testing sets with test size 20%")
-        logging.debug(
+        self.logger.info("Data split into training and testing sets with test size 20%")
+        self.logger.debug(
             f"Data split completed. X_train shape: {X_train.shape}, X_test shape: {X_test.shape}, y_train shape: {y_train.shape}, y_test shape: {y_test.shape}")
         return X_train, X_test, y_train, y_test
 
@@ -109,13 +107,13 @@ class FeatureEngineer:
         self.scaler = StandardScaler()  # Initialize StandardScaler
         self.X_train_scaled = self.scaler.fit_transform(X_train)  # Scale the training data
         self.X_test_scaled = self.scaler.transform(X_test)  # Scale the testing data
-        logging.info("Data scaling complete using StandardScaler")
-        logging.debug(
+        self.logger.info("Data scaling complete using StandardScaler")
+        self.logger.debug(
             f"Data scaled. X_train_scaled shape: {self.X_train_scaled.shape}, X_test_scaled shape: {self.X_test_scaled.shape}")
 
         # Save the scaler to disk
         joblib.dump(self.scaler, self.scaler_save_path)
-        logging.info(f"Scaler saved to {self.scaler_save_path}")
+        self.logger.info(f"Scaler saved to {self.scaler_save_path}")
 
     def process_features(self):
         """
@@ -123,14 +121,14 @@ class FeatureEngineer:
 
         This method combines the data, adds polynomial features, splits the data, and scales the features.
         """
-        logging.info("Starting feature engineering process.")
+        self.logger.info("Starting feature engineering process.")
         self.combine_data()  # Combine all input data
         X_combined_poly, y_combined = self.add_polynomial_features()  # Add polynomial features
         X_train, X_test, y_train, y_test = self.split_data(X_combined_poly, y_combined)  # Split the data
         self.scale_data(X_train, X_test)  # Scale the data
         self.y_train = y_train  # Store the training target
         self.y_test = y_test  # Store the testing target
-        logging.info("Feature engineering process completed successfully.")
+        self.logger.info("Feature engineering process completed successfully.")
 
     def get_processed_data(self):
         """
@@ -144,7 +142,7 @@ class FeatureEngineer:
 
         This method returns the scaled training and testing features along with the corresponding target values.
         """
-        logging.debug("Processed data retrieved.")
+        self.logger.debug("Processed data retrieved.")
         return self.X_train_scaled, self.X_test_scaled, self.y_train, self.y_test
 
 
@@ -159,6 +157,7 @@ class PredictionPreprocessor:
         This class handles preprocessing for new data by loading previously saved transformers (polynomial and scaler)
         and applying them to the new data.
         """
+        self.logger = logging.getLogger(__name__)  # Initialize logger
         self.new_data = new_data
         # Define paths to load the saved polynomial transformer and scaler
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -169,7 +168,7 @@ class PredictionPreprocessor:
         self.poly = None
         self.scaler = None
         self.processed_data = None
-        logging.debug("PredictionPreprocessor initialized with provided data.")
+        self.logger.debug("PredictionPreprocessor initialized with provided data.")
 
     def load_transformers(self):
         """
@@ -179,7 +178,8 @@ class PredictionPreprocessor:
         """
         self.poly = joblib.load(self.poly_path)  # Load the polynomial transformer
         self.scaler = joblib.load(self.scaler_path)  # Load the scaler
-        logging.info("Loaded polynomial transformer and scaler from disk.")
+        self.logger.info("Loaded polynomial transformer and scaler from disk.")
+
 
     def preprocess(self):
         """
@@ -190,13 +190,13 @@ class PredictionPreprocessor:
 
         This method applies the saved polynomial transformer and scaler to the new data and returns the result.
         """
-        logging.info("Starting preprocessing for prediction data.")
+        self.logger.info("Starting preprocessing for prediction data.")
         # Select the relevant columns from the new data for preprocessing
         X_new = self.new_data[['RORL', 'DM', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']]
         X_new_poly = self.poly.transform(X_new)  # Apply the polynomial transformation
         X_new_scaled = self.scaler.transform(X_new_poly)  # Scale the transformed data
         self.processed_data = pd.DataFrame(X_new_scaled)  # Store the processed data as a DataFrame
-        logging.info("Preprocessing for prediction data completed successfully.")
+        self.logger.info("Preprocessing for prediction data completed successfully.")
         return self.processed_data  # Return the preprocessed data
 
 

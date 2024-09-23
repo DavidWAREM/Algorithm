@@ -4,6 +4,8 @@ import xgboost as xgb
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import make_regression
 
 class XGBoostModelEvaluator:
     @staticmethod
@@ -47,29 +49,3 @@ class XGBoostModelEvaluator:
         plt.show()
 
 
-
-if __name__ == "__main__":
-    """
-    Example usage of the XGBoostModelEvaluator.
-
-    This script generates dummy regression data, trains an XGBoost model (assumed to be pre-saved), 
-    and evaluates the model using the test data.
-    """
-    # Generate dummy regression data using sklearn's make_regression
-    X, y = make_regression(n_samples=1000, n_features=20, noise=0.1, random_state=42)
-
-    # Split the dataset into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Initialize and train a dummy XGBoost model for demonstration purposes
-    model = xgb.XGBRegressor(objective="reg:squarederror", tree_method="hist", device='cuda')
-    model.fit(X_train, y_train)
-
-    # Ensure the results/models directory exists
-    os.makedirs('results/models', exist_ok=True)
-
-    # Save the trained model in the results/models directory with a specific file extension
-    model.save_model(os.path.join('results', 'models', 'xgboost_model.json'))  # Save as JSON for clarity
-
-    # Evaluate and visualize using the saved model
-    XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)

@@ -5,6 +5,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 from src.prediction.predictions_ANN import ANNPrediction
 
 class ANNModelEvaluator:
+    # Initialize a logger for this class
+    logger = logging.getLogger(__name__)
+
     @staticmethod
     def evaluate_and_visualize(X_test, y_test):
         """
@@ -32,7 +35,7 @@ class ANNModelEvaluator:
         r2 = r2_score(y_test, y_pred)  # R² score (coefficient of determination)
 
         # Log the evaluation results
-        logging.info(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
+        ANNModelEvaluator.logger.info(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
 
         # Plot True vs Predicted values
         plt.figure(figsize=(10, 5))

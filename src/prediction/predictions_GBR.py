@@ -11,6 +11,9 @@ class GradientBoostingPrediction:
         """
         Initialize the Gradient Boosting Prediction.
         """
+        # Initialize logger
+        self.logger = logging.getLogger(__name__)
+
         self.model = self.load_model()
 
     def load_model(self):
@@ -22,6 +25,7 @@ class GradientBoostingPrediction:
         """
         gb_model = GradientBoostingModel()
         model = gb_model.load_model()
+        self.logger.info("Model loaded successfully.")
         return model
 
     def predict(self, X):
@@ -35,35 +39,7 @@ class GradientBoostingPrediction:
         y_pred (array-like): Predicted values.
         """
         y_pred = self.model.predict(X)
+        self.logger.debug("Prediction completed.")
         return y_pred
 
 
-if __name__ == "__main__":
-    # Setup logging
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    # Create a sample regression dataset
-    X, y = make_regression(n_samples=1000, n_features=20, noise=0.1, random_state=42)
-
-    # Split the dataset into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-    # Initialize the Gradient Boosting Prediction with the trained model
-    gb_predict = GradientBoostingPrediction()
-
-    # Make predictions using the loaded model
-    y_pred = gb_predict.predict(X_test)
-
-    # Evaluate the model
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y_test, y_pred)
-
-    logging.info(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
-
-    # Print evaluation results
-    print(f"Model Evaluation - MSE: {mse}, RMSE: {rmse}, R2: {r2}")
-
-    # Print predicted values
-    print("Predicted values:")
-    print(y_pred)

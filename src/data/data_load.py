@@ -19,7 +19,7 @@ class CSVDataLoader:
 
         # Initialize get logger for data_load
         self.logger = logging.getLogger(__name__)
-        self.logger.info("Logger set for data_load")
+        self.logger.debug("Logger set for data_load")
 
         # Get the absolute path to the config file relative to the project root
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -107,7 +107,7 @@ class CSVDataLoader:
                 "No valid CSV files found with the required columns.")  # Log an error if no valid files are found
             raise ValueError("No valid CSV files found with the required columns.")  # Raise an exception
 
-        self.logger.info("All Data loaded.")
+        self.logger.info("All data loaded.")
 
     def get_data(self):
         """

@@ -1,3 +1,4 @@
+import logging
 import xgboost as xgb
 import numpy as np
 
@@ -14,9 +15,13 @@ class XGBoostPrediction:
         Parameters:
         model_file (str): Name of the file where the model is saved. Defaults to "xgboost_model.model".
         """
+        # Initialize logger
+        self.logger = logging.getLogger(__name__)
+
         # Load the saved XGBoost model
         self.model = xgb.Booster()
         self.model.load_model(model_file)
+        self.logger.info(f"Model loaded from {model_file}")
 
     def predict(self, X):
         """
@@ -30,15 +35,6 @@ class XGBoostPrediction:
         """
         # Create DMatrix for predictions
         dmatrix = xgb.DMatrix(X)
-        return self.model.predict(dmatrix)
-
-
-if __name__ == "__main__":
-    # Test data for predictions
-    X_test = np.random.rand(100, 20)
-
-    # Make predictions with XGBoost
-    predictor = XGBoostPrediction()
-    predictions = predictor.predict(X_test)
-
-    print("Predictions:", predictions)
+        predictions = self.model.predict(dmatrix)
+        self.logger.debug("Prediction completed.")
+        return predictions

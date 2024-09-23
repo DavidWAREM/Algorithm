@@ -2,6 +2,7 @@ import logging
 import os
 from tensorflow.keras.models import load_model
 
+
 class ANNPrediction:
     def __init__(self, file_name="ann_model.h5"):
         """
@@ -10,6 +11,9 @@ class ANNPrediction:
         Parameters:
         file_name (str): Name of the file where the model is saved.
         """
+        # Initialize logger
+        self.logger = logging.getLogger(__name__)
+
         self.model = self.load_model(file_name)
 
     def load_model(self, file_name):
@@ -26,7 +30,7 @@ class ANNPrediction:
         results_dir = os.path.join(project_root, 'results', 'models')
         file_path = os.path.join(results_dir, file_name)
         model = load_model(file_path)
-        logging.info(f"Model loaded from {file_path}")
+        self.logger.info(f"Model loaded from {file_path}")
         return model
 
     def predict(self, X):
@@ -40,4 +44,5 @@ class ANNPrediction:
         y_pred (array-like): Predicted values.
         """
         y_pred = self.model.predict(X)
+        self.logger.debug("Prediction completed.")
         return y_pred

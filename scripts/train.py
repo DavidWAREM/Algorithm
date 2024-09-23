@@ -12,14 +12,8 @@ from src.models.train_GBR import GradientBoostingModel
 from src.evaluation.evaluation_GBR import GBRModelEvaluator
 from src.models.train_ANN import ANNModel
 from src.evaluation.evaluation_ANN import ANNModelEvaluator
-from src.data.datapreperation_GNN import GraphDataset
-from src.models.train_GNN import GNNModel
 from src.models.train_XGB import XGBoostModel
 from src.evaluation.evaluation_XGB import XGBoostModelEvaluator
-from src.data.data_load_GCN import GCNDataLoader
-from src.data.data_preprocess_GCN import GCNDataPreprocessor
-from src.models.train_GCN import GCNTrainer, GCNModel
-from src.evaluation.evaluation_GCN import GCNTester
 
 
 def main():
