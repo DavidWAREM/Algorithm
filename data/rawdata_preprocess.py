@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import logging
+import re
 
 
 class DataProcessor:
@@ -52,10 +53,10 @@ class DataProcessor:
             lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
             # Define relevant columns for each DataFrame.
-            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'PMESS', 'GEOH', 'PRECH',
-                           'DP', 'XRECHTS', 'YHOCH', 'HP']
+            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'GEOH', 'PRECH',
+                             'XRECHTS', 'YHOCH', 'HP']
             lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
-                           'VM', 'DP', 'DPREL', 'ROHRTYP', 'RAISE']
+                           'VM', 'DPREL', 'ROHRTYP', 'RAISE']
 
             # Ensure that only relevant columns in kno_columns are extracted from kno_df.
             kno_columns_present = [col for col in kno_columns if col in kno_df.columns]
@@ -70,6 +71,8 @@ class DataProcessor:
         except Exception as e:
             self.logger.error(f"Error splitting data: {e}")  # Log the error if splitting fails.
             return None, None  # Return None for both DataFrames in case of error.
+
+
 
     def save_dataframes(self):
         """
@@ -94,106 +97,112 @@ class DataProcessor:
         except Exception as e:
             self.logger.error(f"Error saving DataFrames: {e}")  # Log any errors encountered during saving.
 
-    def combine_connected_pipes(self, kno_df, lei_df):
+
+class DataCombiner:
+    def __init__(self, directory):
         """
-        Log 'KNAM' values for rows where 'ABGAENGE' equals 2 in the 'kno_df' DataFrame,
-        and log the indices of matching 'KNAM' values in the 'lei_df' DataFrame if 'ANFNAM' and 'ENDNAM' match
-        and 'ROHRTYP' matches as well. Save matched pairs in a new DataFrame.
+        Initializes the DataCombiner with the directory where the 'Zwischenspeicher' folder is located.
 
         Args:
-            kno_df (pd.DataFrame): The DataFrame containing node data ('KNO').
-            lei_df (pd.DataFrame): The DataFrame containing pipe data ('LEI').
-
-        This method identifies matching pipes in the 'LEI' DataFrame based on node connections in the 'KNO' DataFrame.
-        It groups pipes that share the same 'ANFNAM' or 'ENDNAM' and have the same 'ROHRTYP', assigning a 'GroupID' to them.
+            directory (str): The base directory path containing the 'Zwischenspeicher' folder.
         """
-        if 'ABGAENGE' in kno_df.columns and 'KNAM' in kno_df.columns:
-            self.logger.debug("ABGAENGE and KNAM columns found in kno_df.")
-            kno_df['ABGAENGE'] = pd.to_numeric(kno_df['ABGAENGE'], errors='coerce')  # Ensure 'ABGAENGE' is numeric.
-            found = False  # Flag to check if any matches are found.
+        self.logger = logging.getLogger(__name__)
+        self.directory = directory
+        self.logger.info(f"DataCombiner initialized with directory: {directory}")
 
-            # Add a new 'GroupID' column to 'lei_df' to store group information for connected pipes.
-            lei_df['GroupID'] = ''
+    def combine_with_without_load(self, file_type):
+        """
+        Combines data from 'with_load' and 'without_load' CSV files based on matching numbers in filenames.
+        This function processes either 'Pipes' or 'Node' type files, merges the relevant columns, and saves
+        the result into a new CSV file, excluding the '_with' part from the file name.
 
-            # Initialize an empty DataFrame to store matched pairs of connected pipes.
-            matched_pairs_df = pd.DataFrame(columns=['anf_idx', 'end_idx', 'ANFNAM', 'ENDNAM', 'ROHRTYP'])
+        Args:
+            file_type (str): The type of file to combine, either 'Pipes' or 'Node'.
+        """
+        try:
+            # Construct the path to the 'Zwischenspeicher' directory
+            zwischenspeicher_dir = os.path.join(self.directory, 'Zwischenspeicher')
+            self.logger.info(f"Looking for files in directory: {zwischenspeicher_dir}")
 
-            # Initialize a counter for assigning unique GroupIDs.
-            n = 1
+            if not os.path.exists(zwischenspeicher_dir):
+                self.logger.error(f"'Zwischenspeicher' directory not found at: {zwischenspeicher_dir}")
+                return
 
-            # Iterate over each row in 'kno_df' where 'ABGAENGE' equals 2 (indicating a connection point).
-            for idx, row in kno_df.iterrows():
-                self.logger.debug(f"Checking row with ABGAENGE={row['ABGAENGE']} and KNAM={row['KNAM']} at index {idx}")
-                if row['ABGAENGE'] == 2:
-                    found = True  # Set the flag to true when a match is found.
+            # Initialize dictionaries to store with_load and without_load files
+            with_load_files = {}
+            without_load_files = {}
 
-                    # Find matching pipes in 'lei_df' with the same 'ANFNAM' or 'ENDNAM'.
-                    matching_anf_df = lei_df[lei_df['ANFNAM'] == row['KNAM']]
-                    matching_end_df = lei_df[lei_df['ENDNAM'] == row['KNAM']]
+            # Loop through files in the 'Zwischenspeicher' directory and match based on file_type
+            for file in os.listdir(zwischenspeicher_dir):
+                with_load_match = re.match(rf"(.+)_with_load_(\d+)_({file_type})\.csv", file)
+                without_load_match = re.match(rf"(.+)_without_load_(\d+)_({file_type})\.csv", file)
 
-                    # Log and process matches from 'ANFNAM' and 'ENDNAM' columns.
-                    for lei_idx in matching_anf_df.index:
-                        rohrtyp = matching_anf_df.at[lei_idx, 'ROHRTYP']
-                        self.logger.debug(
-                            f"Matching KNAM value found in lei_df (ANFNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
+                if with_load_match:
+                    number = with_load_match.group(2)
+                    with_load_files[number] = os.path.join(zwischenspeicher_dir, file)
+                    self.logger.debug(f"Found with_load file: {file} with number: {number}")
+                elif without_load_match:
+                    number = without_load_match.group(2)
+                    without_load_files[number] = os.path.join(zwischenspeicher_dir, file)
+                    self.logger.debug(f"Found without_load file: {file} with number: {number}")
 
-                    for lei_idx in matching_end_df.index:
-                        rohrtyp = matching_end_df.at[lei_idx, 'ROHRTYP']
-                        self.logger.debug(
-                            f"Matching KNAM value found in lei_df (ENDNAM) at index {lei_idx} with ROHRTYP={rohrtyp}")
+            # Process matching pairs of with_load and without_load files
+            for number in with_load_files.keys():
+                if number in without_load_files:
+                    wl_file = with_load_files[number]
+                    wol_file = without_load_files[number]
+                    self.logger.info(f"Combining with_load file: {wl_file} and without_load file: {wol_file}")
 
-                    # Further match pipes by comparing 'ANFNAM', 'ENDNAM', and 'ROHRTYP'.
-                    for anf_idx in matching_anf_df.index:
-                        for end_idx in matching_end_df.index:
-                            if (matching_anf_df.at[anf_idx, 'ANFNAM'] == matching_end_df.at[end_idx, 'ENDNAM'] and
-                                    matching_anf_df.at[anf_idx, 'ROHRTYP'] == matching_end_df.at[end_idx, 'ROHRTYP']):
-                                self.logger.debug(f"Matching row found: ANFNAM={matching_anf_df.at[anf_idx, 'ANFNAM']}, "
-                                                  f"ENDNAM={matching_end_df.at[end_idx, 'ENDNAM']}, "
-                                                  f"ROHRTYP={matching_anf_df.at[anf_idx, 'ROHRTYP']}, "
-                                                  f"indices {anf_idx} and {end_idx}")
+                    # Read both CSV files into dataframes
+                    df_wl = pd.read_csv(wl_file, sep=';')
+                    df_wol = pd.read_csv(wol_file, sep=';')
 
-                                # Store the matched rows in a new row of the DataFrame.
-                                new_row = {
-                                    'anf_idx': anf_idx,
-                                    'end_idx': end_idx,
-                                    'ANFNAM_anf': matching_anf_df.at[anf_idx, 'ANFNAM'],
-                                    'ENDNAM_anf': matching_anf_df.at[anf_idx, 'ENDNAM'],
-                                    'ANFNAM_end': matching_end_df.at[end_idx, 'ANFNAM'],
-                                    'ENDNAM_end': matching_end_df.at[end_idx, 'ENDNAM'],
-                                    'ROHRTYP_anf': matching_anf_df.at[anf_idx, 'ROHRTYP'],
-                                    'ROHRTYP_end': matching_end_df.at[end_idx, 'ROHRTYP']
-                                }
-                                matched_pairs_df = pd.concat([matched_pairs_df, pd.DataFrame([new_row])],
-                                                             ignore_index=True)
+                    if file_type == 'Pipes':
+                        # Columns for 'Pipes' files
+                        key_columns = ['ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'ROHRTYP', 'RAISE']
+                        self.logger.debug(f"Key columns for 'Pipes': {key_columns}")
 
-                                # Assign or copy 'GroupID' between connected pipes.
-                                if lei_df.at[anf_idx, 'GroupID'] == '' and lei_df.at[end_idx, 'GroupID'] == '':
-                                    lei_df.at[anf_idx, 'GroupID'] = n
-                                    lei_df.at[end_idx, 'GroupID'] = n
-                                    n += 1  # Increment the group counter for the next group.
-                                    self.logger.debug(f"Assigned GroupID {n - 1} to both indices {anf_idx} and {end_idx}")
-                                elif lei_df.at[anf_idx, 'GroupID'] != '' and lei_df.at[end_idx, 'GroupID'] == '':
-                                    lei_df.at[end_idx, 'GroupID'] = lei_df.at[anf_idx, 'GroupID']
-                                    self.logger.debug(f"Copied GroupID from {anf_idx} to {end_idx}")
-                                elif lei_df.at[anf_idx, 'GroupID'] == '' and lei_df.at[end_idx, 'GroupID'] != '':
-                                    lei_df.at[anf_idx, 'GroupID'] = lei_df.at[end_idx, 'GroupID']
-                                    self.logger.debug(f"Copied GroupID from {end_idx} to {anf_idx}")
+                        # Create a new dataframe with the key columns from 'with_load'
+                        combined_df = df_wl[key_columns].copy()
 
-            if not found:
-                self.logger.info("No rows with ABGAENGE == 2 found.")  # Log if no matching rows were found.
+                        # Add VM and FLUSS columns from both with_load and without_load
+                        combined_df['VM_WL'] = df_wl['VM']
+                        combined_df['FLUSS_WL'] = df_wl['FLUSS']
+                        combined_df['VM_WOL'] = df_wol['VM']
+                        combined_df['FLUSS_WOL'] = df_wol['FLUSS']
 
-            # Save the DataFrame with the matched pairs.
-            matched_pairs_df_path = os.path.join(self.directory + '\\Zwischenspeicher',
-                                                 f"{self.base_filename}_matched_pairs.csv")
-            matched_pairs_df.to_csv(matched_pairs_df_path, index=False, sep=';')
-            self.logger.info(f"Matched pairs DataFrame saved to {matched_pairs_df_path}")
+                    elif file_type == 'Node':
+                        # Columns for 'Node' files
+                        key_columns = ['KNAM', 'GEOH', 'XRECHTS', 'YHOCH']
+                        self.logger.debug(f"Key columns for 'Node': {key_columns}")
 
-            # Save the updated 'lei_df' with 'GroupID' column back to a CSV file.
-            lei_path = os.path.join(self.directory + '\\Zwischenspeicher', f"{self.base_filename}_Pipes.csv")
-            lei_df.to_csv(lei_path, index=False, sep=';')
+                        # Create a new dataframe with the key columns from 'with_load'
+                        combined_df = df_wl[key_columns].copy()
 
-            return lei_df  # Return the updated 'lei_df' with 'GroupID'.
+                        # Add PRECH, HP, and ZUFLUSS columns from both with_load and without_load
+                        combined_df['PRECH_WL'] = df_wl['PRECH']
+                        combined_df['HP_WL'] = df_wl['HP']
+                        combined_df['ZUFLUSS_WL'] = df_wl['ZUFLUSS']
+                        combined_df['PRECH_WOL'] = df_wol['PRECH']
+                        combined_df['HP_WOL'] = df_wol['HP']
+                        combined_df['ZUFLUSS_WOL'] = df_wol['ZUFLUSS']
 
-        else:
-            self.logger.warning(
-                "'ABGAENGE' or 'KNAM' columns not found in the DataFrame.")  # Log warning if columns are missing.
+                        # Add dp column for Node files as PRECH_WOL - PRECH_WL
+                        combined_df['dp'] = combined_df['PRECH_WOL'] - combined_df['PRECH_WL']
+                        self.logger.debug(f"Added dp column as PRECH_WOL - PRECH_WL for Node")
+
+                    # Extract the base file name without "_with" and define output file name
+                    base_name = re.sub(rf'_with_load_\d+_({file_type})\.csv', '', os.path.basename(wl_file))
+                    output_file = os.path.join(zwischenspeicher_dir, f"{base_name}_{number}_combined_{file_type}.csv")
+
+                    # Save the combined dataframe to a new CSV file
+                    combined_df.to_csv(output_file, index=False, sep=';')
+                    self.logger.info(f"Combined CSV file saved successfully to: {output_file}")
+
+        except Exception as e:
+            self.logger.error(f"Error combining files: {e}", exc_info=True)
+
+
+
+
+

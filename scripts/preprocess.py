@@ -4,7 +4,7 @@ from venv import logger
 
 import yaml
 from data.rawdata_load import DataLoader  # Custom class to load raw data
-from data.rawdata_preprocess import DataProcessor  # Custom class to process raw data
+from data.rawdata_preprocess import DataProcessor, DataCombiner  # Custom class to process raw data
 from src.logging_config import setup_logging  # Custom function to set up logging
 
 
@@ -66,9 +66,6 @@ def process_file(file_path, file_name):
         # Save the split DataFrames to separate files
         data_processor.save_dataframes()
 
-        # Process and combine connected pipes
-        data_processor.combine_connected_pipes(kno_df, lei_df)
-
         logger.debug(f"Data processing complete for file: {file_name}")  # Log completion of processing
 
     except Exception as e:
@@ -98,6 +95,10 @@ def main():
         if file_name.endswith('.csv'):  # Only process files with a '.csv' extension
             file_path = os.path.join(data_dir, file_name)  # Get the full path to the CSV file
             process_file(file_path, file_name)  # Process the file
+
+    data_combiner = DataCombiner(data_dir)
+    data_combiner.combine_with_without_load('Pipes')
+    data_combiner.combine_with_without_load('Node')
 
 
 if __name__ == "__main__":
