@@ -121,12 +121,3 @@ class CSVDataLoader:
         return self.all_data
 
 
-# Example usage
-if __name__ == "__main__":
-    # Instantiate the CSVDataLoader and get the loaded data
-    loader = CSVDataLoader()
-    data = loader.get_data()
-
-    # Print the file names and shapes of the loaded DataFrames
-    for file_name, df in data:
-        print(f"File: {file_name}, Shape: {df.shape}")
