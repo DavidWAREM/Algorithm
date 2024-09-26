@@ -34,7 +34,7 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
     # Skalierung der physikalischen und geografischen Daten
-    physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
+    physical_columns = ['ZUFLUSS_WOL', 'ZUFLUSS_WL', 'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
     # Anwenden der Skalierung
@@ -47,7 +47,7 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     node_features = nodes_df.drop(columns=['KNAM']).values
 
     # Skalierung der Kantenattribute
-    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
+    edge_columns = ['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
     edges_df[edge_columns] = edge_scaler.transform(edges_df[edge_columns])
 
     edge_attributes = edges_df[edge_columns].values
@@ -163,12 +163,12 @@ def main():
     datasets = []
 
     # Physikalische und geografische Spalten
-    physical_columns = ['ZUFLUSS', 'PMESS', 'PRECH', 'DP', 'HP']
+    physical_columns = ['ZUFLUSS_WOL', 'ZUFLUSS_WL', 'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
     # Laden des ersten Datasets für die Skalierung
-    node_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Node.csv'
-    edge_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_Pipes.csv'
+    node_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_combined_Node.csv'
+    edge_file_first = f'{directory}SyntheticData-Spechbach_Roughness_1_combined_Pipes.csv'
 
     nodes_df_first = pd.read_csv(node_file_first, delimiter=';', decimal='.')
     edges_df_first = pd.read_csv(edge_file_first, delimiter=';', decimal='.')
@@ -185,14 +185,14 @@ def main():
     geo_scaler.fit(nodes_df_first[geo_columns])
 
     # Aktualisieren der edge_columns nach One-Hot-Encoding
-    edge_columns = ['RORL', 'DM', 'FLUSS', 'VM', 'DP', 'DPREL', 'RAISE'] + list(edges_df_first.filter(like='ROHRTYP').columns)
+    edge_columns = ['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE'] + list(edges_df_first.filter(like='ROHRTYP').columns)
 
     edge_scaler.fit(edges_df_first[edge_columns])
 
     # Laden aller Datasets mit Skalierung und Positionscodierung
-    for i in range(1, 10000):  # Begrenzung auf 10 Datasets für schnellere Ausführung
-        node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Node.csv'
-        edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_Pipes.csv'
+    for i in range(1, 4000):  # Begrenzung auf 10 Datasets für schnellere Ausführung
+        node_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_combined_Node.csv'
+        edge_file = f'{directory}SyntheticData-Spechbach_Roughness_{i}_combined_Pipes.csv'
         data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler)
         datasets.append(data)
 

@@ -57,7 +57,7 @@ class FeatureEngineer:
         """
         self.poly = PolynomialFeatures(degree=2, include_bias=False)  # Initialize PolynomialFeatures
         # Select the relevant columns for feature engineering
-        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']]
+        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE']]
         X_combined_poly = self.poly.fit_transform(X_combined)  # Generate polynomial features
         y_combined = self.combined_data['RAU']  # Target variable
         self.logger.info("Feature engineering complete with polynomial features of degree 2")

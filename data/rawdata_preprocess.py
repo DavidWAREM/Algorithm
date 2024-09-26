@@ -159,7 +159,7 @@ class DataCombiner:
 
                     if file_type == 'Pipes':
                         # Columns for 'Pipes' files
-                        key_columns = ['ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'ROHRTYP', 'RAISE']
+                        key_columns = ['ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'ROHRTYP', 'RAISE']
                         self.logger.debug(f"Key columns for 'Pipes': {key_columns}")
 
                         # Create a new dataframe with the key columns from 'with_load'
@@ -204,5 +204,7 @@ class DataCombiner:
 
 
 
-
-
+folder_path_data = 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten\\'
+test = DataCombiner(folder_path_data)
+test.combine_with_without_load('Pipes')
+test.combine_with_without_load('Node')

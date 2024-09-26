@@ -33,7 +33,7 @@ class CSVDataLoader:
         self.folder_path = self.config['paths']['folder_path_data']
 
         # Define the required columns that each CSV file must contain
-        self.required_columns = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']
+        self.required_columns = ['RORL', 'DM', 'RAU', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE']
 
         # Initialize a list to store loaded data
         self.all_data = []
@@ -85,7 +85,7 @@ class CSVDataLoader:
         """
         # Iterate through all files in the folder
         for file_name in os.listdir(self.folder_path):
-            if file_name.endswith('_Pipes.csv'):  # Only process files that end with '_Pipes.csv'
+            if file_name.endswith('_combined_Pipes.csv'):  # Only process files that end with '_Pipes.csv'
                 file_path = os.path.join(self.folder_path, file_name)
                 data = self.load_data_from_csv(file_path)  # Load the data from the CSV file
 
