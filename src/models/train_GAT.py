@@ -18,8 +18,8 @@ def add_positional_encoding(df, columns, max_value=10000):
         df[f'{col}_cos'] = np.cos(df[col] * (2 * pi / max_value))
     return df
 
-# Funktion zum Laden der Daten mit One-Hot-Encoding für 'ROHRTYP' und Skalierung der Knoten-/Kantenfeatures
-def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
+# Funktion zum Laden der Daten mit Anpassungen für fehlende Werte
+def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes):
     nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
     edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
 
@@ -37,42 +37,54 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
     # Definieren Sie ein kleines Epsilon für die Näherung an Null
     epsilon = 1e-6
 
-    # **Zielvariable erstellen, bevor die Skalierung erfolgt**
+    # Zielvariable erstellen, bevor die Skalierung erfolgt
     target_condition = (edges_df['FLUSS_WL'].abs() < epsilon) | (edges_df['FLUSS_WOL'].abs() < epsilon) | \
                        (edges_df['VM_WL'].abs() < epsilon) | (edges_df['VM_WOL'].abs() < epsilon)
     y = torch.tensor(target_condition.astype(float).values, dtype=torch.float)
 
-    # Anzahl der positiven Beispiele in diesem Datensatz
-    num_positive_samples = y.sum().item()
-    if num_positive_samples == 0:
-        print(f"Warnung: Keine positiven Beispiele im Datensatz {edge_file}")
-    else:
-        print(f"Anzahl positiver Beispiele in {edge_file}: {num_positive_samples}")
+    # Ab hier erfolgt die Anpassung der Knotenattribute
 
-    # Optional: Anzeigen der Zeilen, die als positive Beispiele identifiziert wurden
-    if num_positive_samples > 0:
-        positive_edges = edges_df[target_condition]
-        print("Positive Beispiele in diesem Datensatz:")
-        print(positive_edges[['ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL']])
-
-    # **Ab hier erfolgt die Skalierung der Daten**
-
-    # Skalierung der physikalischen und geografischen Daten
-    physical_columns = ['ZUFLUSS_WOL', 'ZUFLUSS_WL', 'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
+    # Geografische Spalten
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
+    # Physikalische Spalten (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
+    adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
+
+    # Für Knoten, die nicht in included_nodes sind, die Werte der adjusted_physical_columns auf NaN setzen
+    nodes_df['Included'] = nodes_df['KNAM'].isin(included_nodes)
+    for col in adjusted_physical_columns:
+        nodes_df.loc[~nodes_df['Included'], col] = np.nan
+
+    # Indikatorspalten hinzufügen, die angeben, ob der Wert fehlt
+    for col in adjusted_physical_columns:
+        nodes_df[f'{col}_missing'] = nodes_df[col].isna().astype(float)
+
+    # Mittelwerte der Spalten für Imputation berechnen (nur über nicht fehlende Werte)
+    mean_values = nodes_df[adjusted_physical_columns].mean()
+
+    # Fehlende Werte durch den Mittelwert ersetzen
+    nodes_df[adjusted_physical_columns] = nodes_df[adjusted_physical_columns].fillna(mean_values)
+
+    # Entfernen der Hilfsspalte
+    nodes_df = nodes_df.drop(columns=['Included'])
+
     # Anwenden der Skalierung
-    nodes_df[physical_columns] = physical_scaler.transform(nodes_df[physical_columns])
+    nodes_df[adjusted_physical_columns] = physical_scaler.transform(nodes_df[adjusted_physical_columns])
     nodes_df[geo_columns] = geo_scaler.transform(nodes_df[geo_columns])
 
     # Positionscodierung für geografische Spalten hinzufügen
     nodes_df = add_positional_encoding(nodes_df, geo_columns)
 
+    # Knotenfeatures erstellen (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
     node_features = nodes_df.drop(columns=['KNAM']).values
 
+    # Entfernen des Features 'RAU' aus den Edge-Features
+    edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
+    # Stellen Sie sicher, dass 'RAU' nicht in edge_columns enthalten ist
+    if 'RAU' in edges_df.columns:
+        edges_df = edges_df.drop(columns=['RAU'])
+
     # Skalierung der Kantenattribute
-    edge_columns = ['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE'] + list(
-        edges_df.filter(like='ROHRTYP').columns)
     edges_df[edge_columns] = edge_scaler.transform(edges_df[edge_columns])
 
     edge_attributes = edges_df[edge_columns].values
@@ -83,8 +95,6 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler):
 
     data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y)
     return data
-
-
 
 # GAT-Modell mit Kantenvorhersage für binäre Klassifikation
 class EdgeGAT(torch.nn.Module):
@@ -163,10 +173,6 @@ def test(loader, model, device):
     y_true = np.concatenate(y_true_list)
     y_pred = np.concatenate(y_pred_list)
 
-    # Überprüfen der einzigartigen Klassen in y_true
-    unique_classes = np.unique(y_true)
-    print("Einzigartige Klassen in y_true:", unique_classes)
-
     return y_true, y_pred
 
 # Wahre vs. vorhergesagte Werte plotten
@@ -178,15 +184,34 @@ def plot_predictions(y_true, y_pred):
     plt.title('GAT - Wahre vs. Vorhergesagte Wahrscheinlichkeiten')
     plt.show()
 
-# Hauptfunktion mit erweitertem Training und Early Stopping basierend auf Validierungsverlust
+# Hauptfunktion mit Anpassungen für fehlende Werte
 def main():
     directory = r'C:/Users/D.Muehlfeld/Documents/Berechnungsdaten_Valve/Zwischenspeicher/'
 
     datasets = []
 
-    # Physikalische und geografische Spalten
-    physical_columns = ['ZUFLUSS_WOL', 'ZUFLUSS_WL', 'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
+    # Liste der Knoten, für die Messdaten vorhanden sind
+    included_nodes = [
+        'K0003', 'K0004', 'K0005', 'K0006', 'K0011', 'K0012', 'K0014', 'K0016',
+        'K0017', 'K0020', 'K0021', 'K0028', 'K0032', 'K0033', 'K0034', 'K0061',
+        'K0062', 'K0063', 'K0064', 'K0080', 'K0086', 'K0087', 'K0088', 'K0090',
+        'K0091', 'K0093', 'K0094', 'K0115', 'K0119', 'K0121', 'K0125', 'K0135',
+        'K0136', 'K0138', 'K0144', 'K0145', 'K0147', 'K0148', 'K0151', 'K0155',
+        'K0156', 'K0163', 'K0164', 'K0165', 'K0166', 'K0173', 'K0174', 'K0176',
+        'K0179', 'K0180', 'K0183', 'K0184', 'K0185', 'K0186', 'K0191', 'K0195',
+        'K0201', 'K0207', 'K0208', 'K0209', 'K0210', 'K0211', 'K0213', 'K0214',
+        'K0220', 'K0229', 'K0230', 'K0238', 'K0239', 'K0245', 'K0254', 'K0260',
+        'K0261', 'K0294', 'K0300', 'K0301', 'K0305', 'K0311', 'K0314', 'K0315',
+        'K0316', 'K0317', 'K0318', 'K0319', 'K0327', 'K0328', 'K0329', 'K0330',
+        'K0333', 'K0334', 'K0335', 'K0336', 'K0340', 'K0347', 'K0357', 'K0215',
+        'K0388'
+    ]
+
+    # Geografische Spalten
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
+
+    # Physikalische Spalten (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
+    adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
 
     # Laden des ersten Datasets für die Skalierung
     node_file_first = f'{directory}SyntheticData-Spechbach_Valve_1_combined_Node.csv'
@@ -195,20 +220,32 @@ def main():
     nodes_df_first = pd.read_csv(node_file_first, delimiter=';', decimal='.')
     edges_df_first = pd.read_csv(edge_file_first, delimiter=';', decimal='.')
 
-    # One-Hot-Encoding für 'ROHRTYP'
-    edges_df_first = pd.get_dummies(edges_df_first, columns=['ROHRTYP'], prefix='ROHRTYP')
+    # Für Knoten, die nicht in included_nodes sind, die Werte der adjusted_physical_columns auf NaN setzen
+    nodes_df_first['Included'] = nodes_df_first['KNAM'].isin(included_nodes)
+    for col in adjusted_physical_columns:
+        nodes_df_first.loc[~nodes_df_first['Included'], col] = np.nan
+
+    # Fehlende Werte im ersten Datensatz für die Skalierung behandeln
+    mean_values_first = nodes_df_first[adjusted_physical_columns].mean()
+    nodes_df_first[adjusted_physical_columns] = nodes_df_first[adjusted_physical_columns].fillna(mean_values_first)
 
     # Skalierer für physikalische und geografische Daten anpassen
     physical_scaler = StandardScaler()
     geo_scaler = MinMaxScaler()
     edge_scaler = StandardScaler()
 
-    physical_scaler.fit(nodes_df_first[physical_columns])
+    physical_scaler.fit(nodes_df_first[adjusted_physical_columns])
     geo_scaler.fit(nodes_df_first[geo_columns])
 
+    # One-Hot-Encoding für 'ROHRTYP'
+    edges_df_first = pd.get_dummies(edges_df_first, columns=['ROHRTYP'], prefix='ROHRTYP')
+
+    # Entfernen des Features 'RAU' aus edges_df_first, falls vorhanden
+    if 'RAU' in edges_df_first.columns:
+        edges_df_first = edges_df_first.drop(columns=['RAU'])
+
     # Aktualisieren der edge_columns nach One-Hot-Encoding
-    edge_columns = ['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE'] + list(
-        edges_df_first.filter(like='ROHRTYP').columns)
+    edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df_first.filter(like='ROHRTYP').columns)
 
     edge_scaler.fit(edges_df_first[edge_columns])
 
@@ -216,16 +253,12 @@ def main():
     for i in range(1, 109):
         node_file = f'{directory}SyntheticData-Spechbach_Valve_{i}_combined_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Valve_{i}_combined_Pipes.csv'
-        data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler)
+        data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes)
         datasets.append(data)
 
-    # Überprüfen der Anzahl positiver Beispiele in allen Datensätzen
-    total_positive = sum([data.y.sum().item() for data in datasets])
-    print(f'Gesamtzahl positiver Beispiele: {total_positive}')
-
-    # Überprüfen, ob insgesamt positive Beispiele vorhanden sind
-    if total_positive == 0:
-        print("Warnung: Keine positiven Beispiele in allen Datensätzen gefunden. Bitte überprüfen Sie die Daten und die Bedingung für die Zielvariable.")
+    # Überprüfen, ob mindestens ein gültiger Datensatz vorhanden ist
+    if not datasets:
+        print("Keine gültigen Datensätze verfügbar. Bitte überprüfen Sie die Daten.")
         return
 
     # Aufteilen in Trainings- und Validierungsdaten
@@ -234,9 +267,7 @@ def main():
     # Überprüfen, ob positive Beispiele in Trainings- und Validierungsdaten vorhanden sind
     train_positive = sum([data.y.sum().item() for data in train_data])
     val_positive = sum([data.y.sum().item() for data in val_data])
-    print(f'Positive Beispiele im Training: {train_positive}, im Validierung: {val_positive}')
 
-    # Überprüfen, ob positive Beispiele vorhanden sind
     if train_positive == 0 or val_positive == 0:
         print("Warnung: Keine positiven Beispiele im Training oder in der Validierung. Bitte überprüfen Sie die Datenaufteilung.")
         return
@@ -295,11 +326,8 @@ def main():
     # Vorhersagen und Testmetriken erhalten
     y_true, y_pred = test(test_loader, model, device)
 
-    # Überprüfen der einzigartigen Klassen in y_true
-    unique_classes = np.unique(y_true)
-    print("Einzigartige Klassen in y_true (Testdaten):", unique_classes)
-
     # Überprüfen, ob y_true mindestens zwei Klassen enthält
+    unique_classes = np.unique(y_true)
     if len(unique_classes) < 2:
         print("Warnung: y_true enthält nur eine Klasse. ROC AUC Score kann nicht berechnet werden.")
         auc = None
