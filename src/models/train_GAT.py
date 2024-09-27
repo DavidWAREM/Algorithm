@@ -7,9 +7,11 @@ from torch_geometric.nn import GATConv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.metrics import roc_auc_score, accuracy_score, precision_recall_curve, average_precision_score, confusion_matrix, ConfusionMatrixDisplay
 from math import pi
 from sklearn.model_selection import train_test_split
+from sklearn.impute import KNNImputer
+from sklearn.metrics import roc_curve, auc
 
 # Funktion zur Hinzufügung von Positionscodierung mittels Sinus und Kosinus für geografische Koordinaten
 def add_positional_encoding(df, columns, max_value=10000):
@@ -18,12 +20,35 @@ def add_positional_encoding(df, columns, max_value=10000):
         df[f'{col}_cos'] = np.cos(df[col] * (2 * pi / max_value))
     return df
 
-# Funktion zum Laden der Daten mit Anpassungen für fehlende Werte
-def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes):
+# Graph-based Imputation für fehlende ZUFLUSS_WL-Werte (global definiert)
+def graph_based_imputation(df, edge_index, feature_name):
+    node_values = df[feature_name].values
+    missing_mask = np.isnan(node_values)
+    # Erstellen Sie einen Adjazenzlisten-Dictionary
+    adjacency = {i: [] for i in range(len(df))}
+    for src, dst in edge_index.T:
+        adjacency[src].append(dst)
+        adjacency[dst].append(src)
+    # Iterieren über fehlende Werte
+    for idx in np.where(missing_mask)[0]:
+        neighbors = adjacency[idx]
+        neighbor_values = [node_values[n] for n in neighbors if not np.isnan(node_values[n])]
+        if neighbor_values:
+            # Physikalisches Modell: Mittelwert der Nachbarn
+            node_values[idx] = np.mean(neighbor_values)
+        else:
+            # Wenn keine Nachbarn bekannt sind, setzen wir den Mittelwert aller bekannten Werte
+            node_values[idx] = np.nanmean(node_values)
+    df[feature_name] = node_values
+    return df
+
+# Funktion zum Laden der Daten mit graph-based Imputation
+def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes, zfluss_wl_nodes):
     nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
     edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
 
     node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
+    nodes_df['node_idx'] = nodes_df['KNAM'].map(node_mapping)
     edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
     edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
@@ -47,36 +72,45 @@ def load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, in
     # Geografische Spalten
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
-    # Physikalische Spalten (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
+    # Physikalische Spalten
     adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
+    additional_physical_columns = ['ZUFLUSS_WL']
+    all_physical_columns = adjusted_physical_columns + additional_physical_columns
 
     # Für Knoten, die nicht in included_nodes sind, die Werte der adjusted_physical_columns auf NaN setzen
     nodes_df['Included'] = nodes_df['KNAM'].isin(included_nodes)
     for col in adjusted_physical_columns:
         nodes_df.loc[~nodes_df['Included'], col] = np.nan
 
+    # Umgang mit ZUFLUSS_WL nur für bestimmte Knoten
+    nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
+        lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in zfluss_wl_nodes else np.nan,
+        axis=1
+    )
+
     # Indikatorspalten hinzufügen, die angeben, ob der Wert fehlt
-    for col in adjusted_physical_columns:
+    for col in all_physical_columns:
         nodes_df[f'{col}_missing'] = nodes_df[col].isna().astype(float)
 
-    # Mittelwerte der Spalten für Imputation berechnen (nur über nicht fehlende Werte)
-    mean_values = nodes_df[adjusted_physical_columns].mean()
+    # Graph-based Imputation für fehlende ZUFLUSS_WL-Werte
+    nodes_df = graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
 
-    # Fehlende Werte durch den Mittelwert ersetzen
-    nodes_df[adjusted_physical_columns] = nodes_df[adjusted_physical_columns].fillna(mean_values)
+    # Fehlende Werte für andere physikalische Spalten mit KNN-Imputation behandeln
+    imputer = KNNImputer(n_neighbors=5)
+    nodes_df[adjusted_physical_columns] = imputer.fit_transform(nodes_df[adjusted_physical_columns])
 
     # Entfernen der Hilfsspalte
     nodes_df = nodes_df.drop(columns=['Included'])
 
     # Anwenden der Skalierung
-    nodes_df[adjusted_physical_columns] = physical_scaler.transform(nodes_df[adjusted_physical_columns])
+    nodes_df[all_physical_columns] = physical_scaler.transform(nodes_df[all_physical_columns])
     nodes_df[geo_columns] = geo_scaler.transform(nodes_df[geo_columns])
 
     # Positionscodierung für geografische Spalten hinzufügen
     nodes_df = add_positional_encoding(nodes_df, geo_columns)
 
-    # Knotenfeatures erstellen (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
-    node_features = nodes_df.drop(columns=['KNAM']).values
+    # Knotenfeatures erstellen
+    node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
 
     # Entfernen des Features 'RAU' aus den Edge-Features
     edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
@@ -175,13 +209,37 @@ def test(loader, model, device):
 
     return y_true, y_pred
 
-# Wahre vs. vorhergesagte Werte plotten
-def plot_predictions(y_true, y_pred):
-    plt.figure(figsize=(10, 5))
-    plt.scatter(y_true, y_pred, alpha=0.7)
-    plt.xlabel('Wahre Werte')
-    plt.ylabel('Vorhergesagte Wahrscheinlichkeiten')
-    plt.title('GAT - Wahre vs. Vorhergesagte Wahrscheinlichkeiten')
+# ROC-Kurve plotten
+def plot_roc_curve(y_true, y_pred):
+    fpr, tpr, thresholds = roc_curve(y_true, y_pred)
+    roc_auc = auc(fpr, tpr)
+    plt.figure()
+    plt.plot(fpr, tpr, label='ROC-Kurve (AUC = %0.2f)' % roc_auc)
+    plt.plot([0, 1], [0, 1], 'k--')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC)')
+    plt.legend(loc="lower right")
+    plt.show()
+
+# Precision-Recall-Kurve plotten
+def plot_precision_recall(y_true, y_pred):
+    precision, recall, thresholds = precision_recall_curve(y_true, y_pred)
+    average_precision = average_precision_score(y_true, y_pred)
+    plt.figure()
+    plt.plot(recall, precision, label='Precision-Recall-Kurve (AP = %0.2f)' % average_precision)
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall-Kurve')
+    plt.legend(loc="lower left")
+    plt.show()
+
+# Konfusionsmatrix plotten
+def plot_confusion_matrix(y_true, y_pred_binary):
+    cm = confusion_matrix(y_true, y_pred_binary)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot()
+    plt.title('Konfusionsmatrix')
     plt.show()
 
 # Hauptfunktion mit Anpassungen für fehlende Werte
@@ -207,11 +265,40 @@ def main():
         'K0388'
     ]
 
+    # Liste der Knoten, für die ZUFLUSS_WL verfügbar ist (sortiert und ohne Duplikate)
+    zfluss_wl_nodes = [
+        'K0003', 'K0004', 'K0005', 'K0006', 'K0007', 'K0008', 'K0011', 'K0012', 'K0013', 'K0014',
+        'K0015', 'K0016', 'K0021', 'K0022', 'K0023', 'K0025', 'K0026', 'K0028', 'K0029', 'K0030',
+        'K0031', 'K0033', 'K0034', 'K0036', 'K0037', 'K0038', 'K0040', 'K0041', 'K0042', 'K0045',
+        'K0046', 'K0059', 'K0060', 'K0061', 'K0062', 'K0063', 'K0065', 'K0066', 'K0067', 'K0070',
+        'K0071', 'K0073', 'K0074', 'K0076', 'K0077', 'K0078', 'K0079', 'K0080', 'K0081', 'K0082',
+        'K0083', 'K0084', 'K0085', 'K0086', 'K0089', 'K0090', 'K0091', 'K0093', 'K0094', 'K0095',
+        'K0101', 'K0106', 'K0108', 'K0109', 'K0110', 'K0111', 'K0112', 'K0113', 'K0115', 'K0118',
+        'K0119', 'K0121', 'K0122', 'K0125', 'K0127', 'K0128', 'K0129', 'K0130', 'K0131', 'K0132',
+        'K0133', 'K0135', 'K0136', 'K0137', 'K0138', 'K0140', 'K0141', 'K0142', 'K0147', 'K0148',
+        'K0151', 'K0152', 'K0155', 'K0156', 'K0160', 'K0161', 'K0162', 'K0163', 'K0164', 'K0165',
+        'K0166', 'K0168', 'K0169', 'K0170', 'K0171', 'K0172', 'K0173', 'K0174', 'K0176', 'K0177',
+        'K0179', 'K0180', 'K0181', 'K0182', 'K0183', 'K0184', 'K0185', 'K0186', 'K0188', 'K0189',
+        'K0190', 'K0191', 'K0193', 'K0195', 'K0196', 'K0197', 'K0198', 'K0199', 'K0200', 'K0201',
+        'K0202', 'K0204', 'K0205', 'K0206', 'K0207', 'K0208', 'K0209', 'K0210', 'K0211', 'K0213',
+        'K0214', 'K0215', 'K0219', 'K0220', 'K0222', 'K0223', 'K0226', 'K0229', 'K0230', 'K0232',
+        'K0233', 'K0234', 'K0235', 'K0237', 'K0238', 'K0239', 'K0244', 'K0245', 'K0248', 'K0249',
+        'K0250', 'K0251', 'K0252', 'K0255', 'K0256', 'K0260', 'K0261', 'K0262', 'K0264', 'K0265',
+        'K0266', 'K0277', 'K0280', 'K0281', 'K0282', 'K0283', 'K0287', 'K0289', 'K0290', 'K0291',
+        'K0292', 'K0295', 'K0296', 'K0298', 'K0299', 'K0300', 'K0301', 'K0304', 'K0305', 'K0306',
+        'K0307', 'K0308', 'K0309', 'K0311', 'K0312', 'K0313', 'K0314', 'K0315', 'K0316', 'K0317',
+        'K0318', 'K0319', 'K0320', 'K0321', 'K0322', 'K0323', 'K0324', 'K0325', 'K0327', 'K0328',
+        'K0329', 'K0330', 'K0332', 'K0333', 'K0334', 'K0336', 'K0340', 'K0342', 'K0346', 'K0347',
+        'K0357', 'K0364', 'K0365', 'K0388'
+    ]
+
     # Geografische Spalten
     geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
 
-    # Physikalische Spalten (ZUFLUSS_WL und ZUFLUSS_WOL wurden entfernt)
+    # Physikalische Spalten
     adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
+    additional_physical_columns = ['ZUFLUSS_WL']
+    all_physical_columns = adjusted_physical_columns + additional_physical_columns
 
     # Laden des ersten Datasets für die Skalierung
     node_file_first = f'{directory}SyntheticData-Spechbach_Valve_1_combined_Node.csv'
@@ -225,16 +312,37 @@ def main():
     for col in adjusted_physical_columns:
         nodes_df_first.loc[~nodes_df_first['Included'], col] = np.nan
 
-    # Fehlende Werte im ersten Datensatz für die Skalierung behandeln
-    mean_values_first = nodes_df_first[adjusted_physical_columns].mean()
-    nodes_df_first[adjusted_physical_columns] = nodes_df_first[adjusted_physical_columns].fillna(mean_values_first)
+    # Umgang mit ZUFLUSS_WL nur für bestimmte Knoten
+    nodes_df_first['ZUFLUSS_WL'] = nodes_df_first.apply(
+        lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in zfluss_wl_nodes else np.nan,
+        axis=1
+    )
+
+    # Indikatorspalten hinzufügen, die angeben, ob der Wert fehlt
+    for col in all_physical_columns:
+        nodes_df_first[f'{col}_missing'] = nodes_df_first[col].isna().astype(float)
+
+    # KNN-Imputation für adjusted_physical_columns
+    imputer = KNNImputer(n_neighbors=5)
+    nodes_df_first[adjusted_physical_columns] = imputer.fit_transform(nodes_df_first[adjusted_physical_columns])
+
+    # Graph-based Imputation für ZUFLUSS_WL im ersten Datensatz
+    node_mapping_first = {name: idx for idx, name in enumerate(nodes_df_first['KNAM'])}
+    edges_df_first['ANFNR'] = edges_df_first['ANFNAM'].map(node_mapping_first)
+    edges_df_first['ENDNR'] = edges_df_first['ENDNAM'].map(node_mapping_first)
+    edge_index_first = edges_df_first[['ANFNR', 'ENDNR']].values.T
+
+    nodes_df_first = graph_based_imputation(nodes_df_first, edge_index_first, 'ZUFLUSS_WL')
+
+    # Entfernen der Hilfsspalte
+    nodes_df_first = nodes_df_first.drop(columns=['Included'])
 
     # Skalierer für physikalische und geografische Daten anpassen
     physical_scaler = StandardScaler()
     geo_scaler = MinMaxScaler()
     edge_scaler = StandardScaler()
 
-    physical_scaler.fit(nodes_df_first[adjusted_physical_columns])
+    physical_scaler.fit(nodes_df_first[all_physical_columns])
     geo_scaler.fit(nodes_df_first[geo_columns])
 
     # One-Hot-Encoding für 'ROHRTYP'
@@ -253,7 +361,7 @@ def main():
     for i in range(1, 109):
         node_file = f'{directory}SyntheticData-Spechbach_Valve_{i}_combined_Node.csv'
         edge_file = f'{directory}SyntheticData-Spechbach_Valve_{i}_combined_Pipes.csv'
-        data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes)
+        data = load_data(node_file, edge_file, physical_scaler, geo_scaler, edge_scaler, included_nodes, zfluss_wl_nodes)
         datasets.append(data)
 
     # Überprüfen, ob mindestens ein gültiger Datensatz vorhanden ist
@@ -330,21 +438,23 @@ def main():
     unique_classes = np.unique(y_true)
     if len(unique_classes) < 2:
         print("Warnung: y_true enthält nur eine Klasse. ROC AUC Score kann nicht berechnet werden.")
-        auc = None
+        auc_score = None
     else:
         # Metriken berechnen
-        auc = roc_auc_score(y_true, y_pred)
+        auc_score = roc_auc_score(y_true, y_pred)
 
     # Binäre Vorhersagen
     y_pred_binary = (y_pred >= 0.5).astype(int)
     accuracy = accuracy_score(y_true, y_pred_binary)
 
     print(f'Genauigkeit: {accuracy:.4f}')
-    if auc is not None:
-        print(f'AUC: {auc:.4f}')
+    if auc_score is not None:
+        print(f'AUC: {auc_score:.4f}')
 
-    # Wahre vs. vorhergesagte Wahrscheinlichkeiten plotten
-    plot_predictions(y_true, y_pred)
+    # Plots erzeugen
+    plot_roc_curve(y_true, y_pred)
+    plot_precision_recall(y_true, y_pred)
+    plot_confusion_matrix(y_true, y_pred_binary)
 
     model_path = os.path.join(directory, 'edge_gat_model_classification.pth')
     torch.save(model.state_dict(), model_path)
