@@ -1,0 +1,33 @@
+your_project_directory/
+├── config/
+│   └── config.yaml
+├── src/
+│   ├── __init__.py
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── data_loader.py
+│   │   └── data_preparation.py
+│   ├── evaluation/
+│   │   ├── __init__.py
+│   │   ├── evaluation.py
+│   │   └── plots.py
+│   ├── train/
+│   │   ├── __init__.py
+│   │   ├── train.py
+│   │   ├── training_process.py
+│   │   └── trainer.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── gat.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── config_loader.py
+│   └── logging_config.py
+├── scripts/
+│   └── run_training.py
+├── logs/
+│   └── training.log
+├── results/
+│   ├── figures/
+│   └── models/
+└── README.md
