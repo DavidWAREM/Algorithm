@@ -120,4 +120,3 @@ class CSVDataLoader:
         """
         return self.all_data
 
-

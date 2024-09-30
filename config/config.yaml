@@ -8,4 +8,3 @@ paths:
   knoten_file: 'export_results_13_Spechbach_RNAB.TXT_0_Node.csv'
   leitungen_file: 'export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv'
   log_file: 'C:\\Users\\D.Muehlfeld\\PycharmProjects\\Algorithm\\logs\\verify_graph.log'
-
