@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, precision_recall_curve, confusion_matrix
 import seaborn as sns
 import logging
+import os
+
 
 def plot_roc_curve(y_true, y_pred):
     """
@@ -22,11 +24,16 @@ def plot_roc_curve(y_true, y_pred):
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC)')
         plt.legend()
+        plt.tight_layout()
+
+        # Ensure the directory exists
+        os.makedirs('results/figures', exist_ok=True)
         plt.savefig('results/figures/roc_curve.png')
         plt.close()
         logger.info("ROC curve plotted and saved.")
     except Exception as e:
         logger.error(f"Error plotting ROC curve: {e}")
+
 
 def plot_precision_recall(y_true, y_pred):
     """
@@ -45,11 +52,16 @@ def plot_precision_recall(y_true, y_pred):
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend()
+        plt.tight_layout()
+
+        # Ensure the directory exists
+        os.makedirs('results/figures', exist_ok=True)
         plt.savefig('results/figures/precision_recall_curve.png')
         plt.close()
         logger.info("Precision-Recall curve plotted and saved.")
     except Exception as e:
         logger.error(f"Error plotting Precision-Recall curve: {e}")
+
 
 def plot_confusion_matrix(y_true, y_pred_binary):
     """
@@ -62,12 +74,16 @@ def plot_confusion_matrix(y_true, y_pred_binary):
     logger = logging.getLogger(__name__)
     try:
         cm = confusion_matrix(y_true, y_pred_binary)
-        plt.figure(figsize=(6,4))
+        plt.figure(figsize=(6, 4))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Predicted Negative', 'Predicted Positive'],
                     yticklabels=['Actual Negative', 'Actual Positive'])
         plt.ylabel('Actual')
         plt.xlabel('Predicted')
         plt.title('Confusion Matrix')
+        plt.tight_layout()
+
+        # Ensure the directory exists
+        os.makedirs('results/figures', exist_ok=True)
         plt.savefig('results/figures/confusion_matrix.png')
         plt.close()
         logger.info("Confusion matrix plotted and saved.")

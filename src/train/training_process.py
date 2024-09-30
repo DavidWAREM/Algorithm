@@ -54,6 +54,7 @@ class Trainer:
 
                 # Scheduler step
                 self.scheduler.step(val_loss)
+                self.logger.info(f"Epoch {epoch}: Train Loss={train_loss:.4f}, Val Loss={val_loss:.4f}")
 
                 # Early Stopping
                 if val_loss < best_val_loss:

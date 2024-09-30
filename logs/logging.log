@@ -1,54 +1,793 @@
-2024-09-28 15:09:11,624 - matplotlib - DEBUG - matplotlib data path: C:\Users\D.Muehlfeld\AppData\Local\anaconda3\envs\ml_env\Lib\site-packages\matplotlib\mpl-data
-2024-09-28 15:09:11,627 - matplotlib - DEBUG - CONFIGDIR=C:\Users\D.Muehlfeld\.matplotlib
-2024-09-28 15:09:11,628 - matplotlib - DEBUG - interactive is False
-2024-09-28 15:09:11,629 - matplotlib - DEBUG - platform is win32
-2024-09-28 15:09:11,665 - matplotlib - DEBUG - CACHEDIR=C:\Users\D.Muehlfeld\.matplotlib
-2024-09-28 15:09:11,666 - matplotlib.font_manager - DEBUG - Using fontManager instance from C:\Users\D.Muehlfeld\.matplotlib\fontlist-v330.json
-2024-09-28 15:09:13,332 - __main__ - INFO - Starting training process.
-2024-09-28 15:09:13,332 - __main__ - INFO - Configuration path set to C:\Users\D.Muehlfeld\PycharmProjects\Algorithm\config\config.yaml.
-2024-09-28 15:09:13,339 - __main__ - INFO - Configuration loaded successfully from C:\Users\D.Muehlfeld\PycharmProjects\Algorithm\config\config.yaml.
-2024-09-28 15:09:13,339 - __main__ - INFO - Data directory set to C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher.
-2024-09-28 15:09:13,339 - __main__ - INFO - Hyperparameters extracted from configuration.
-2024-09-28 15:09:13,339 - __main__ - INFO - Node lists extracted from configuration.
-2024-09-28 15:09:13,343 - src.data.data_preparation - INFO - First dataset loaded successfully.
-2024-09-28 15:09:13,353 - src.data.data_preparation - INFO - KNN imputation completed for the first dataset.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 0; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 8; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 18; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 23; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 31; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 37; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 41; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 45; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 46; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 47; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 48; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 49; cannot impute.
-2024-09-28 15:09:13,353 - src.data.data_loader - WARNING - No connected values found for node 50; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 52; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 53; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 54; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 55; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 83; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 94; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 106; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 137; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 199; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 207; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 214; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 220; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 224; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 225; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 246; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 255; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 287; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 290; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 292; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - WARNING - No connected values found for node 293; cannot impute.
-2024-09-28 15:09:13,354 - src.data.data_loader - INFO - Graph-based imputation completed for column 'ZUFLUSS_WL'.
-2024-09-28 15:09:13,355 - src.data.data_preparation - INFO - Graph-based imputation completed for 'ZUFLUSS_WL'.
-2024-09-28 15:09:13,356 - src.data.data_preparation - INFO - One-Hot Encoding for 'ROHRTYP' completed.
-2024-09-28 15:09:13,356 - src.data.data_preparation - INFO - Dropped 'RAU' column from edges.
-2024-09-28 15:09:13,358 - src.data.data_preparation - INFO - Scalers fitted on the first dataset.
-2024-09-28 15:09:13,361 - src.data.data_preparation - INFO - Scaling of features completed.
-2024-09-28 15:09:13,361 - __main__ - ERROR - Error during data preparation: 'DataModule' object has no attribute 'get_scalers'
+2024-09-28 15:49:08,287 - matplotlib - DEBUG - matplotlib data path: C:\Users\D.Muehlfeld\AppData\Local\anaconda3\envs\ml_env\Lib\site-packages\matplotlib\mpl-data
+2024-09-28 15:49:08,293 - matplotlib - DEBUG - CONFIGDIR=C:\Users\D.Muehlfeld\.matplotlib
+2024-09-28 15:49:08,295 - matplotlib - DEBUG - interactive is False
+2024-09-28 15:49:08,295 - matplotlib - DEBUG - platform is win32
+2024-09-28 15:49:08,330 - matplotlib - DEBUG - CACHEDIR=C:\Users\D.Muehlfeld\.matplotlib
+2024-09-28 15:49:08,331 - matplotlib.font_manager - DEBUG - Using fontManager instance from C:\Users\D.Muehlfeld\.matplotlib\fontlist-v330.json
+2024-09-28 15:49:08,958 - __main__ - INFO - Starting training process.
+2024-09-28 15:49:08,958 - __main__ - INFO - Configuration path set to C:\Users\D.Muehlfeld\PycharmProjects\Algorithm\config\config.yaml.
+2024-09-28 15:49:08,965 - __main__ - INFO - Configuration loaded successfully from C:\Users\D.Muehlfeld\PycharmProjects\Algorithm\config\config.yaml.
+2024-09-28 15:49:08,965 - __main__ - INFO - Data directory set to C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher.
+2024-09-28 15:49:08,965 - __main__ - INFO - Hyperparameters extracted from configuration.
+2024-09-28 15:49:08,965 - __main__ - INFO - Node lists extracted from configuration.
+2024-09-28 15:49:08,968 - src.data.data_preparation - DEBUG - Valve 1: Collected ROHRTYP categories.
+2024-09-28 15:49:08,970 - src.data.data_preparation - DEBUG - Valve 2: Collected ROHRTYP categories.
+2024-09-28 15:49:08,971 - src.data.data_preparation - DEBUG - Valve 3: Collected ROHRTYP categories.
+2024-09-28 15:49:08,973 - src.data.data_preparation - DEBUG - Valve 4: Collected ROHRTYP categories.
+2024-09-28 15:49:08,974 - src.data.data_preparation - DEBUG - Valve 5: Collected ROHRTYP categories.
+2024-09-28 15:49:08,975 - src.data.data_preparation - DEBUG - Valve 6: Collected ROHRTYP categories.
+2024-09-28 15:49:08,977 - src.data.data_preparation - DEBUG - Valve 7: Collected ROHRTYP categories.
+2024-09-28 15:49:08,978 - src.data.data_preparation - DEBUG - Valve 8: Collected ROHRTYP categories.
+2024-09-28 15:49:08,979 - src.data.data_preparation - DEBUG - Valve 9: Collected ROHRTYP categories.
+2024-09-28 15:49:08,980 - src.data.data_preparation - DEBUG - Valve 10: Collected ROHRTYP categories.
+2024-09-28 15:49:08,981 - src.data.data_preparation - DEBUG - Valve 11: Collected ROHRTYP categories.
+2024-09-28 15:49:08,982 - src.data.data_preparation - DEBUG - Valve 12: Collected ROHRTYP categories.
+2024-09-28 15:49:08,983 - src.data.data_preparation - DEBUG - Valve 13: Collected ROHRTYP categories.
+2024-09-28 15:49:08,985 - src.data.data_preparation - DEBUG - Valve 14: Collected ROHRTYP categories.
+2024-09-28 15:49:08,986 - src.data.data_preparation - DEBUG - Valve 15: Collected ROHRTYP categories.
+2024-09-28 15:49:08,987 - src.data.data_preparation - DEBUG - Valve 16: Collected ROHRTYP categories.
+2024-09-28 15:49:08,988 - src.data.data_preparation - DEBUG - Valve 17: Collected ROHRTYP categories.
+2024-09-28 15:49:08,989 - src.data.data_preparation - DEBUG - Valve 18: Collected ROHRTYP categories.
+2024-09-28 15:49:08,991 - src.data.data_preparation - DEBUG - Valve 19: Collected ROHRTYP categories.
+2024-09-28 15:49:08,992 - src.data.data_preparation - DEBUG - Valve 20: Collected ROHRTYP categories.
+2024-09-28 15:49:08,994 - src.data.data_preparation - DEBUG - Valve 21: Collected ROHRTYP categories.
+2024-09-28 15:49:08,995 - src.data.data_preparation - DEBUG - Valve 22: Collected ROHRTYP categories.
+2024-09-28 15:49:08,996 - src.data.data_preparation - DEBUG - Valve 23: Collected ROHRTYP categories.
+2024-09-28 15:49:08,997 - src.data.data_preparation - DEBUG - Valve 24: Collected ROHRTYP categories.
+2024-09-28 15:49:08,998 - src.data.data_preparation - DEBUG - Valve 25: Collected ROHRTYP categories.
+2024-09-28 15:49:09,000 - src.data.data_preparation - DEBUG - Valve 26: Collected ROHRTYP categories.
+2024-09-28 15:49:09,002 - src.data.data_preparation - DEBUG - Valve 27: Collected ROHRTYP categories.
+2024-09-28 15:49:09,003 - src.data.data_preparation - DEBUG - Valve 28: Collected ROHRTYP categories.
+2024-09-28 15:49:09,004 - src.data.data_preparation - DEBUG - Valve 29: Collected ROHRTYP categories.
+2024-09-28 15:49:09,005 - src.data.data_preparation - DEBUG - Valve 30: Collected ROHRTYP categories.
+2024-09-28 15:49:09,007 - src.data.data_preparation - DEBUG - Valve 31: Collected ROHRTYP categories.
+2024-09-28 15:49:09,008 - src.data.data_preparation - DEBUG - Valve 32: Collected ROHRTYP categories.
+2024-09-28 15:49:09,009 - src.data.data_preparation - DEBUG - Valve 33: Collected ROHRTYP categories.
+2024-09-28 15:49:09,010 - src.data.data_preparation - DEBUG - Valve 34: Collected ROHRTYP categories.
+2024-09-28 15:49:09,011 - src.data.data_preparation - DEBUG - Valve 35: Collected ROHRTYP categories.
+2024-09-28 15:49:09,012 - src.data.data_preparation - DEBUG - Valve 36: Collected ROHRTYP categories.
+2024-09-28 15:49:09,014 - src.data.data_preparation - DEBUG - Valve 37: Collected ROHRTYP categories.
+2024-09-28 15:49:09,015 - src.data.data_preparation - DEBUG - Valve 38: Collected ROHRTYP categories.
+2024-09-28 15:49:09,017 - src.data.data_preparation - DEBUG - Valve 39: Collected ROHRTYP categories.
+2024-09-28 15:49:09,018 - src.data.data_preparation - DEBUG - Valve 40: Collected ROHRTYP categories.
+2024-09-28 15:49:09,019 - src.data.data_preparation - DEBUG - Valve 41: Collected ROHRTYP categories.
+2024-09-28 15:49:09,020 - src.data.data_preparation - DEBUG - Valve 42: Collected ROHRTYP categories.
+2024-09-28 15:49:09,021 - src.data.data_preparation - DEBUG - Valve 43: Collected ROHRTYP categories.
+2024-09-28 15:49:09,022 - src.data.data_preparation - DEBUG - Valve 44: Collected ROHRTYP categories.
+2024-09-28 15:49:09,024 - src.data.data_preparation - DEBUG - Valve 45: Collected ROHRTYP categories.
+2024-09-28 15:49:09,025 - src.data.data_preparation - DEBUG - Valve 46: Collected ROHRTYP categories.
+2024-09-28 15:49:09,026 - src.data.data_preparation - DEBUG - Valve 47: Collected ROHRTYP categories.
+2024-09-28 15:49:09,027 - src.data.data_preparation - DEBUG - Valve 48: Collected ROHRTYP categories.
+2024-09-28 15:49:09,028 - src.data.data_preparation - DEBUG - Valve 49: Collected ROHRTYP categories.
+2024-09-28 15:49:09,031 - src.data.data_preparation - DEBUG - Valve 50: Collected ROHRTYP categories.
+2024-09-28 15:49:09,032 - src.data.data_preparation - DEBUG - Valve 51: Collected ROHRTYP categories.
+2024-09-28 15:49:09,033 - src.data.data_preparation - DEBUG - Valve 52: Collected ROHRTYP categories.
+2024-09-28 15:49:09,035 - src.data.data_preparation - DEBUG - Valve 53: Collected ROHRTYP categories.
+2024-09-28 15:49:09,036 - src.data.data_preparation - DEBUG - Valve 54: Collected ROHRTYP categories.
+2024-09-28 15:49:09,037 - src.data.data_preparation - DEBUG - Valve 55: Collected ROHRTYP categories.
+2024-09-28 15:49:09,038 - src.data.data_preparation - DEBUG - Valve 56: Collected ROHRTYP categories.
+2024-09-28 15:49:09,039 - src.data.data_preparation - DEBUG - Valve 57: Collected ROHRTYP categories.
+2024-09-28 15:49:09,041 - src.data.data_preparation - DEBUG - Valve 58: Collected ROHRTYP categories.
+2024-09-28 15:49:09,042 - src.data.data_preparation - DEBUG - Valve 59: Collected ROHRTYP categories.
+2024-09-28 15:49:09,043 - src.data.data_preparation - DEBUG - Valve 60: Collected ROHRTYP categories.
+2024-09-28 15:49:09,044 - src.data.data_preparation - DEBUG - Valve 61: Collected ROHRTYP categories.
+2024-09-28 15:49:09,046 - src.data.data_preparation - DEBUG - Valve 62: Collected ROHRTYP categories.
+2024-09-28 15:49:09,047 - src.data.data_preparation - DEBUG - Valve 63: Collected ROHRTYP categories.
+2024-09-28 15:49:09,049 - src.data.data_preparation - DEBUG - Valve 64: Collected ROHRTYP categories.
+2024-09-28 15:49:09,049 - src.data.data_preparation - DEBUG - Valve 65: Collected ROHRTYP categories.
+2024-09-28 15:49:09,050 - src.data.data_preparation - DEBUG - Valve 66: Collected ROHRTYP categories.
+2024-09-28 15:49:09,052 - src.data.data_preparation - DEBUG - Valve 67: Collected ROHRTYP categories.
+2024-09-28 15:49:09,053 - src.data.data_preparation - DEBUG - Valve 68: Collected ROHRTYP categories.
+2024-09-28 15:49:09,054 - src.data.data_preparation - DEBUG - Valve 69: Collected ROHRTYP categories.
+2024-09-28 15:49:09,055 - src.data.data_preparation - DEBUG - Valve 70: Collected ROHRTYP categories.
+2024-09-28 15:49:09,057 - src.data.data_preparation - DEBUG - Valve 71: Collected ROHRTYP categories.
+2024-09-28 15:49:09,058 - src.data.data_preparation - DEBUG - Valve 72: Collected ROHRTYP categories.
+2024-09-28 15:49:09,059 - src.data.data_preparation - DEBUG - Valve 73: Collected ROHRTYP categories.
+2024-09-28 15:49:09,061 - src.data.data_preparation - DEBUG - Valve 74: Collected ROHRTYP categories.
+2024-09-28 15:49:09,062 - src.data.data_preparation - DEBUG - Valve 75: Collected ROHRTYP categories.
+2024-09-28 15:49:09,063 - src.data.data_preparation - DEBUG - Valve 76: Collected ROHRTYP categories.
+2024-09-28 15:49:09,064 - src.data.data_preparation - DEBUG - Valve 77: Collected ROHRTYP categories.
+2024-09-28 15:49:09,065 - src.data.data_preparation - DEBUG - Valve 78: Collected ROHRTYP categories.
+2024-09-28 15:49:09,067 - src.data.data_preparation - DEBUG - Valve 79: Collected ROHRTYP categories.
+2024-09-28 15:49:09,068 - src.data.data_preparation - DEBUG - Valve 80: Collected ROHRTYP categories.
+2024-09-28 15:49:09,069 - src.data.data_preparation - DEBUG - Valve 81: Collected ROHRTYP categories.
+2024-09-28 15:49:09,071 - src.data.data_preparation - DEBUG - Valve 82: Collected ROHRTYP categories.
+2024-09-28 15:49:09,072 - src.data.data_preparation - DEBUG - Valve 83: Collected ROHRTYP categories.
+2024-09-28 15:49:09,073 - src.data.data_preparation - DEBUG - Valve 84: Collected ROHRTYP categories.
+2024-09-28 15:49:09,074 - src.data.data_preparation - DEBUG - Valve 85: Collected ROHRTYP categories.
+2024-09-28 15:49:09,075 - src.data.data_preparation - DEBUG - Valve 86: Collected ROHRTYP categories.
+2024-09-28 15:49:09,077 - src.data.data_preparation - DEBUG - Valve 87: Collected ROHRTYP categories.
+2024-09-28 15:49:09,079 - src.data.data_preparation - DEBUG - Valve 88: Collected ROHRTYP categories.
+2024-09-28 15:49:09,079 - src.data.data_preparation - DEBUG - Valve 89: Collected ROHRTYP categories.
+2024-09-28 15:49:09,082 - src.data.data_preparation - DEBUG - Valve 90: Collected ROHRTYP categories.
+2024-09-28 15:49:09,083 - src.data.data_preparation - DEBUG - Valve 91: Collected ROHRTYP categories.
+2024-09-28 15:49:09,084 - src.data.data_preparation - DEBUG - Valve 92: Collected ROHRTYP categories.
+2024-09-28 15:49:09,086 - src.data.data_preparation - DEBUG - Valve 93: Collected ROHRTYP categories.
+2024-09-28 15:49:09,087 - src.data.data_preparation - DEBUG - Valve 94: Collected ROHRTYP categories.
+2024-09-28 15:49:09,088 - src.data.data_preparation - DEBUG - Valve 95: Collected ROHRTYP categories.
+2024-09-28 15:49:09,089 - src.data.data_preparation - DEBUG - Valve 96: Collected ROHRTYP categories.
+2024-09-28 15:49:09,091 - src.data.data_preparation - DEBUG - Valve 97: Collected ROHRTYP categories.
+2024-09-28 15:49:09,091 - src.data.data_preparation - DEBUG - Valve 98: Collected ROHRTYP categories.
+2024-09-28 15:49:09,093 - src.data.data_preparation - DEBUG - Valve 99: Collected ROHRTYP categories.
+2024-09-28 15:49:09,094 - src.data.data_preparation - DEBUG - Valve 100: Collected ROHRTYP categories.
+2024-09-28 15:49:09,095 - src.data.data_preparation - DEBUG - Valve 101: Collected ROHRTYP categories.
+2024-09-28 15:49:09,097 - src.data.data_preparation - DEBUG - Valve 102: Collected ROHRTYP categories.
+2024-09-28 15:49:09,098 - src.data.data_preparation - DEBUG - Valve 103: Collected ROHRTYP categories.
+2024-09-28 15:49:09,100 - src.data.data_preparation - DEBUG - Valve 104: Collected ROHRTYP categories.
+2024-09-28 15:49:09,101 - src.data.data_preparation - DEBUG - Valve 105: Collected ROHRTYP categories.
+2024-09-28 15:49:09,103 - src.data.data_preparation - DEBUG - Valve 106: Collected ROHRTYP categories.
+2024-09-28 15:49:09,104 - src.data.data_preparation - DEBUG - Valve 107: Collected ROHRTYP categories.
+2024-09-28 15:49:09,105 - src.data.data_preparation - DEBUG - Valve 108: Collected ROHRTYP categories.
+2024-09-28 15:49:09,105 - src.data.data_preparation - INFO - Collected 18 unique ROHRTYP categories across all datasets.
+2024-09-28 15:49:09,108 - src.data.data_preparation - INFO - First dataset loaded successfully.
+2024-09-28 15:49:09,115 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,116 - src.data.data_preparation - INFO - Graph-based imputation completed for 'ZUFLUSS_WL'.
+2024-09-28 15:49:09,116 - src.data.data_preparation - INFO - One-Hot Encoding for 'ROHRTYP' completed.
+2024-09-28 15:49:09,116 - src.data.data_preparation - INFO - Reindexed edges_df_first to include all ROHRTYP columns. Missing columns filled with 0.
+2024-09-28 15:49:09,117 - src.data.data_preparation - INFO - Dropped 'RAU' column from edges.
+2024-09-28 15:49:09,120 - src.data.data_preparation - INFO - Scalers fitted on the first dataset.
+2024-09-28 15:49:09,123 - src.data.data_preparation - INFO - Scaling of features completed.
+2024-09-28 15:49:09,123 - __main__ - INFO - DataModule prepared the first dataset and fitted scalers.
+2024-09-28 15:49:09,126 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_1_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_1_combined_Pipes.csv.
+2024-09-28 15:49:09,132 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,133 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,133 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,133 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,145 - src.data.data_preparation - INFO - Valve 1 data loaded successfully.
+2024-09-28 15:49:09,147 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_2_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_2_combined_Pipes.csv.
+2024-09-28 15:49:09,153 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,154 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,154 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,155 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,157 - src.data.data_preparation - INFO - Valve 2 data loaded successfully.
+2024-09-28 15:49:09,159 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_3_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_3_combined_Pipes.csv.
+2024-09-28 15:49:09,166 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,167 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,167 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,167 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,170 - src.data.data_preparation - INFO - Valve 3 data loaded successfully.
+2024-09-28 15:49:09,173 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_4_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_4_combined_Pipes.csv.
+2024-09-28 15:49:09,179 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,181 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,181 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,181 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,184 - src.data.data_preparation - INFO - Valve 4 data loaded successfully.
+2024-09-28 15:49:09,187 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_5_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_5_combined_Pipes.csv.
+2024-09-28 15:49:09,193 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,193 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,194 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,194 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,196 - src.data.data_preparation - INFO - Valve 5 data loaded successfully.
+2024-09-28 15:49:09,200 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_6_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_6_combined_Pipes.csv.
+2024-09-28 15:49:09,214 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,215 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,215 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,215 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,218 - src.data.data_preparation - INFO - Valve 6 data loaded successfully.
+2024-09-28 15:49:09,222 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_7_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_7_combined_Pipes.csv.
+2024-09-28 15:49:09,230 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,230 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,231 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,231 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,235 - src.data.data_preparation - INFO - Valve 7 data loaded successfully.
+2024-09-28 15:49:09,239 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_8_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_8_combined_Pipes.csv.
+2024-09-28 15:49:09,246 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,247 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,247 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,248 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,250 - src.data.data_preparation - INFO - Valve 8 data loaded successfully.
+2024-09-28 15:49:09,255 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_9_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_9_combined_Pipes.csv.
+2024-09-28 15:49:09,262 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,263 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,263 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,263 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,265 - src.data.data_preparation - INFO - Valve 9 data loaded successfully.
+2024-09-28 15:49:09,271 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_10_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_10_combined_Pipes.csv.
+2024-09-28 15:49:09,278 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,279 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,279 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,279 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,281 - src.data.data_preparation - INFO - Valve 10 data loaded successfully.
+2024-09-28 15:49:09,287 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_11_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_11_combined_Pipes.csv.
+2024-09-28 15:49:09,294 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,295 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,295 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,295 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,297 - src.data.data_preparation - INFO - Valve 11 data loaded successfully.
+2024-09-28 15:49:09,302 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_12_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_12_combined_Pipes.csv.
+2024-09-28 15:49:09,309 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,310 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,311 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,311 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,313 - src.data.data_preparation - INFO - Valve 12 data loaded successfully.
+2024-09-28 15:49:09,318 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_13_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_13_combined_Pipes.csv.
+2024-09-28 15:49:09,323 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,324 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,325 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,325 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,327 - src.data.data_preparation - INFO - Valve 13 data loaded successfully.
+2024-09-28 15:49:09,330 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_14_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_14_combined_Pipes.csv.
+2024-09-28 15:49:09,339 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,340 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,340 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,341 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,343 - src.data.data_preparation - INFO - Valve 14 data loaded successfully.
+2024-09-28 15:49:09,346 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_15_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_15_combined_Pipes.csv.
+2024-09-28 15:49:09,352 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,353 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,353 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,353 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,356 - src.data.data_preparation - INFO - Valve 15 data loaded successfully.
+2024-09-28 15:49:09,359 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_16_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_16_combined_Pipes.csv.
+2024-09-28 15:49:09,365 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,367 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,368 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,368 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,371 - src.data.data_preparation - INFO - Valve 16 data loaded successfully.
+2024-09-28 15:49:09,375 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_17_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_17_combined_Pipes.csv.
+2024-09-28 15:49:09,381 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,381 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,382 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,382 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,384 - src.data.data_preparation - INFO - Valve 17 data loaded successfully.
+2024-09-28 15:49:09,388 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_18_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_18_combined_Pipes.csv.
+2024-09-28 15:49:09,394 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,395 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,395 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,395 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,397 - src.data.data_preparation - INFO - Valve 18 data loaded successfully.
+2024-09-28 15:49:09,402 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_19_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_19_combined_Pipes.csv.
+2024-09-28 15:49:09,408 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,409 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,409 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,409 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,412 - src.data.data_preparation - INFO - Valve 19 data loaded successfully.
+2024-09-28 15:49:09,416 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_20_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_20_combined_Pipes.csv.
+2024-09-28 15:49:09,422 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,423 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,424 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,424 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,426 - src.data.data_preparation - INFO - Valve 20 data loaded successfully.
+2024-09-28 15:49:09,430 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_21_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_21_combined_Pipes.csv.
+2024-09-28 15:49:09,437 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,440 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,441 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,441 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,444 - src.data.data_preparation - INFO - Valve 21 data loaded successfully.
+2024-09-28 15:49:09,447 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_22_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_22_combined_Pipes.csv.
+2024-09-28 15:49:09,453 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,454 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,454 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,454 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,457 - src.data.data_preparation - INFO - Valve 22 data loaded successfully.
+2024-09-28 15:49:09,461 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_23_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_23_combined_Pipes.csv.
+2024-09-28 15:49:09,469 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,469 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,470 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,470 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,473 - src.data.data_preparation - INFO - Valve 23 data loaded successfully.
+2024-09-28 15:49:09,476 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_24_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_24_combined_Pipes.csv.
+2024-09-28 15:49:09,484 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,485 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,485 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,485 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,487 - src.data.data_preparation - INFO - Valve 24 data loaded successfully.
+2024-09-28 15:49:09,491 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_25_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_25_combined_Pipes.csv.
+2024-09-28 15:49:09,497 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,498 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,499 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,499 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,502 - src.data.data_preparation - INFO - Valve 25 data loaded successfully.
+2024-09-28 15:49:09,507 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_26_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_26_combined_Pipes.csv.
+2024-09-28 15:49:09,515 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,516 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,517 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,517 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,519 - src.data.data_preparation - INFO - Valve 26 data loaded successfully.
+2024-09-28 15:49:09,522 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_27_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_27_combined_Pipes.csv.
+2024-09-28 15:49:09,528 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,530 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,530 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,530 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,532 - src.data.data_preparation - INFO - Valve 27 data loaded successfully.
+2024-09-28 15:49:09,536 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_28_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_28_combined_Pipes.csv.
+2024-09-28 15:49:09,544 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,545 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,546 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,546 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,548 - src.data.data_preparation - INFO - Valve 28 data loaded successfully.
+2024-09-28 15:49:09,552 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_29_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_29_combined_Pipes.csv.
+2024-09-28 15:49:09,558 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,559 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,559 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,559 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,561 - src.data.data_preparation - INFO - Valve 29 data loaded successfully.
+2024-09-28 15:49:09,565 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_30_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_30_combined_Pipes.csv.
+2024-09-28 15:49:09,571 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,572 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,572 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,573 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,575 - src.data.data_preparation - INFO - Valve 30 data loaded successfully.
+2024-09-28 15:49:09,577 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_31_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_31_combined_Pipes.csv.
+2024-09-28 15:49:09,583 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,584 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,585 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,585 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,587 - src.data.data_preparation - INFO - Valve 31 data loaded successfully.
+2024-09-28 15:49:09,590 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_32_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_32_combined_Pipes.csv.
+2024-09-28 15:49:09,596 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,598 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,598 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,598 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,602 - src.data.data_preparation - INFO - Valve 32 data loaded successfully.
+2024-09-28 15:49:09,604 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_33_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_33_combined_Pipes.csv.
+2024-09-28 15:49:09,610 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,611 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,611 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,612 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,614 - src.data.data_preparation - INFO - Valve 33 data loaded successfully.
+2024-09-28 15:49:09,616 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_34_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_34_combined_Pipes.csv.
+2024-09-28 15:49:09,624 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,625 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,625 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,625 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,627 - src.data.data_preparation - INFO - Valve 34 data loaded successfully.
+2024-09-28 15:49:09,630 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_35_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_35_combined_Pipes.csv.
+2024-09-28 15:49:09,643 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,645 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,645 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,646 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,648 - src.data.data_preparation - INFO - Valve 35 data loaded successfully.
+2024-09-28 15:49:09,652 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_36_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_36_combined_Pipes.csv.
+2024-09-28 15:49:09,659 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,660 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,660 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,660 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,662 - src.data.data_preparation - INFO - Valve 36 data loaded successfully.
+2024-09-28 15:49:09,665 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_37_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_37_combined_Pipes.csv.
+2024-09-28 15:49:09,674 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,675 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,675 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,675 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,679 - src.data.data_preparation - INFO - Valve 37 data loaded successfully.
+2024-09-28 15:49:09,684 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_38_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_38_combined_Pipes.csv.
+2024-09-28 15:49:09,690 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,691 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,691 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,691 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,694 - src.data.data_preparation - INFO - Valve 38 data loaded successfully.
+2024-09-28 15:49:09,698 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_39_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_39_combined_Pipes.csv.
+2024-09-28 15:49:09,706 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,707 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,707 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,707 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,711 - src.data.data_preparation - INFO - Valve 39 data loaded successfully.
+2024-09-28 15:49:09,715 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_40_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_40_combined_Pipes.csv.
+2024-09-28 15:49:09,721 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,722 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,722 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,722 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,724 - src.data.data_preparation - INFO - Valve 40 data loaded successfully.
+2024-09-28 15:49:09,728 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_41_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_41_combined_Pipes.csv.
+2024-09-28 15:49:09,735 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,736 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,737 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,737 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,740 - src.data.data_preparation - INFO - Valve 41 data loaded successfully.
+2024-09-28 15:49:09,745 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_42_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_42_combined_Pipes.csv.
+2024-09-28 15:49:09,750 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,751 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,752 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,752 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,754 - src.data.data_preparation - INFO - Valve 42 data loaded successfully.
+2024-09-28 15:49:09,757 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_43_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_43_combined_Pipes.csv.
+2024-09-28 15:49:09,763 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,764 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,765 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,765 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,767 - src.data.data_preparation - INFO - Valve 43 data loaded successfully.
+2024-09-28 15:49:09,771 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_44_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_44_combined_Pipes.csv.
+2024-09-28 15:49:09,777 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,778 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,778 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,778 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,780 - src.data.data_preparation - INFO - Valve 44 data loaded successfully.
+2024-09-28 15:49:09,784 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_45_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_45_combined_Pipes.csv.
+2024-09-28 15:49:09,791 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,792 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,793 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,793 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,795 - src.data.data_preparation - INFO - Valve 45 data loaded successfully.
+2024-09-28 15:49:09,798 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_46_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_46_combined_Pipes.csv.
+2024-09-28 15:49:09,805 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,806 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,806 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,806 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,808 - src.data.data_preparation - INFO - Valve 46 data loaded successfully.
+2024-09-28 15:49:09,810 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_47_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_47_combined_Pipes.csv.
+2024-09-28 15:49:09,817 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,818 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,819 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,819 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,821 - src.data.data_preparation - INFO - Valve 47 data loaded successfully.
+2024-09-28 15:49:09,824 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_48_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_48_combined_Pipes.csv.
+2024-09-28 15:49:09,830 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,831 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,832 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,832 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,834 - src.data.data_preparation - INFO - Valve 48 data loaded successfully.
+2024-09-28 15:49:09,838 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_49_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_49_combined_Pipes.csv.
+2024-09-28 15:49:09,845 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,845 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,846 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,846 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,849 - src.data.data_preparation - INFO - Valve 49 data loaded successfully.
+2024-09-28 15:49:09,852 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_50_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_50_combined_Pipes.csv.
+2024-09-28 15:49:09,858 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,859 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,859 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,860 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,862 - src.data.data_preparation - INFO - Valve 50 data loaded successfully.
+2024-09-28 15:49:09,865 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_51_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_51_combined_Pipes.csv.
+2024-09-28 15:49:09,875 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,877 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,878 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,878 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,882 - src.data.data_preparation - INFO - Valve 51 data loaded successfully.
+2024-09-28 15:49:09,885 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_52_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_52_combined_Pipes.csv.
+2024-09-28 15:49:09,892 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,893 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,894 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,894 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,897 - src.data.data_preparation - INFO - Valve 52 data loaded successfully.
+2024-09-28 15:49:09,901 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_53_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_53_combined_Pipes.csv.
+2024-09-28 15:49:09,909 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,911 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,911 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,912 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,914 - src.data.data_preparation - INFO - Valve 53 data loaded successfully.
+2024-09-28 15:49:09,918 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_54_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_54_combined_Pipes.csv.
+2024-09-28 15:49:09,924 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,925 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,925 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,925 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,928 - src.data.data_preparation - INFO - Valve 54 data loaded successfully.
+2024-09-28 15:49:09,932 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_55_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_55_combined_Pipes.csv.
+2024-09-28 15:49:09,938 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,939 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,939 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,940 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,943 - src.data.data_preparation - INFO - Valve 55 data loaded successfully.
+2024-09-28 15:49:09,946 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_56_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_56_combined_Pipes.csv.
+2024-09-28 15:49:09,953 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,954 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,954 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,954 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,956 - src.data.data_preparation - INFO - Valve 56 data loaded successfully.
+2024-09-28 15:49:09,960 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_57_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_57_combined_Pipes.csv.
+2024-09-28 15:49:09,966 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,967 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,967 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,968 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,969 - src.data.data_preparation - INFO - Valve 57 data loaded successfully.
+2024-09-28 15:49:09,974 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_58_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_58_combined_Pipes.csv.
+2024-09-28 15:49:09,981 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,982 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,982 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,982 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,984 - src.data.data_preparation - INFO - Valve 58 data loaded successfully.
+2024-09-28 15:49:09,988 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_59_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_59_combined_Pipes.csv.
+2024-09-28 15:49:09,994 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:09,995 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:09,995 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:09,996 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:09,998 - src.data.data_preparation - INFO - Valve 59 data loaded successfully.
+2024-09-28 15:49:10,002 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_60_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_60_combined_Pipes.csv.
+2024-09-28 15:49:10,008 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,009 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,009 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,009 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,012 - src.data.data_preparation - INFO - Valve 60 data loaded successfully.
+2024-09-28 15:49:10,016 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_61_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_61_combined_Pipes.csv.
+2024-09-28 15:49:10,023 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,024 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,024 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,024 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,026 - src.data.data_preparation - INFO - Valve 61 data loaded successfully.
+2024-09-28 15:49:10,030 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_62_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_62_combined_Pipes.csv.
+2024-09-28 15:49:10,036 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,037 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,038 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,038 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,043 - src.data.data_preparation - INFO - Valve 62 data loaded successfully.
+2024-09-28 15:49:10,046 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_63_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_63_combined_Pipes.csv.
+2024-09-28 15:49:10,053 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,054 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,054 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,054 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,057 - src.data.data_preparation - INFO - Valve 63 data loaded successfully.
+2024-09-28 15:49:10,060 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_64_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_64_combined_Pipes.csv.
+2024-09-28 15:49:10,067 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,068 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,068 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,069 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,071 - src.data.data_preparation - INFO - Valve 64 data loaded successfully.
+2024-09-28 15:49:10,077 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_65_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_65_combined_Pipes.csv.
+2024-09-28 15:49:10,085 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,086 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,086 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,087 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,089 - src.data.data_preparation - INFO - Valve 65 data loaded successfully.
+2024-09-28 15:49:10,093 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_66_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_66_combined_Pipes.csv.
+2024-09-28 15:49:10,099 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,101 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,101 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,101 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,103 - src.data.data_preparation - INFO - Valve 66 data loaded successfully.
+2024-09-28 15:49:10,108 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_67_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_67_combined_Pipes.csv.
+2024-09-28 15:49:10,118 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,118 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,119 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,119 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,120 - src.data.data_preparation - INFO - Valve 67 data loaded successfully.
+2024-09-28 15:49:10,124 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_68_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_68_combined_Pipes.csv.
+2024-09-28 15:49:10,130 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,130 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,131 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,131 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,133 - src.data.data_preparation - INFO - Valve 68 data loaded successfully.
+2024-09-28 15:49:10,136 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_69_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_69_combined_Pipes.csv.
+2024-09-28 15:49:10,143 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,144 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,144 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,144 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,146 - src.data.data_preparation - INFO - Valve 69 data loaded successfully.
+2024-09-28 15:49:10,149 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_70_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_70_combined_Pipes.csv.
+2024-09-28 15:49:10,154 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,155 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,155 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,155 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,157 - src.data.data_preparation - INFO - Valve 70 data loaded successfully.
+2024-09-28 15:49:10,160 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_71_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_71_combined_Pipes.csv.
+2024-09-28 15:49:10,166 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,166 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,167 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,167 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,169 - src.data.data_preparation - INFO - Valve 71 data loaded successfully.
+2024-09-28 15:49:10,172 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_72_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_72_combined_Pipes.csv.
+2024-09-28 15:49:10,178 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,179 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,179 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,179 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,182 - src.data.data_preparation - INFO - Valve 72 data loaded successfully.
+2024-09-28 15:49:10,184 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_73_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_73_combined_Pipes.csv.
+2024-09-28 15:49:10,191 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,191 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,191 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,192 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,194 - src.data.data_preparation - INFO - Valve 73 data loaded successfully.
+2024-09-28 15:49:10,198 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_74_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_74_combined_Pipes.csv.
+2024-09-28 15:49:10,204 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,205 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,205 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,205 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,208 - src.data.data_preparation - INFO - Valve 74 data loaded successfully.
+2024-09-28 15:49:10,211 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_75_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_75_combined_Pipes.csv.
+2024-09-28 15:49:10,218 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,218 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,218 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,218 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,221 - src.data.data_preparation - INFO - Valve 75 data loaded successfully.
+2024-09-28 15:49:10,224 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_76_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_76_combined_Pipes.csv.
+2024-09-28 15:49:10,230 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,231 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,232 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,232 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,234 - src.data.data_preparation - INFO - Valve 76 data loaded successfully.
+2024-09-28 15:49:10,237 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_77_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_77_combined_Pipes.csv.
+2024-09-28 15:49:10,246 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,247 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,248 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,248 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,250 - src.data.data_preparation - INFO - Valve 77 data loaded successfully.
+2024-09-28 15:49:10,253 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_78_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_78_combined_Pipes.csv.
+2024-09-28 15:49:10,259 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,261 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,261 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,262 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,263 - src.data.data_preparation - INFO - Valve 78 data loaded successfully.
+2024-09-28 15:49:10,268 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_79_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_79_combined_Pipes.csv.
+2024-09-28 15:49:10,275 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,276 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,276 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,277 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,281 - src.data.data_preparation - INFO - Valve 79 data loaded successfully.
+2024-09-28 15:49:10,284 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_80_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_80_combined_Pipes.csv.
+2024-09-28 15:49:10,291 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,292 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,292 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,293 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,295 - src.data.data_preparation - INFO - Valve 80 data loaded successfully.
+2024-09-28 15:49:10,298 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_81_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_81_combined_Pipes.csv.
+2024-09-28 15:49:10,305 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,306 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,306 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,306 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,308 - src.data.data_preparation - INFO - Valve 81 data loaded successfully.
+2024-09-28 15:49:10,313 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_82_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_82_combined_Pipes.csv.
+2024-09-28 15:49:10,321 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,322 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,322 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,322 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,324 - src.data.data_preparation - INFO - Valve 82 data loaded successfully.
+2024-09-28 15:49:10,328 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_83_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_83_combined_Pipes.csv.
+2024-09-28 15:49:10,334 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,335 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,335 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,335 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,337 - src.data.data_preparation - INFO - Valve 83 data loaded successfully.
+2024-09-28 15:49:10,341 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_84_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_84_combined_Pipes.csv.
+2024-09-28 15:49:10,348 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,349 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,349 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,350 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,352 - src.data.data_preparation - INFO - Valve 84 data loaded successfully.
+2024-09-28 15:49:10,356 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_85_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_85_combined_Pipes.csv.
+2024-09-28 15:49:10,362 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,363 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,363 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,363 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,365 - src.data.data_preparation - INFO - Valve 85 data loaded successfully.
+2024-09-28 15:49:10,368 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_86_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_86_combined_Pipes.csv.
+2024-09-28 15:49:10,374 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,375 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,375 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,375 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,378 - src.data.data_preparation - INFO - Valve 86 data loaded successfully.
+2024-09-28 15:49:10,381 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_87_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_87_combined_Pipes.csv.
+2024-09-28 15:49:10,386 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,387 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,387 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,387 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,389 - src.data.data_preparation - INFO - Valve 87 data loaded successfully.
+2024-09-28 15:49:10,393 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_88_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_88_combined_Pipes.csv.
+2024-09-28 15:49:10,399 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,401 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,401 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,401 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,404 - src.data.data_preparation - INFO - Valve 88 data loaded successfully.
+2024-09-28 15:49:10,407 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_89_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_89_combined_Pipes.csv.
+2024-09-28 15:49:10,416 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,418 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,418 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,418 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,420 - src.data.data_preparation - INFO - Valve 89 data loaded successfully.
+2024-09-28 15:49:10,424 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_90_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_90_combined_Pipes.csv.
+2024-09-28 15:49:10,430 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,431 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,431 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,431 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,434 - src.data.data_preparation - INFO - Valve 90 data loaded successfully.
+2024-09-28 15:49:10,437 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_91_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_91_combined_Pipes.csv.
+2024-09-28 15:49:10,445 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,446 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,446 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,447 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,450 - src.data.data_preparation - INFO - Valve 91 data loaded successfully.
+2024-09-28 15:49:10,453 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_92_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_92_combined_Pipes.csv.
+2024-09-28 15:49:10,460 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,461 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,461 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,461 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,464 - src.data.data_preparation - INFO - Valve 92 data loaded successfully.
+2024-09-28 15:49:10,468 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_93_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_93_combined_Pipes.csv.
+2024-09-28 15:49:10,474 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,475 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,475 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,475 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,477 - src.data.data_preparation - INFO - Valve 93 data loaded successfully.
+2024-09-28 15:49:10,483 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_94_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_94_combined_Pipes.csv.
+2024-09-28 15:49:10,491 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,492 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,493 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,493 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,495 - src.data.data_preparation - INFO - Valve 94 data loaded successfully.
+2024-09-28 15:49:10,499 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_95_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_95_combined_Pipes.csv.
+2024-09-28 15:49:10,505 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,506 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,506 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,506 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,508 - src.data.data_preparation - INFO - Valve 95 data loaded successfully.
+2024-09-28 15:49:10,513 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_96_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_96_combined_Pipes.csv.
+2024-09-28 15:49:10,520 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,521 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,521 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,522 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,524 - src.data.data_preparation - INFO - Valve 96 data loaded successfully.
+2024-09-28 15:49:10,528 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_97_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_97_combined_Pipes.csv.
+2024-09-28 15:49:10,534 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,534 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,535 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,535 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,537 - src.data.data_preparation - INFO - Valve 97 data loaded successfully.
+2024-09-28 15:49:10,541 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_98_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_98_combined_Pipes.csv.
+2024-09-28 15:49:10,548 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,549 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,550 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,551 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,553 - src.data.data_preparation - INFO - Valve 98 data loaded successfully.
+2024-09-28 15:49:10,556 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_99_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_99_combined_Pipes.csv.
+2024-09-28 15:49:10,563 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,563 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,564 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,564 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,566 - src.data.data_preparation - INFO - Valve 99 data loaded successfully.
+2024-09-28 15:49:10,570 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_100_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_100_combined_Pipes.csv.
+2024-09-28 15:49:10,576 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,577 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,577 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,577 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,579 - src.data.data_preparation - INFO - Valve 100 data loaded successfully.
+2024-09-28 15:49:10,582 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_101_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_101_combined_Pipes.csv.
+2024-09-28 15:49:10,589 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,589 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,590 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,590 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,593 - src.data.data_preparation - INFO - Valve 101 data loaded successfully.
+2024-09-28 15:49:10,596 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_102_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_102_combined_Pipes.csv.
+2024-09-28 15:49:10,603 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,604 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,605 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,605 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,608 - src.data.data_preparation - INFO - Valve 102 data loaded successfully.
+2024-09-28 15:49:10,611 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_103_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_103_combined_Pipes.csv.
+2024-09-28 15:49:10,619 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,621 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,621 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,622 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,624 - src.data.data_preparation - INFO - Valve 103 data loaded successfully.
+2024-09-28 15:49:10,628 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_104_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_104_combined_Pipes.csv.
+2024-09-28 15:49:10,634 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,635 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,635 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,636 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,638 - src.data.data_preparation - INFO - Valve 104 data loaded successfully.
+2024-09-28 15:49:10,642 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_105_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_105_combined_Pipes.csv.
+2024-09-28 15:49:10,648 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,649 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,649 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,649 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,654 - src.data.data_preparation - INFO - Valve 105 data loaded successfully.
+2024-09-28 15:49:10,659 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_106_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_106_combined_Pipes.csv.
+2024-09-28 15:49:10,665 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,667 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,667 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,667 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,669 - src.data.data_preparation - INFO - Valve 106 data loaded successfully.
+2024-09-28 15:49:10,672 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_107_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_107_combined_Pipes.csv.
+2024-09-28 15:49:10,679 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,679 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,681 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,681 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,684 - src.data.data_preparation - INFO - Valve 107 data loaded successfully.
+2024-09-28 15:49:10,689 - src.data.data_loader - INFO - Loaded node data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_108_combined_Node.csv and edge data from C:\Users\D.Muehlfeld\Documents\Berechnungsdaten_Valve\Zwischenspeicher\SyntheticData-Spechbach_Valve_108_combined_Pipes.csv.
+2024-09-28 15:49:10,695 - src.data.data_loader - INFO - Graph-based Imputation für 'ZUFLUSS_WL' abgeschlossen.
+2024-09-28 15:49:10,697 - src.data.data_loader - INFO - One-Hot Encoding für 'ROHRTYP' abgeschlossen.
+2024-09-28 15:49:10,697 - src.data.data_loader - INFO - Reindexed edges_df, um alle ROHRTYP Spalten zu inkludieren.
+2024-09-28 15:49:10,698 - src.data.data_loader - INFO - Spalte 'RAU' aus edges_df entfernt.
+2024-09-28 15:49:10,699 - src.data.data_preparation - INFO - Valve 108 data loaded successfully.
+2024-09-28 15:49:10,700 - __main__ - INFO - Loaded 108 datasets successfully.
+2024-09-28 15:49:10,700 - __main__ - INFO - Data split into 86 training and 22 validation samples.
+2024-09-28 15:49:10,700 - __main__ - INFO - Training positive samples: 95.0, Validation positive samples: 22.0.
+2024-09-28 15:49:11,036 - src.models.model_setup - INFO - Model initialized successfully.
+2024-09-28 15:49:11,036 - src.models.model_setup - INFO - Optimizer initialized successfully.
+2024-09-28 15:49:11,036 - __main__ - INFO - Model, optimizer, criterion, and scheduler initialized.
+2024-09-28 15:49:11,037 - __main__ - INFO - DataLoaders created successfully.
+2024-09-28 15:49:11,037 - __main__ - INFO - Epoch 1/300
+2024-09-28 15:49:11,181 - src.train.train - ERROR - Error during training: Target size (torch.Size([320])) must be the same as input size (torch.Size([301, 1]))
+2024-09-28 15:49:11,181 - __main__ - ERROR - An error occurred during epoch 1: Target size (torch.Size([320])) must be the same as input size (torch.Size([301, 1]))
+2024-09-28 15:49:11,181 - __main__ - INFO - Training completed successfully.
+2024-09-28 15:49:11,464 - src.train.train - INFO - Testing completed successfully.
+2024-09-28 15:49:11,464 - __main__ - INFO - Test predictions obtained.
+2024-09-28 15:49:11,465 - __main__ - ERROR - An error occurred during evaluation: Input contains NaN.
+2024-09-28 15:49:11,465 - __main__ - ERROR - Error during evaluation: Input contains NaN.
