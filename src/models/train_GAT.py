@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import torch
 import numpy as np
+import yaml
+import joblib
 from torch_geometric.data import Data, DataLoader
 from torch_geometric.nn import GATConv
 import torch.nn.functional as F
@@ -21,20 +23,11 @@ from sklearn.impute import KNNImputer
 from sklearn.metrics import roc_curve, auc
 import logging
 
-# Logging Configuration
-logging.basicConfig(
-    level=logging.INFO,  # Set to DEBUG if you want to see debug logs
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("training.log"),
-        logging.StreamHandler()
-    ]
-)
 logger = logging.getLogger(__name__)
 
 # Data Preparation Class
 class DataModule:
-    def __init__(self, directory, included_nodes, zfluss_wl_nodes, num_valves=108):
+    def __init__(self, directory, included_nodes, zfluss_wl_nodes, num_valves=100):
         self.directory = directory
         self.included_nodes = included_nodes
         self.zfluss_wl_nodes = zfluss_wl_nodes
@@ -188,6 +181,9 @@ class DataModule:
         logger.debug("Created PyTorch Geometric Data object.")
         return data
 
+    import os
+    import joblib
+
     def fit_scalers(self):
         node_file_first = f'{self.directory}SyntheticData-Spechbach_Valve_1_combined_Node.csv'
         edge_file_first = f'{self.directory}SyntheticData-Spechbach_Valve_1_combined_Pipes.csv'
@@ -251,6 +247,21 @@ class DataModule:
         self.edge_scaler.fit(edges_df_first[edge_columns])
         logger.debug("Fitted edge scaler.")
 
+        # **Speichern der Scaler**
+        # Definiere den Pfad zum Projektstammverzeichnis
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        # Definiere den Pfad zum Ordner 'results/scalers'
+        scalers_dir = os.path.join(project_root, 'results', 'models')
+        # Konstruiere die Pfade zu den Scaler-Dateien
+        physical_scaler_path = os.path.join(scalers_dir, 'physical_scaler.pkl')
+        geo_scaler_path = os.path.join(scalers_dir, 'geo_scaler.pkl')
+        edge_scaler_path = os.path.join(scalers_dir, 'edge_scaler.pkl')
+        # Speichere die Scaler
+        joblib.dump(self.physical_scaler, physical_scaler_path)
+        joblib.dump(self.geo_scaler, geo_scaler_path)
+        joblib.dump(self.edge_scaler, edge_scaler_path)
+        logger.info("Saved scalers.")
+
     def load_all_data(self):
         self.fit_scalers()
         logger.info("Started loading all datasets.")
@@ -260,7 +271,7 @@ class DataModule:
             try:
                 data = self.load_data(node_file, edge_file)
                 self.datasets.append(data)
-                logger.info(f'Dataset {i} loaded successfully.')
+                logger.debug(f'Dataset {i} loaded successfully.')
             except Exception as e:
                 logger.error(f'Error loading Dataset {i}: {e}')
                 continue
@@ -499,54 +510,25 @@ class Evaluator:
 
 # Main Function
 def main():
-    directory = r'C:/Users/D.Muehlfeld/Documents/Berechnungsdaten_Valve/Zwischenspeicher/'
+
+    # Get the absolute path to the config file relative to the project root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))  # Two levels up
+    config_file = os.path.join(project_root, 'config', 'config.yaml')  # Default path to config.yaml
+
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    directory = config['paths']['folder_path_data']
+
+    logger = logging.getLogger(__name__)
 
     # List of nodes with available measurement data
-    included_nodes = [
-        'K0003', 'K0004', 'K0005', 'K0006', 'K0011', 'K0012', 'K0014', 'K0016',
-        'K0017', 'K0020', 'K0021', 'K0028', 'K0032', 'K0033', 'K0034', 'K0061',
-        'K0062', 'K0063', 'K0064', 'K0080', 'K0086', 'K0087', 'K0088', 'K0090',
-        'K0091', 'K0093', 'K0094', 'K0115', 'K0119', 'K0121', 'K0125', 'K0135',
-        'K0136', 'K0138', 'K0144', 'K0145', 'K0147', 'K0148', 'K0151', 'K0155',
-        'K0156', 'K0163', 'K0164', 'K0165', 'K0166', 'K0173', 'K0174', 'K0176',
-        'K0179', 'K0180', 'K0183', 'K0184', 'K0185', 'K0186', 'K0191', 'K0195',
-        'K0201', 'K0207', 'K0208', 'K0209', 'K0210', 'K0211', 'K0213', 'K0214',
-        'K0220', 'K0229', 'K0230', 'K0238', 'K0239', 'K0245', 'K0254', 'K0260',
-        'K0261', 'K0294', 'K0300', 'K0301', 'K0305', 'K0311', 'K0314', 'K0315',
-        'K0316', 'K0317', 'K0318', 'K0319', 'K0327', 'K0328', 'K0329', 'K0330',
-        'K0333', 'K0334', 'K0335', 'K0336', 'K0340', 'K0347', 'K0357', 'K0215',
-        'K0388'
-    ]
-
-    # List of nodes with available ZUFLUSS_WL data (sorted and without duplicates)
-    zfluss_wl_nodes = [
-        'K0003', 'K0004', 'K0005', 'K0006', 'K0007', 'K0008', 'K0011', 'K0012', 'K0013', 'K0014',
-        'K0015', 'K0016', 'K0021', 'K0022', 'K0023', 'K0025', 'K0026', 'K0028', 'K0029', 'K0030',
-        'K0031', 'K0033', 'K0034', 'K0036', 'K0037', 'K0038', 'K0040', 'K0041', 'K0042', 'K0045',
-        'K0046', 'K0059', 'K0060', 'K0061', 'K0062', 'K0063', 'K0065', 'K0066', 'K0067', 'K0070',
-        'K0071', 'K0073', 'K0074', 'K0076', 'K0077', 'K0078', 'K0079', 'K0080', 'K0081', 'K0082',
-        'K0083', 'K0084', 'K0085', 'K0086', 'K0089', 'K0090', 'K0091', 'K0093', 'K0094', 'K0095',
-        'K0101', 'K0106', 'K0108', 'K0109', 'K0110', 'K0111', 'K0112', 'K0113', 'K0115', 'K0118',
-        'K0119', 'K0121', 'K0122', 'K0125', 'K0127', 'K0128', 'K0129', 'K0130', 'K0131', 'K0132',
-        'K0133', 'K0135', 'K0136', 'K0137', 'K0138', 'K0140', 'K0141', 'K0142', 'K0147', 'K0148',
-        'K0151', 'K0152', 'K0155', 'K0156', 'K0160', 'K0161', 'K0162', 'K0163', 'K0164', 'K0165',
-        'K0166', 'K0168', 'K0169', 'K0170', 'K0171', 'K0172', 'K0173', 'K0174', 'K0176', 'K0177',
-        'K0179', 'K0180', 'K0181', 'K0182', 'K0183', 'K0184', 'K0185', 'K0186', 'K0188', 'K0189',
-        'K0190', 'K0191', 'K0193', 'K0195', 'K0196', 'K0197', 'K0198', 'K0199', 'K0200', 'K0201',
-        'K0202', 'K0204', 'K0205', 'K0206', 'K0207', 'K0208', 'K0209', 'K0210', 'K0211', 'K0213',
-        'K0214', 'K0215', 'K0219', 'K0220', 'K0222', 'K0223', 'K0226', 'K0229', 'K0230', 'K0232',
-        'K0233', 'K0234', 'K0235', 'K0237', 'K0238', 'K0239', 'K0244', 'K0245', 'K0248', 'K0249',
-        'K0250', 'K0251', 'K0252', 'K0255', 'K0256', 'K0260', 'K0261', 'K0262', 'K0264', 'K0265',
-        'K0266', 'K0277', 'K0280', 'K0281', 'K0282', 'K0283', 'K0287', 'K0289', 'K0290', 'K0291',
-        'K0292', 'K0295', 'K0296', 'K0298', 'K0299', 'K0300', 'K0301', 'K0304', 'K0305', 'K0306',
-        'K0307', 'K0308', 'K0309', 'K0311', 'K0312', 'K0313', 'K0314', 'K0315', 'K0316', 'K0317',
-        'K0318', 'K0319', 'K0320', 'K0321', 'K0322', 'K0323', 'K0324', 'K0325', 'K0327', 'K0328',
-        'K0329', 'K0330', 'K0332', 'K0333', 'K0334', 'K0336', 'K0340', 'K0342', 'K0346', 'K0347',
-        'K0357', 'K0364', 'K0365', 'K0388'
-    ]
+    included_nodes = config['nodes']['included_nodes']
+    zfluss_wl_nodes = config['nodes']['zfluss_wl_nodes']
 
     # Initialize DataModule
-    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=108)
+    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=3800)
     data_module.load_all_data()
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
@@ -611,7 +593,9 @@ def main():
     evaluator.plot_metrics(y_true, y_pred)
 
     # Save the model
-    model_path = os.path.join(directory, 'edge_gat_model_classification.pth')
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    results_dir = os.path.join(project_root, 'results', 'models')
+    model_path = os.path.join(results_dir, 'edge_gat_model_classification.pth')
     trainer.save_model(model_path)
 
     logger.info("Program completed successfully.")

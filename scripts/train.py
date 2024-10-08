@@ -14,6 +14,7 @@ from src.models.train_ANN import ANNModel
 from src.evaluation.evaluation_ANN import ANNModelEvaluator
 from src.models.train_XGB import XGBoostModel
 from src.evaluation.evaluation_XGB import XGBoostModelEvaluator
+from src.models.train_GAT import main as gat_main
 
 
 def main():
@@ -110,71 +111,9 @@ def main():
         # Evaluate the XGBoost model with tuned hyperparameters
         XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)
 
-    elif args.algorithm == "GCN":
-        folder_path_data = config['paths']['folder_path_data']
+    elif args.algorithm == "GAT":
+        gat_main()
 
-        # Initialize data loader and load all datasets
-        data_loader = GCNDataLoader(folder_path_data, num_datasets=10)
-        datasets = data_loader.load_all_data()
-
-        # Initialize the preprocessor (with scaling of both node and edge data)
-        preprocessor = GCNDataPreprocessor()
-        train_data, test_data = preprocessor.split_data(datasets, test_size=0.2)
-
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-        # Debugging: print structure of train_data
-        print(f"Structure of train_data[0]: {train_data[0]}")
-
-
-
-
-        if args.hyperparameter_search:
-            def objective(trial):
-                hidden_dim = trial.suggest_int('hidden_dim', 16, 128)
-                lr = trial.suggest_loguniform('lr', 1e-5, 1e-2)
-                weight_decay = trial.suggest_loguniform('weight_decay', 1e-6, 1e-2)
-
-                # Initialize model with trial parameters and pass num_edge_features
-                model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
-                                 output_dim=1, hidden_dim=hidden_dim)
-                optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
-
-                # Train and test model
-                trainer = GCNTrainer(model=model, optimizer=optimizer, device=device)
-                trainer.train_model(train_data)
-                tester = GCNTester(model=model, device=device)
-                total_mse, rmse, r2 = tester.test_model(test_data)
-                return total_mse
-
-            # Run hyperparameter tuning with Optuna
-            study = optuna.create_study(direction='minimize')
-            study.optimize(objective, n_trials=50)
-
-            logger.info(f"Best trial: {study.best_params}")
-            best_params = study.best_params
-
-            # Use the best hyperparameters for final evaluation
-            model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
-                             output_dim=1, hidden_dim=best_params['hidden_dim'])
-            optimizer = torch.optim.Adam(model.parameters(), lr=best_params['lr'],
-                                         weight_decay=best_params['weight_decay'])
-
-        else:
-
-            num_edge_features = train_data[0][1]# Use default hyperparameters
-            model = GCNModel(num_node_features=train_data[0][0].x.shape[1], num_edge_features=num_edge_features,
-                             output_dim=1, hidden_dim=27)
-            optimizer = torch.optim.Adam(model.parameters(), lr=9.63e-05, weight_decay=6.81e-05)
-
-        # Train the model
-        trainer = GCNTrainer(model=model, optimizer=optimizer, device=device)
-        trainer.train_model(train_data)
-
-        # Test and evaluate the model
-        tester = GCNTester(model=model, device=device)
-        total_mse, rmse, r2 = tester.test_model(test_data)
-        logger.info(f'Total MSE: {total_mse:.4f}, RMSE: {rmse:.4f}, R²: {r2:.4f}')
 
     logger.info("Training and evaluation completed successfully")
 
