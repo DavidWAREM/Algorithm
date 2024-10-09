@@ -64,6 +64,27 @@ def add_positional_encoding(df, columns, max_value=10000):
         df[f'{col}_cos'] = np.cos(df[col] * (2 * np.pi / max_value))
     return df
 
+# Funktion zur Graph-basierten Imputation
+def graph_based_imputation(df, edge_index, feature_name):
+    node_values = df[feature_name].values
+    missing_mask = np.isnan(node_values)
+    # Adjazenzliste erstellen
+    adjacency = {i: [] for i in range(len(df))}
+    for src, dst in edge_index.T:
+        adjacency[src].append(dst)
+        adjacency[dst].append(src)
+    # Iterieren über fehlende Werte
+    for idx in np.where(missing_mask)[0]:
+        neighbors = adjacency[idx]
+        neighbor_values = [node_values[n] for n in neighbors if not np.isnan(node_values[n])]
+        if neighbor_values:
+            node_values[idx] = np.mean(neighbor_values)
+        else:
+            node_values[idx] = np.nanmean(node_values)
+    df[feature_name] = node_values
+    logger.debug(f"Graph-basierte Imputation für Feature '{feature_name}' durchgeführt.")
+    return df
+
 # Funktion zur Vorverarbeitung der neuen Daten
 def process_new_data(nodes_df, edges_df, included_nodes, zfluss_wl_nodes,
                      physical_scaler, geo_scaler, edge_scaler,
@@ -73,14 +94,34 @@ def process_new_data(nodes_df, edges_df, included_nodes, zfluss_wl_nodes,
         edges_df = edges_df.drop(columns=['RAU'])
         logger.debug("'RAU' Spalte gefunden und aus den Kantendaten entfernt.")
 
-    # Knoten-Namen zu Indizes mappen
+    # Knotennamen bereinigen und zu Indizes mappen
+    nodes_df['KNAM'] = nodes_df['KNAM'].astype(str).str.strip().str.lower()
+    edges_df['ANFNAM'] = edges_df['ANFNAM'].astype(str).str.strip().str.lower()
+    edges_df['ENDNAM'] = edges_df['ENDNAM'].astype(str).str.strip().str.lower()
+
     node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
     nodes_df['node_idx'] = nodes_df['KNAM'].map(node_mapping)
     edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
     edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
-    # One-Hot-Encoding für 'ROHRTYP'
-    edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP')
+    # Überprüfe auf fehlende Knotenindices
+    missing_anfnr = edges_df['ANFNR'].isnull()
+    missing_endnr = edges_df['ENDNR'].isnull()
+
+    if missing_anfnr.any() or missing_endnr.any():
+        missing_anfnam = edges_df.loc[missing_anfnr, 'ANFNAM'].unique()
+        missing_endnam = edges_df.loc[missing_endnr, 'ENDNAM'].unique()
+        logger.error(f"Fehlende Knotenindices für ANFNAMs: {missing_anfnam}, ENDNAMs: {missing_endnam}")
+        raise ValueError("Kantendaten enthalten Knoten, die nicht in den Knotendaten gefunden wurden.")
+
+    # Konvertiere Indizes zu Integer
+    edges_df['ANFNR'] = edges_df['ANFNR'].astype(int)
+    edges_df['ENDNR'] = edges_df['ENDNR'].astype(int)
+
+    # One-Hot-Encoding für 'ROHRTYP' mit dtype=float
+    edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
+    logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt.")
+
     edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
     # Sicherstellen, dass relevante Spalten numerisch sind
@@ -88,14 +129,14 @@ def process_new_data(nodes_df, edges_df, included_nodes, zfluss_wl_nodes,
     logger.debug("Relevante Kantenspalten in float konvertiert.")
 
     # Anpassen der Knotenattribute
-    nodes_df['Included'] = nodes_df['KNAM'].isin(included_nodes)
+    nodes_df['Included'] = nodes_df['KNAM'].isin([n.lower() for n in included_nodes])
     for col in adjusted_physical_columns:
         nodes_df.loc[~nodes_df['Included'], col] = np.nan
         logger.debug(f"{col} auf NaN gesetzt für nicht inkludierte Knoten.")
 
     # 'ZUFLUSS_WL' nur für spezifische Knoten behandeln
     nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
-        lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in zfluss_wl_nodes else np.nan,
+        lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in zfluss_wl_nodes] else np.nan,
         axis=1
     )
     logger.debug("'ZUFLUSS_WL' für spezifische Knoten behandelt.")
@@ -107,27 +148,7 @@ def process_new_data(nodes_df, edges_df, included_nodes, zfluss_wl_nodes,
         logger.debug(f"Fehlender Indikator für {col} hinzugefügt.")
 
     # Graph-basierte Imputation für fehlende 'ZUFLUSS_WL' Werte
-    node_values = nodes_df['ZUFLUSS_WL'].values
-    missing_mask = np.isnan(node_values)
-    # Adjazenzliste erstellen
-    adjacency = {i: [] for i in range(len(nodes_df))}
-    for src, dst in edge_index.T:
-        adjacency[src].append(dst)
-        adjacency[dst].append(src)
-    # Iterieren über fehlende Werte
-    for idx in np.where(missing_mask)[0]:
-        neighbors = adjacency[idx]
-        neighbor_values = [node_values[n] for n in neighbors if not np.isnan(node_values[n])]
-        if neighbor_values:
-            mean_val = np.mean(neighbor_values)
-        else:
-            mean_val = np.nanmean(node_values)
-            if np.isnan(mean_val):
-                mean_val = 0  # Fallback, falls der globale Mittelwert ebenfalls NaN ist
-            logger.debug(f"Keine gültigen Nachbarn für Knoten {idx}. Setze 'ZUFLUSS_WL' auf {mean_val}.")
-        node_values[idx] = mean_val
-    nodes_df['ZUFLUSS_WL'] = node_values
-    logger.debug("Graph-basierte Imputation für 'ZUFLUSS_WL' abgeschlossen.")
+    nodes_df = graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
 
     # Fehlende Werte für andere physikalische Spalten mit KNN Imputer behandeln
     imputer = KNNImputer(n_neighbors=5)
@@ -152,14 +173,29 @@ def process_new_data(nodes_df, edges_df, included_nodes, zfluss_wl_nodes,
     logger.debug("Knotenfeatures erstellt.")
 
     # Edge-Spalten nach One-Hot-Encoding aktualisieren
-    edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
+    continuous_edge_columns = ['RORL', 'DM', 'RAISE']
+    one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
+    edge_columns = continuous_edge_columns + one_hot_edge_columns
 
-    # Edge-Attribute skalieren
-    edges_df[edge_columns] = edge_scaler.transform(edges_df[edge_columns])
-    logger.debug("Edge-Attribute skaliert.")
+    # Sicherstellen, dass alle Edge-Attribute numerisch sind
+    edges_df[edge_columns] = edges_df[edge_columns].apply(pd.to_numeric, errors='coerce')
 
+    # Fehlende Werte in One-Hot-Encoder-Spalten auffüllen
+    edges_df[one_hot_edge_columns] = edges_df[one_hot_edge_columns].fillna(0)
+
+    # Skalierung nur auf kontinuierliche Edge-Attribute anwenden
+    edges_df[continuous_edge_columns] = edge_scaler.transform(edges_df[continuous_edge_columns])
+    logger.debug("Kontinuierliche Edge-Attribute skaliert.")
+
+    # Edge-Attribute kombinieren
     edge_attributes = edges_df[edge_columns].values
 
+    # Überprüfe, ob edge_attributes numerisch sind
+    if not np.issubdtype(edge_attributes.dtype, np.number):
+        logger.error(f"edge_attributes hat falschen Datentyp: {edge_attributes.dtype}")
+        raise ValueError("edge_attributes müssen numerisch sein.")
+
+    # In Tensoren konvertieren
     x = torch.tensor(node_features, dtype=torch.float)
     edge_index = torch.tensor(edge_index, dtype=torch.long)
     edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
@@ -193,7 +229,6 @@ def main():
 
     # Pfade zu den gespeicherten Modellen und Skalern
     models_dir = os.path.join(project_root, 'results', 'models')
-
 
     physical_scaler_path = os.path.join(models_dir, 'physical_scaler.pkl')
     geo_scaler_path = os.path.join(models_dir, 'geo_scaler.pkl')

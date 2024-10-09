@@ -95,12 +95,35 @@ class DataModule:
             edges_df = edges_df.drop(columns=['RAU'])
             logger.debug("'RAU' column found and removed from edge data.")
 
+        # Clean and prepare node names
+        nodes_df['KNAM'] = nodes_df['KNAM'].astype(str).str.strip().str.lower()
+        edges_df['ANFNAM'] = edges_df['ANFNAM'].astype(str).str.strip().str.lower()
+        edges_df['ENDNAM'] = edges_df['ENDNAM'].astype(str).str.strip().str.lower()
+
+        # Map node names to indices
         node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
         nodes_df['node_idx'] = nodes_df['KNAM'].map(node_mapping)
         edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
         edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
-        edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP')
+        # Check for missing node indices in edges
+        missing_anfnr = edges_df['ANFNR'].isnull()
+        missing_endnr = edges_df['ENDNR'].isnull()
+
+        if missing_anfnr.any() or missing_endnr.any():
+            missing_anfnam = edges_df.loc[missing_anfnr, 'ANFNAM'].unique()
+            missing_endnam = edges_df.loc[missing_endnr, 'ENDNAM'].unique()
+            logger.error(f"Missing node indices for ANFNAMs: {missing_anfnam}, ENDNAMs: {missing_endnam}")
+            raise ValueError("Edge data contains nodes that are not found in node data.")
+
+        # Convert indices to integer
+        edges_df['ANFNR'] = edges_df['ANFNR'].astype(int)
+        edges_df['ENDNR'] = edges_df['ENDNR'].astype(int)
+
+        # One-Hot Encoding for 'ROHRTYP' with dtype float
+        edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
+        logger.debug("Performed One-Hot Encoding for 'ROHRTYP'.")
+
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
         # Ensure relevant columns are numeric
@@ -122,14 +145,14 @@ class DataModule:
 
         # Adjust node attributes
         # Set values of adjusted_physical_columns to NaN for nodes not in included_nodes
-        nodes_df['Included'] = nodes_df['KNAM'].isin(self.included_nodes)
+        nodes_df['Included'] = nodes_df['KNAM'].isin([n.lower() for n in self.included_nodes])
         for col in self.adjusted_physical_columns:
             nodes_df.loc[~nodes_df['Included'], col] = np.nan
             logger.debug(f"Set {col} to NaN for nodes not included.")
 
         # Handle ZUFLUSS_WL only for specific nodes
         nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
-            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in self.zfluss_wl_nodes else np.nan,
+            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
         logger.debug("Handled 'ZUFLUSS_WL' for specific nodes.")
@@ -151,7 +174,7 @@ class DataModule:
         nodes_df = nodes_df.drop(columns=['Included'])
         logger.debug("Dropped the 'Included' column from node data.")
 
-        # Apply scaling
+        # Apply scaling to node features
         nodes_df[self.all_physical_columns] = self.physical_scaler.transform(nodes_df[self.all_physical_columns])
         nodes_df[self.geo_columns] = self.geo_scaler.transform(nodes_df[self.geo_columns])
         logger.debug("Applied scaling to physical and geographic columns.")
@@ -162,27 +185,52 @@ class DataModule:
 
         # Create node features
         node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
-        logger.debug("Created node features.")
 
         # Update edge_columns after One-Hot Encoding
-        edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df.filter(like='ROHRTYP').columns)
+        # Separate continuous and one-hot encoded columns
+        continuous_edge_columns = ['RORL', 'DM', 'RAISE']
+        one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
+        edge_columns = continuous_edge_columns + one_hot_edge_columns
 
-        # Scale edge attributes
-        edges_df[edge_columns] = self.edge_scaler.transform(edges_df[edge_columns])
-        logger.debug("Scaled edge attributes.")
+        # Ensure all edge attributes are numeric
+        edges_df[edge_columns] = edges_df[edge_columns].apply(pd.to_numeric, errors='coerce')
 
+        # Check for non-numeric columns in edge attributes
+        non_numeric_cols = edges_df[edge_columns].select_dtypes(exclude=[np.number]).columns
+        if len(non_numeric_cols) > 0:
+            logger.error(f"Non-numeric columns in edge attributes: {non_numeric_cols}")
+            raise ValueError("Edge attributes contain non-numeric data.")
+
+        # Fill missing values in one-hot encoded columns (if any)
+        edges_df[one_hot_edge_columns] = edges_df[one_hot_edge_columns].fillna(0)
+
+        # Scale only continuous edge attributes
+        edges_df[continuous_edge_columns] = self.edge_scaler.transform(edges_df[continuous_edge_columns])
+        logger.debug("Scaled continuous edge attributes.")
+
+        # Combine scaled continuous attributes and unscaled one-hot encoded attributes
         edge_attributes = edges_df[edge_columns].values
 
-        x = torch.tensor(node_features, dtype=torch.float)
-        edge_index = torch.tensor(edge_index, dtype=torch.long)
-        edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
+        # Check if edge_attributes are numeric
+        if not np.issubdtype(edge_attributes.dtype, np.number):
+            logger.error(f"edge_attributes has incorrect dtype: {edge_attributes.dtype}")
+            raise ValueError("edge_attributes must be numeric.")
+
+        # Convert to tensors
+        try:
+            x = torch.tensor(node_features, dtype=torch.float)
+            edge_index = torch.tensor(edge_index, dtype=torch.long)
+            edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
+        except Exception as e:
+            logger.error(f"Error converting to tensors: {e}")
+            logger.debug(f"node_features dtype: {node_features.dtype}")
+            logger.debug(f"edge_index dtype: {edge_index.dtype}")
+            logger.debug(f"edge_attr dtype: {edge_attributes.dtype}")
+            raise e
 
         data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y)
         logger.debug("Created PyTorch Geometric Data object.")
         return data
-
-    import os
-    import joblib
 
     def fit_scalers(self):
         node_file_first = f'{self.directory}SyntheticData-Spechbach_Valve_1_combined_Node.csv'
@@ -201,15 +249,20 @@ class DataModule:
             edges_df_first = edges_df_first.drop(columns=['RAU'])
             logger.debug("'RAU' column found and removed from edge data during scaler fitting.")
 
+        # Clean and prepare node names
+        nodes_df_first['KNAM'] = nodes_df_first['KNAM'].astype(str).str.strip().str.lower()
+        edges_df_first['ANFNAM'] = edges_df_first['ANFNAM'].astype(str).str.strip().str.lower()
+        edges_df_first['ENDNAM'] = edges_df_first['ENDNAM'].astype(str).str.strip().str.lower()
+
         # Set adjusted_physical_columns to NaN for nodes not in included_nodes
-        nodes_df_first['Included'] = nodes_df_first['KNAM'].isin(self.included_nodes)
+        nodes_df_first['Included'] = nodes_df_first['KNAM'].isin([n.lower() for n in self.included_nodes])
         for col in self.adjusted_physical_columns:
             nodes_df_first.loc[~nodes_df_first['Included'], col] = np.nan
             logger.debug(f"Set {col} to NaN for nodes not included during scaler fitting.")
 
         # Handle ZUFLUSS_WL only for specific nodes
         nodes_df_first['ZUFLUSS_WL'] = nodes_df_first.apply(
-            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in self.zfluss_wl_nodes else np.nan,
+            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
         logger.debug("Handled 'ZUFLUSS_WL' for specific nodes during scaler fitting.")
@@ -227,36 +280,47 @@ class DataModule:
 
         nodes_df_first = self.graph_based_imputation(nodes_df_first, edge_index_first, 'ZUFLUSS_WL')
 
+        # Handle missing values for other physical columns using KNN Imputer
+        imputer = KNNImputer(n_neighbors=5)
+        nodes_df_first[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df_first[self.adjusted_physical_columns])
+        logger.debug("Performed KNN imputation for adjusted physical columns during scaler fitting.")
+
         # Remove the helper column
         nodes_df_first = nodes_df_first.drop(columns=['Included'])
         logger.debug("Dropped the 'Included' column from node data during scaler fitting.")
 
-        # Fit scalers
+        # Fit scalers on node features
         self.physical_scaler.fit(nodes_df_first[self.all_physical_columns])
         self.geo_scaler.fit(nodes_df_first[self.geo_columns])
         logger.debug("Fitted physical and geographic scalers.")
 
-        # One-Hot Encoding for 'ROHRTYP'
-        edges_df_first = pd.get_dummies(edges_df_first, columns=['ROHRTYP'], prefix='ROHRTYP')
+        # One-Hot Encoding for 'ROHRTYP' with dtype float
+        edges_df_first = pd.get_dummies(edges_df_first, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
         logger.debug("Performed One-Hot Encoding for 'ROHRTYP' during scaler fitting.")
 
         # Update edge_columns after One-Hot Encoding
-        edge_columns = ['RORL', 'DM', 'RAISE'] + list(edges_df_first.filter(like='ROHRTYP').columns)
+        continuous_edge_columns = ['RORL', 'DM', 'RAISE']
+        one_hot_edge_columns = list(edges_df_first.filter(like='ROHRTYP').columns)
+        edge_columns = continuous_edge_columns + one_hot_edge_columns
 
-        # Fit edge scaler
-        self.edge_scaler.fit(edges_df_first[edge_columns])
-        logger.debug("Fitted edge scaler.")
+        # Ensure all edge attributes are numeric
+        edges_df_first[edge_columns] = edges_df_first[edge_columns].apply(pd.to_numeric, errors='coerce')
 
-        # **Speichern der Scaler**
-        # Definiere den Pfad zum Projektstammverzeichnis
+        # Fill missing values in one-hot encoded columns (if any)
+        edges_df_first[one_hot_edge_columns] = edges_df_first[one_hot_edge_columns].fillna(0)
+
+        # Fit edge scaler on continuous attributes only
+        self.edge_scaler.fit(edges_df_first[continuous_edge_columns])
+        logger.debug("Fitted edge scaler on continuous attributes.")
+
+        # Save the scalers
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-        # Definiere den Pfad zum Ordner 'results/scalers'
         scalers_dir = os.path.join(project_root, 'results', 'models')
-        # Konstruiere die Pfade zu den Scaler-Dateien
+        if not os.path.exists(scalers_dir):
+            os.makedirs(scalers_dir)
         physical_scaler_path = os.path.join(scalers_dir, 'physical_scaler.pkl')
         geo_scaler_path = os.path.join(scalers_dir, 'geo_scaler.pkl')
         edge_scaler_path = os.path.join(scalers_dir, 'edge_scaler.pkl')
-        # Speichere die Scaler
         joblib.dump(self.physical_scaler, physical_scaler_path)
         joblib.dump(self.geo_scaler, geo_scaler_path)
         joblib.dump(self.edge_scaler, edge_scaler_path)
@@ -307,6 +371,8 @@ class DataModule:
 
         return train_loader, val_loader, test_loader
 
+
+
 # GAT Model with Edge Prediction for Binary Classification
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=16, dropout=0.2):
@@ -347,6 +413,7 @@ class EdgeGAT(torch.nn.Module):
         logger.debug("Computed edge logits.")
 
         return edge_logits  # Return logits
+
 
 # Trainer Class
 class Trainer:
@@ -427,6 +494,8 @@ class Trainer:
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)
         self.logger.info(f'Model saved at: {path}')
+
+
 
 # Evaluator Class
 class Evaluator:
@@ -528,7 +597,7 @@ def main():
     zfluss_wl_nodes = config['nodes']['zfluss_wl_nodes']
 
     # Initialize DataModule
-    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=3800)
+    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=100)
     data_module.load_all_data()
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
