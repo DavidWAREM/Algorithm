@@ -653,7 +653,7 @@ def main():
     zfluss_wl_nodes = config['nodes']['zfluss_wl_nodes']
 
     # Initialisiere DataModule
-    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=100)
+    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes, num_valves=3800)
     data_module.load_all_data()
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
