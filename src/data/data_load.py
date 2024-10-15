@@ -33,7 +33,7 @@ class CSVDataLoader:
         self.folder_path = self.config['paths']['folder_path_data']
 
         # Define the required columns that each CSV file must contain
-        self.required_columns = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']
+        self.required_columns = ['RORL', 'DM', 'RAU', 'FLUSS', 'VM', 'DPREL', 'RAISE']
 
         # Initialize a list to store loaded data
         self.all_data = []

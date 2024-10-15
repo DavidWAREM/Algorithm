@@ -91,7 +91,7 @@ def main():
         # Evaluate the XGBoost model and visualize results
         XGBoostModelEvaluator.evaluate_and_visualize(X_test, y_test)
 
-    elif args.algorithm == 'XGB Hyperparameter':
+    elif args.algorithm == 'XGB_Hyperparameter':
         # Load and preprocess data for XGBoost with hyperparameter tuning
         data_loader = CSVDataLoader(config_file=config_path)
         all_data = data_loader.get_data()
