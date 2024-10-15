@@ -20,10 +20,10 @@ class XGBoostModel:
             'objective': 'reg:squarederror',
             'tree_method': 'hist',  # Use hist for tree_method
             'device': 'cuda',  # Use GPU for training with CUDA
-            'colsample_bytree': 0.9,
-            'learning_rate': 0.1,
-            'max_depth': 7,
-            'n_estimators': 600,
+            'colsample_bytree': 0.7,
+            'learning_rate': 0.05,
+            'max_depth': 5,
+            'n_estimators': 400,
             'subsample': 0.9
         }
         self.logger.debug(f"XGBoost parameters: {self.params}")
