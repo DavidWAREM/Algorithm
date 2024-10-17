@@ -1,7 +1,5 @@
 import os
-import logging
-from venv import logger
-
+import logging  # Korrigierter Import
 import yaml
 from data.rawdata_load import DataLoader  # Custom class to load raw data
 from data.rawdata_preprocess import DataProcessor, DataCombiner  # Custom class to process raw data
@@ -17,9 +15,6 @@ def load_config(config_file='config/config.yaml'):
 
     Returns:
         dict: Configuration dictionary containing paths and other settings.
-
-    This function loads the configuration needed for the script, including file paths for raw data and logs.
-    It constructs the absolute path to the configuration file and loads it using the `yaml.safe_load()` method.
     """
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -37,13 +32,14 @@ def load_config(config_file='config/config.yaml'):
     return config  # Return the loaded configuration
 
 
-def process_file(file_path, file_name):
+def process_file(file_path, file_name, logger):
     """
     Process a single CSV file: load, preprocess, split, and save the data.
 
     Args:
         file_path (str): Full path to the CSV file.
         file_name (str): Name of the file being processed.
+        logger (logging.Logger): Logger instance for logging.
 
     This function handles the entire data processing pipeline for a single file.
     It loads the file, preprocesses the data, splits the data into two DataFrames, and then processes them further (e.g., combining pipes).
@@ -81,7 +77,7 @@ def main():
     """
     setup_logging()  # Set up the logging configuration
     logger = logging.getLogger(__name__)  # Create a logger for this script
-    logger.info('Logger startet')
+    logger.info('Logger gestartet')
 
     # Load configuration settings from the YAML file
     config = load_config()
@@ -94,8 +90,9 @@ def main():
     for file_name in os.listdir(data_dir):
         if file_name.endswith('.csv'):  # Only process files with a '.csv' extension
             file_path = os.path.join(data_dir, file_name)  # Get the full path to the CSV file
-            process_file(file_path, file_name)  # Process the file
+            process_file(file_path, file_name, logger)  # Process the file
 
+    # Initialize DataCombiner and combine the processed files
     data_combiner = DataCombiner(data_dir)
     data_combiner.combine_with_without_load('Pipes')
     data_combiner.combine_with_without_load('Node')
