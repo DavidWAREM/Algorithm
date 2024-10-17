@@ -39,7 +39,7 @@ def load_and_analyze_data(directory, logger):
         'u_star_WL', 'u_star_WOL', 'delta_WL', 'delta_WOL',
         'h_f_WL', 'h_f_WOL', 'S_WL', 'S_WOL',
         'Reibungsverlust_mbar_km_WL', 'Reibungsverlust_mbar_km_WOL',
-        'flow_regime_WL', 'flow_regime_WOL', 'DPREL'
+        'flow_regime_WL', 'flow_regime_WOL'
     ]
 
     node_features = [

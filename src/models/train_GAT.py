@@ -85,6 +85,7 @@ class DataModule:
                 raise ValueError(f"Spalte {col} fehlt in {node_file}.")
 
         # Check for required edge columns
+        # Removed 'DPREL' from required_edge_columns
         required_edge_columns = ['ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'ROHRTYP', 'RORL', 'DM', 'RAISE', 'RAU']
         for col in required_edge_columns:
             if col not in edges_df.columns:
@@ -190,8 +191,13 @@ class DataModule:
         # Create node features
         node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
 
-        # Update edge_columns after One-Hot Encoding
-        continuous_edge_columns = ['RORL', 'DM', 'RAISE']
+        # Update edge_columns after One-Hot Encoding to include new variables
+        continuous_edge_columns = [
+            'RORL', 'DM', 'RAISE',
+            'tau_w_WL_square', 'S_WL_square', 'Reibungsverlust_mbar_km_WL_square',
+            'tau_w_WOL_square', 'Reibungsverlust_mbar_km_WOL_square', 'S_WOL_square',
+            'f_WL_sqrt', 'u_star_WL_square', 'u_star_WOL_square', 'h_f_WL_square'
+        ]
         one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
         edge_columns = continuous_edge_columns + one_hot_edge_columns
 
@@ -337,8 +343,13 @@ class DataModule:
         edges_df_all = pd.get_dummies(edges_df_all, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
         logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt (Skalierer-Anpassung).")
 
-        # Update edge_columns after One-Hot Encoding
-        continuous_edge_columns = ['RORL', 'DM', 'RAISE']
+        # Update edge_columns after One-Hot Encoding to include new variables
+        continuous_edge_columns = [
+            'RORL', 'DM', 'RAISE',
+            'tau_w_WL_square', 'S_WL_square', 'Reibungsverlust_mbar_km_WL_square',
+            'tau_w_WOL_square', 'Reibungsverlust_mbar_km_WOL_square', 'S_WOL_square',
+            'f_WL_sqrt', 'u_star_WL_square', 'u_star_WOL_square', 'h_f_WL_square'
+        ]
         one_hot_edge_columns = list(edges_df_all.filter(like='ROHRTYP').columns)
         edge_columns = continuous_edge_columns + one_hot_edge_columns
 
@@ -420,7 +431,7 @@ class DataModule:
         )
         logger.info("Daten in Trainings-, Validierungs- und Testmengen aufgeteilt.")
 
-        # Create DataLoaders
+        # Create DataLoaders with appropriate batch size
         train_loader = DataLoader(train_data, batch_size=16, shuffle=True)
         val_loader = DataLoader(val_data, batch_size=16, shuffle=False)
         test_loader = DataLoader(test_data, batch_size=16, shuffle=False)
@@ -428,7 +439,7 @@ class DataModule:
 
         return train_loader, val_loader, test_loader
 
-# EdgeGAT Model with Edge Prediction for Regression
+
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=64, dropout=0.15):
         super(EdgeGAT, self).__init__()

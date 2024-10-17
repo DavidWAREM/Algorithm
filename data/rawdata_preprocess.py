@@ -4,8 +4,6 @@ import logging
 import re
 import numpy as np  # Für numerische Berechnungen
 
-
-
 class DataProcessor:
     def __init__(self, dataframe, original_file_path):
         """
@@ -201,33 +199,54 @@ class DataCombiner:
                         for col in numeric_columns:
                             combined_df[col] = pd.to_numeric(combined_df[col], errors='coerce')
 
-                        # **Convert DM, RAU, and RORL from mm to meters**
+                        # **Convert DM and RORL from mm to meters**
                         combined_df['DM'] = combined_df['DM'] / 1000  # mm to m
-                        combined_df['RAU'] = combined_df['RAU'] / 1000  # mm to m
-                        combined_df['RORL'] = combined_df['RORL'].apply(lambda x: float(str(x).replace(',', '.')))  # Ensure proper decimal format
-                        combined_df['RORL'] = combined_df['RORL'] / 1000  # mm to m (falls RORL in mm ist, sonst diesen Schritt entfernen)
+                        # Entfernen Sie die Umrechnung für RAU, wenn RAU bereits das Ziel ist und nicht verwendet wird
+                        # combined_df['RAU'] = combined_df['RAU'] / 1000  # mm to m (falls RAU in mm ist, sonst diesen Schritt entfernen)
 
                         # Compute Reynolds numbers
-                        combined_df['Re_WL'] = (rho * combined_df['VM_WL'] * combined_df['DM']) / mu
-                        combined_df['Re_WOL'] = (rho * combined_df['VM_WOL'] * combined_df['DM']) / mu
+                        combined_df['Re_WL'] = (combined_df['VM_WL'] * combined_df['DM']) / nu
+                        combined_df['Re_WOL'] = (combined_df['VM_WOL'] * combined_df['DM']) / nu
 
-                        # Define function to calculate friction factor including roughness
-                        def calculate_friction_factor(Re, epsilon, D):
-                            rel_roughness = epsilon / D
-                            # Handle cases where Re is zero or NaN to avoid log10 issues
-                            rel_roughness = rel_roughness.replace([np.inf, -np.inf], np.nan)
-                            rel_roughness = rel_roughness.fillna(0)
-                            # Avoid log10 of non-positive numbers
-                            term = (rel_roughness / 3.7) + (5.74 / Re**0.9)
-                            # Replace non-positive terms with a small positive number to avoid log10 errors
-                            term = np.where(term <= 0, 1e-10, term)
-                            f_turbulent = 0.25 / (np.log10(term))**2
-                            f = np.where(Re < 2000, 64 / Re, f_turbulent)
+                        # **Aktualisierte Funktion zur Berechnung des Reibungsfaktors ohne RAU**
+                        def calculate_friction_factor(Re, D, assumed_roughness=0.0001):
+                            """
+                            Calculates the friction factor based on Reynolds number and pipe diameter using the Blasius equation
+                            for turbulent flow in smooth pipes and standard formula for laminar flow.
+
+                            Parameters:
+                            - Re: Reynolds number (array-like)
+                            - D: Pipe diameter (array-like)
+                            - assumed_roughness: Assumed roughness of the pipe (default is 0.0001 meters)
+
+                            Returns:
+                            - f: Friction factor (array-like)
+                            """
+                            Re = np.maximum(Re, 1e-6)  # Avoid division by zero
+                            D = np.maximum(D, 1e-6)    # Avoid division by zero
+                            # Relative roughness is not used since we assume smooth pipes
+                            # Calculate friction factor for laminar flow
+                            f_laminar = 64 / Re
+                            # Calculate friction factor for turbulent flow using Blasius equation
+                            f_turbulent = 0.3164 * Re**-0.25
+                            # Define masks for different flow regimes
+                            laminar_mask = Re < 2000
+                            turbulent_mask = Re > 4000
+                            transition_mask = (~laminar_mask) & (~turbulent_mask)
+                            # Initialize friction factor array
+                            f = np.zeros_like(Re)
+                            # Assign friction factors based on flow regimes
+                            f[laminar_mask] = f_laminar[laminar_mask]
+                            f[turbulent_mask] = f_turbulent[turbulent_mask]
+                            # Linear interpolation for transition regime
+                            f[transition_mask] = f_laminar[transition_mask] + (
+                                (Re[transition_mask] - 2000) * (f_turbulent[transition_mask] - f_laminar[transition_mask]) / 2000
+                            )
                             return f
 
-                        # Compute friction factors
-                        combined_df['f_WL'] = calculate_friction_factor(combined_df['Re_WL'], combined_df['RAU'], combined_df['DM'])
-                        combined_df['f_WOL'] = calculate_friction_factor(combined_df['Re_WOL'], combined_df['RAU'], combined_df['DM'])
+                        # Compute friction factors without RAU
+                        combined_df['f_WL'] = calculate_friction_factor(combined_df['Re_WL'], combined_df['DM'])
+                        combined_df['f_WOL'] = calculate_friction_factor(combined_df['Re_WOL'], combined_df['DM'])
 
                         # Compute wall shear stress (Wandreibungsspannung)
                         combined_df['tau_w_WL'] = (combined_df['f_WL'] / 8) * rho * (combined_df['VM_WL'] ** 2)
@@ -242,7 +261,6 @@ class DataCombiner:
                         combined_df['delta_WOL'] = (5 * nu) / combined_df['u_star_WOL']
 
                         # Compute head loss h_f using Darcy-Weisbach equation
-                        # Ensure RORL is in meters
                         combined_df['h_f_WL'] = combined_df['f_WL'] * (combined_df['RORL'] / combined_df['DM']) * \
                                                 (combined_df['VM_WL'] ** 2) / (2 * g)
                         combined_df['h_f_WOL'] = combined_df['f_WOL'] * (combined_df['RORL'] / combined_df['DM']) * \
@@ -357,8 +375,3 @@ class DataCombiner:
 
         except Exception as e:
             self.logger.error(f"Error combining files: {e}", exc_info=True)
-
-
-
-
-
