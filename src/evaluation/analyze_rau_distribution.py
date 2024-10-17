@@ -15,7 +15,7 @@ def load_and_analyze_rau_values(directory, num_valves=100):
 
     # Iteriere durch alle Dateien und lade die RAU-Werte
     for i in range(1, num_valves + 1):
-        edge_file = os.path.join(directory, f'SyntheticData-Spechbach_Simplification_Roughness_{i}_combined_Pipes.csv')
+        edge_file = os.path.join(directory, f'SyntheticData-Spechbach_Simplification^2_Roughness_{i}_combined_Pipes.csv')
 
         try:
             edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
@@ -55,7 +55,7 @@ def main():
     directory = 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\Zwischenspeicher'  # Pfad zu deinen Daten anpassen
 
     # Setze die Anzahl der Dateien, die du analysieren möchtest (basiert auf deinem ursprünglichen Code)
-    num_valves = 100  # Anpassen, falls du mehr Dateien hast
+    num_valves = 990  # Anpassen, falls du mehr Dateien hast
 
     # Lade und analysiere die RAU-Werte
     load_and_analyze_rau_values(directory, num_valves=num_valves)
