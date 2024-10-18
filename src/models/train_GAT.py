@@ -26,6 +26,36 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # DataModule Class
+
+
+import os
+import glob
+import pandas as pd
+import torch
+import numpy as np
+import yaml
+import joblib
+from torch_geometric.data import Data, DataLoader
+from torch_geometric.nn import GATConv
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import (
+    mean_squared_error,
+    mean_absolute_error,
+    r2_score,
+)
+from math import pi
+from sklearn.model_selection import train_test_split
+from sklearn.impute import KNNImputer
+import logging
+import csv
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# DataModule Class
 class DataModule:
     def __init__(self, directory, included_nodes, zfluss_wl_nodes):
         self.directory = directory
@@ -34,12 +64,17 @@ class DataModule:
         self.physical_scaler = StandardScaler()
         self.geo_scaler = MinMaxScaler()
         self.edge_scaler = StandardScaler()
-        self.rau_scaler = StandardScaler()  # Added for scaling target variable
+        self.rau_scaler = StandardScaler()  # Für das Skalieren der Zielvariable
         self.datasets = []
         self.geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
         self.adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
         self.additional_physical_columns = ['ZUFLUSS_WL']
         self.all_physical_columns = self.adjusted_physical_columns + self.additional_physical_columns
+
+        # Neue transformierte Edge-Features hinzufügen
+        self.transformed_edge_columns = ['RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt']
+        # Keine Edge-Features in Node-Dateien
+        # self.all_edge_columns = self.transformed_edge_columns.copy()  # Entfernt
 
     def add_positional_encoding(self, df, columns, max_value=10000):
         for col in columns:
@@ -69,7 +104,7 @@ class DataModule:
 
     def load_data(self, node_file, edge_file):
         try:
-            # Load data
+            # Load node and edge data separately
             nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
             edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
             logger.debug(f"Dateien geladen: {node_file}, {edge_file}.")
@@ -77,16 +112,19 @@ class DataModule:
             logger.error(f"Fehler beim Laden der Dateien {node_file} oder {edge_file}: {e}")
             raise e
 
-        # Check for required node columns
+        # Check for required node columns (ohne transformierte Edge-Features)
         required_node_columns = ['KNAM', 'XRECHTS', 'YHOCH', 'GEOH'] + self.adjusted_physical_columns + ['ZUFLUSS_WL']
         for col in required_node_columns:
             if col not in nodes_df.columns:
                 logger.debug(f"Spalte {col} fehlt in {node_file}.")
                 raise ValueError(f"Spalte {col} fehlt in {node_file}.")
 
-        # Check for required edge columns
-        # Removed 'DPREL' from required_edge_columns
-        required_edge_columns = ['ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'ROHRTYP', 'RORL', 'DM', 'RAISE', 'RAU']
+        # Check for required edge columns, einschließlich der transformierten Features
+        required_edge_columns = [
+            'ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL',
+            'ROHRTYP', 'RORL', 'DM', 'RAISE', 'RAU',
+            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'  # Hinzugefügte transformierte Features
+        ]
         for col in required_edge_columns:
             if col not in edges_df.columns:
                 logger.debug(f"Spalte {col} fehlt in {edge_file}.")
@@ -126,8 +164,12 @@ class DataModule:
 
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
-        # Ensure relevant edge columns are numeric
-        edges_df[['FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAU']] = edges_df[['FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAU']].astype(float)
+        # Ensure relevant edge columns are numeric (einschließlich der neuen transformierten Features)
+        edge_features_columns = [
+            'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAU',
+            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'
+        ]
+        edges_df[edge_features_columns] = edges_df[edge_features_columns].astype(float)
         logger.debug("Relevante Kantenspalten in float konvertiert.")
 
         # Create and scale target variable
@@ -191,12 +233,11 @@ class DataModule:
         # Create node features
         node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
 
-        # Update edge_columns after One-Hot Encoding to include new variables
+        # Update edge_columns to include neue transformierte Features
         continuous_edge_columns = [
             'RORL', 'DM', 'RAISE',
-            'tau_w_WL_square', 'S_WL_square', 'Reibungsverlust_mbar_km_WL_square',
-            'tau_w_WOL_square', 'Reibungsverlust_mbar_km_WOL_square', 'S_WOL_square',
-            'f_WL_sqrt', 'u_star_WL_square', 'u_star_WOL_square', 'h_f_WL_square'
+            'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
+            'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
         one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
         edge_columns = continuous_edge_columns + one_hot_edge_columns
@@ -343,12 +384,11 @@ class DataModule:
         edges_df_all = pd.get_dummies(edges_df_all, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
         logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt (Skalierer-Anpassung).")
 
-        # Update edge_columns after One-Hot Encoding to include new variables
+        # Update edge_columns to include neue transformierte Features
         continuous_edge_columns = [
             'RORL', 'DM', 'RAISE',
-            'tau_w_WL_square', 'S_WL_square', 'Reibungsverlust_mbar_km_WL_square',
-            'tau_w_WOL_square', 'Reibungsverlust_mbar_km_WOL_square', 'S_WOL_square',
-            'f_WL_sqrt', 'u_star_WL_square', 'u_star_WOL_square', 'h_f_WL_square'
+            'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
+            'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
         one_hot_edge_columns = list(edges_df_all.filter(like='ROHRTYP').columns)
         edge_columns = continuous_edge_columns + one_hot_edge_columns
@@ -695,7 +735,6 @@ class Evaluator:
         plt.show()
         logger.debug("Residuenplot erstellt.")
 
-# Main Function
 def main():
 
     # Path to the configuration file relative to the project root
@@ -736,9 +775,12 @@ def main():
         logger.error("Keine Datensätze gefunden zum Trainieren des Modells.")
         raise ValueError("Keine Datensätze gefunden zum Trainieren des Modells.")
 
+    # Berechnen der Anzahl der Edge-Features
+    num_edge_features = data_module.datasets[0].edge_attr.shape[1]
+
     model = EdgeGAT(
         num_node_features=data_module.datasets[0].x.shape[1],
-        num_edge_features=data_module.datasets[0].edge_attr.shape[1],
+        num_edge_features=num_edge_features,  # Aktualisiert, um die neuen Edge-Features zu berücksichtigen
         hidden_dim=64,
         dropout=0.15
     ).to(device)
@@ -816,6 +858,10 @@ def main():
     trainer.save_model(model_path)
 
     logger.info("Programm erfolgreich abgeschlossen.")
+
+if __name__ == "__main__":
+    main()
+
 
 if __name__ == "__main__":
     main()
