@@ -23,6 +23,7 @@ from sklearn.impute import KNNImputer
 from sklearn.metrics import roc_curve, auc
 import logging
 import csv
+import json
 
 # Initialisiere das Logging
 logging.basicConfig(level=logging.INFO)
@@ -136,10 +137,9 @@ class DataModule:
         edges_df[['FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL']] = edges_df[['FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL']].astype(float)
         logger.debug("Relevante Kantenspalten in float konvertiert.")
 
-        # Kleines Epsilon für Null-Approximation definieren
-        epsilon = 1e-6
-
         # Zielvariable erstellen
+        # Hier geht es um Klassifikation: ob FLUSS_WL, FLUSS_WOL, VM_WL oder VM_WOL nahe Null sind
+        epsilon = 1e-6
         target_condition = (
             (edges_df['FLUSS_WL'].abs() < epsilon) |
             (edges_df['FLUSS_WOL'].abs() < epsilon) |
@@ -227,7 +227,7 @@ class DataModule:
         # Speichern der Kantenidentifikatoren im Data-Objekt
         data.edge_ids = edges_df['edge_id'].values  # Dies ist ein NumPy-Array
 
-        logger.debug("PyTorch Geometric Data-Objekt erstellt.")
+        logger.debug("PyTorch Geometric Data Objekt erstellt.")
         return data
 
     def fit_scalers(self):
@@ -408,9 +408,9 @@ class Trainer:
         self.device = device
         self.num_epochs = num_epochs
         self.patience = patience
-        self.results_dir = results_dir  # Hinzugefügt
+        self.results_dir = results_dir
         self.best_model_state = None
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__)  # Eigener Logger für die Klasse
 
     def train_epoch(self, loader):
         self.model.train()
@@ -424,7 +424,7 @@ class Trainer:
             self.optimizer.step()
             total_loss += loss.item()
         avg_loss = total_loss / len(loader)
-        logger.debug(f"Training epoch loss: {avg_loss:.4f}")
+        self.logger.debug(f"Training epoch loss: {avg_loss:.4f}")
         return avg_loss
 
     def validate_epoch(self, loader):
@@ -437,7 +437,7 @@ class Trainer:
                 loss = self.criterion(logits, batch.y)
                 total_loss += loss.item()
         avg_loss = total_loss / len(loader)
-        logger.debug(f"Validation epoch loss: {avg_loss:.4f}")
+        self.logger.debug(f"Validation epoch loss: {avg_loss:.4f}")
         return avg_loss
 
     def evaluate_monitoring_dataset(self, monitoring_loader, epoch):
@@ -456,23 +456,12 @@ class Trainer:
                 probs = torch.sigmoid(logits)
                 y_true_list.extend(batch.y.cpu().numpy().flatten())
                 y_pred_list.extend(probs.cpu().numpy().flatten())
-                # Wenn batch.edge_ids ein NumPy-Array ist
                 edge_id_list.extend(batch.edge_ids)
-                # Falls es sich nicht flatten lässt, verwende .tolist()
-                # edge_id_list.extend(batch.edge_ids.tolist())
 
         avg_loss = total_loss / len(monitoring_loader)
         y_true = np.array(y_true_list).reshape(-1)
         y_pred = np.array(y_pred_list).reshape(-1)
         edge_ids_all = np.array(edge_id_list).reshape(-1)
-
-        # Überprüfe die Formen und Längen der Arrays
-        logger.debug(f'y_true shape: {y_true.shape}')
-        logger.debug(f'y_pred shape: {y_pred.shape}')
-        logger.debug(f'edge_ids_all shape: {edge_ids_all.shape}')
-        logger.debug(f'Length of y_true: {len(y_true)}')
-        logger.debug(f'Length of y_pred: {len(y_pred)}')
-        logger.debug(f'Length of edge_ids_all: {len(edge_ids_all)}')
 
         # Berechne Metriken
         accuracy = accuracy_score(y_true, (y_pred >= 0.5).astype(int))
@@ -484,7 +473,9 @@ class Trainer:
         metrics = {
             'loss': avg_loss,
             'accuracy': accuracy,
-            'auc_score': auc_score
+            'auc_score': auc_score,
+            'y_true': y_true,           # Hinzugefügt
+            'y_pred_prob': y_pred        # Hinzugefügt
         }
 
         # Speichern der Vorhersagen pro Kante in einer CSV-Datei
@@ -499,7 +490,7 @@ class Trainer:
         csv_filename = f'monitoring_predictions_epoch_{epoch}.csv'
         csv_filepath = os.path.join(self.results_dir, csv_filename)
         df_predictions.to_csv(csv_filepath, index=False)
-        logger.info(f'Per-Kante-Vorhersagen für Epoche {epoch} gespeichert unter {csv_filepath}')
+        self.logger.info(f'Per-Kante-Vorhersagen für Epoche {epoch} gespeichert unter {csv_filepath}')
 
         return metrics
 
@@ -509,7 +500,7 @@ class Trainer:
 
         self.monitoring_results = []
 
-        logger.info("Starte den Trainingsprozess.")
+        self.logger.info("Starte den Trainingsprozess.")
         for epoch in range(1, self.num_epochs + 1):
             train_loss = self.train_epoch(train_loader)
             val_loss = self.validate_epoch(val_loader)
@@ -518,7 +509,7 @@ class Trainer:
             if monitoring_loader is not None:
                 monitoring_metrics = self.evaluate_monitoring_dataset(monitoring_loader, epoch)
                 self.monitoring_results.append((epoch, monitoring_metrics))
-                logger.info(
+                self.logger.info(
                     f'Epoche {epoch:03d}, Überwachung - Verlust: {monitoring_metrics["loss"]:.4f}, '
                     f'Genauigkeit: {monitoring_metrics["accuracy"]:.4f}, AUC: {monitoring_metrics["auc_score"]:.4f}'
                 )
@@ -535,10 +526,10 @@ class Trainer:
                 best_val_loss = val_loss
                 patience_counter = 0
                 self.best_model_state = self.model.state_dict()
-                logger.debug(f"Epoche {epoch}: Verbesserter Validierungsverlust auf {val_loss:.4f}.")
+                self.logger.debug(f"Epoche {epoch}: Verbesserter Validierungsverlust auf {val_loss:.4f}.")
             else:
                 patience_counter += 1
-                logger.debug(f"Epoche {epoch}: Keine Verbesserung des Validierungsverlusts.")
+                self.logger.debug(f"Epoche {epoch}: Keine Verbesserung des Validierungsverlusts.")
 
             if patience_counter >= self.patience:
                 self.logger.info(f"Frühes Stoppen in Epoche {epoch}.")
@@ -549,15 +540,41 @@ class Trainer:
             self.model.load_state_dict(self.best_model_state)
             self.logger.info("Bestes Modell basierend auf dem Validierungsverlust geladen.")
 
+        # Speichere den optimalen Schwellenwert basierend auf der letzten Überwachung
+        if self.monitoring_results:
+            last_epoch, last_metrics = self.monitoring_results[-1]
+            optimal_threshold = self.find_optimal_threshold(last_metrics['y_true'], last_metrics['y_pred_prob'])
+            threshold_path = os.path.join(self.results_dir, 'optimal_threshold.json')
+            self.save_threshold(optimal_threshold, threshold_path)
+            self.logger.info(f"Optimaler Schwellenwert {optimal_threshold:.4f} gespeichert unter {threshold_path}.")
+
+    def find_optimal_threshold(self, y_true, y_pred_probs):
+        fpr, tpr, thresholds = roc_curve(y_true, y_pred_probs)
+        distances = np.sqrt((fpr - 0)**2 + (tpr - 1)**2)
+        optimal_idx = np.argmin(distances)
+        optimal_threshold = thresholds[optimal_idx]
+        self.logger.info(f"Optimaler Schwellenwert basierend auf ROC: {optimal_threshold:.4f}")
+        return optimal_threshold
+
+    def save_threshold(self, optimal_threshold, path):
+        try:
+            with open(path, 'w') as f:
+                json.dump({'optimal_threshold': float(optimal_threshold)}, f)
+            self.logger.info(f"Optimaler Schwellenwert {optimal_threshold:.4f} in {path} gespeichert.")
+        except TypeError as e:
+            self.logger.error(f"Fehler beim Speichern des Schwellenwerts: {e}")
+            raise
+
     def save_model(self, path):
         torch.save(self.model.state_dict(), path)
         self.logger.info(f'Modell gespeichert unter: {path}')
 
 # Evaluator Class
 class Evaluator:
-    def __init__(self, model, device):
+    def __init__(self, model, device, results_dir):
         self.model = model
         self.device = device
+        self.results_dir = results_dir
         self.logger = logging.getLogger(__name__)
 
     def test_model(self, loader):
@@ -585,20 +602,35 @@ class Evaluator:
         if len(unique_classes) < 2:
             self.logger.warning("y_true enthält nur eine Klasse. ROC AUC Score kann nicht berechnet werden.")
             auc_score = None
+            optimal_threshold = 0.5  # Fallback
         else:
             auc_score = roc_auc_score(y_true, y_pred)
             self.logger.info(f'ROC AUC Score: {auc_score:.4f}')
+            optimal_threshold = self.find_optimal_threshold(y_true, y_pred)
 
-        y_pred_binary = (y_pred >= 0.5).astype(int)
+        y_pred_binary = (y_pred >= optimal_threshold).astype(int)
         accuracy = accuracy_score(y_true, y_pred_binary)
         self.logger.info(f'Genauigkeit: {accuracy:.4f}')
 
-        return accuracy, auc_score, y_pred_binary
+        return accuracy, auc_score, y_pred_binary, optimal_threshold
+
+    def find_optimal_threshold(self, y_true, y_pred_probs):
+        fpr, tpr, thresholds = roc_curve(y_true, y_pred_probs)
+        distances = np.sqrt((fpr - 0)**2 + (tpr - 1)**2)
+        optimal_idx = np.argmin(distances)
+        optimal_threshold = thresholds[optimal_idx]
+        logger.info(f"Optimaler Schwellenwert basierend auf ROC: {optimal_threshold:.4f}")
+        return optimal_threshold
+
+    def save_threshold(self, optimal_threshold, path):
+        with open(path, 'w') as f:
+            json.dump({'optimal_threshold': optimal_threshold}, f)
+        logger.info(f"Optimaler Schwellenwert {optimal_threshold:.4f} in {path} gespeichert.")
 
     def plot_metrics(self, y_true, y_pred):
         self.plot_roc_curve(y_true, y_pred)
         self.plot_precision_recall(y_true, y_pred)
-        self.plot_confusion_matrix(y_true, (y_pred >= 0.5).astype(int))
+        self.plot_confusion_matrix(y_true, (y_pred >= 0.5).astype(int))  # Optional anpassen
 
     def plot_roc_curve(self, y_true, y_pred):
         fpr, tpr, _ = roc_curve(y_true, y_pred)
@@ -635,18 +667,27 @@ class Evaluator:
 
 # Main Function
 def main():
-
     # Pfad zur Konfigurationsdatei relativ zum Projektstammverzeichnis
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))  # Zwei Ebenen hoch
+    project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))  # Zwei Ebenen hoch
     config_file = os.path.join(project_root, 'config', 'config.yaml')  # Standardpfad zur config.yaml
 
-    with open(config_file, 'r') as file:
-        config = yaml.safe_load(file)
+    # Laden der Konfiguration
+    try:
+        with open(config_file, 'r') as file:
+            config = yaml.safe_load(file)
+        logger.info("Konfigurationsdatei erfolgreich geladen.")
+    except FileNotFoundError:
+        logger.error(f"Konfigurationsdatei nicht gefunden: {config_file}")
+        return
+    except yaml.YAMLError as e:
+        logger.error(f"Fehler beim Parsen der Konfigurationsdatei: {e}")
+        return
 
     directory = config['paths']['folder_path_data']
 
-    logger = logging.getLogger(__name__)
+    # Verwenden Sie den globalen logger, keine lokale Zuweisung
+    # logger = logging.getLogger(__name__)  # Entfernen Sie diese Zeile
 
     # Liste der Knoten mit verfügbaren Messdaten
     included_nodes = config['nodes']['included_nodes']
@@ -724,28 +765,12 @@ def main():
     # Start des Trainings mit Übergabe des monitoring_loader
     trainer.train_model(train_loader, val_loader, monitoring_loader=monitoring_loader)
 
-    # Initialisiere Evaluator
-    evaluator = Evaluator(model, device)
-    logger.info("Evaluator initialisiert.")
-
-    # Teste das Modell auf dem Testdatensatz
-    y_true, y_pred = evaluator.test_model(test_loader)
-
-    # Berechne Metriken
-    accuracy, auc_score, y_pred_binary = evaluator.calculate_metrics(y_true, y_pred)
-
-    # Generiere Plots
-    evaluator.plot_metrics(y_true, y_pred)
-
     # Speichere das Modell
     models_dir = os.path.join(project_root, 'results', 'models')
     if not os.path.exists(models_dir):
         os.makedirs(models_dir)
     model_path = os.path.join(models_dir, 'edge_gat_model_classification.pth')
     trainer.save_model(model_path)
-
-    # Speichere die Überwachungsergebnisse im gleichen Ordner wie die visuellen Ausgaben
-    # Bereits erledigt durch die Trainer-Klasse
 
     logger.info("Programm erfolgreich abgeschlossen.")
 
