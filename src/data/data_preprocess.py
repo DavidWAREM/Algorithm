@@ -57,7 +57,7 @@ class FeatureEngineer:
         """
         self.poly = PolynomialFeatures(degree=2, include_bias=False)  # Initialize PolynomialFeatures
         # Select the relevant columns for feature engineering
-        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAISE']]
+        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE']]
         X_combined_poly = self.poly.fit_transform(X_combined)  # Generate polynomial features
         y_combined = self.combined_data['RAU']  # Target variable
         self.logger.info("Feature engineering complete with polynomial features of degree 2")
@@ -192,7 +192,7 @@ class PredictionPreprocessor:
         """
         self.logger.info("Starting preprocessing for prediction data.")
         # Select the relevant columns from the new data for preprocessing
-        X_new = self.new_data[['RORL', 'DM', 'FLUSS', 'VM', 'DPREL', 'RAISE', 'DP']]
+        X_new = self.new_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE']]
         X_new_poly = self.poly.transform(X_new)  # Apply the polynomial transformation
         X_new_scaled = self.scaler.transform(X_new_poly)  # Scale the transformed data
         self.processed_data = pd.DataFrame(X_new_scaled)  # Store the processed data as a DataFrame

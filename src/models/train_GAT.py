@@ -15,47 +15,15 @@ from sklearn.metrics import (
     mean_absolute_error,
     r2_score,
 )
-from math import pi
 from sklearn.model_selection import train_test_split
 from sklearn.impute import KNNImputer
 import logging
-import csv
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# DataModule Class
 
-
-import os
-import glob
-import pandas as pd
-import torch
-import numpy as np
-import yaml
-import joblib
-from torch_geometric.data import Data, DataLoader
-from torch_geometric.nn import GATConv
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import (
-    mean_squared_error,
-    mean_absolute_error,
-    r2_score,
-)
-from math import pi
-from sklearn.model_selection import train_test_split
-from sklearn.impute import KNNImputer
-import logging
-import csv
-
-# Initialize logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# DataModule Class
 class DataModule:
     def __init__(self, directory, included_nodes, zfluss_wl_nodes):
         self.directory = directory
@@ -74,7 +42,6 @@ class DataModule:
         # Neue transformierte Edge-Features hinzufügen
         self.transformed_edge_columns = ['RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt']
         # Keine Edge-Features in Node-Dateien
-        # self.all_edge_columns = self.transformed_edge_columns.copy()  # Entfernt
 
     def add_positional_encoding(self, df, columns, max_value=10000):
         for col in columns:
@@ -477,8 +444,20 @@ class DataModule:
         test_loader = DataLoader(test_data, batch_size=16, shuffle=False)
         logger.info("DataLoader für Trainings-, Validierungs- und Testmengen erstellt.")
 
-        return train_loader, val_loader, test_loader
+        # Log the feature columns used for training
+        if len(self.datasets) > 0:
+            sample_data = self.datasets[0]
+            node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
+                                    'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin', 'GEOH_cos']
+            # Dynamisch die 'ROHRTYP' One-Hot-Spalten ermitteln
+            roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+            edge_feature_columns = ['RORL', 'DM', 'RAISE', 'RAISE_log', 'RAISE_sqrt',
+                                    'h_f_WL_sqrt', 'h_f_WOL_sqrt'] + roh_columns
 
+            logger.info(f"Verwendete Knotenspalten für das Training: {node_feature_columns}")
+            logger.info(f"Verwendete Kantenspalten für das Training: {edge_feature_columns}")
+
+        return train_loader, val_loader, test_loader
 
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=64, dropout=0.15):
@@ -778,8 +757,29 @@ def main():
     # Berechnen der Anzahl der Edge-Features
     num_edge_features = data_module.datasets[0].edge_attr.shape[1]
 
+    # Extrahiere und logge die verwendeten Kantenspalten
+    sample_data = data_module.datasets[0]
+    # Annahme: 'edge_attr' ist ein Pandas DataFrame, ansonsten muss dies angepasst werden
+    if isinstance(sample_data.edge_attr, pd.DataFrame):
+        roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+    else:
+        roh_columns = [f'ROHRTYP_{i}' for i in range(num_edge_features) if i >= 0]  # Beispielhafte Ermittlung
+
+    edge_feature_columns = [
+        'RORL', 'DM', 'RAISE',
+        'RAISE_log', 'RAISE_sqrt',
+        'h_f_WL_sqrt', 'h_f_WOL_sqrt'
+    ] + roh_columns
+
+    logger.info(f"Verwendete Kantenspalten für das Training: {edge_feature_columns}")
+
+    # Definiere die Knotenspalten basierend auf dem DataModule
+    node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
+                            'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin', 'GEOH_cos']
+    logger.info(f"Verwendete Knotenspalten für das Training: {node_feature_columns}")
+
     model = EdgeGAT(
-        num_node_features=data_module.datasets[0].x.shape[1],
+        num_node_features=len(node_feature_columns),
         num_edge_features=num_edge_features,  # Aktualisiert, um die neuen Edge-Features zu berücksichtigen
         hidden_dim=64,
         dropout=0.15
@@ -858,10 +858,6 @@ def main():
     trainer.save_model(model_path)
 
     logger.info("Programm erfolgreich abgeschlossen.")
-
-if __name__ == "__main__":
-    main()
-
 
 if __name__ == "__main__":
     main()

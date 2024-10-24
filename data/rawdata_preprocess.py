@@ -101,50 +101,43 @@ class DataProcessor:
             self.logger.error(f"Error saving DataFrames: {e}")  # Log any errors encountered during saving.
 
 
+
 class DataCombiner:
     def __init__(self, directory):
         """
-        Initialisiert den DataCombiner mit dem Verzeichnis, in dem sich der 'Zwischenspeicher' Ordner befindet.
+        Initializes the DataCombiner with the directory containing the 'Zwischenspeicher' folder.
 
         Args:
-            directory (str): Der Basisverzeichnis-Pfad, der den 'Zwischenspeicher' Ordner enthält.
+            directory (str): The base directory path containing the 'Zwischenspeicher' folder.
         """
         self.logger = logging.getLogger(__name__)
         self.directory = directory
-        self.logger.info(f"DataCombiner initialisiert mit Verzeichnis: {directory}")
+        self.logger.info(f"DataCombiner initialized with directory: {directory}")
 
     def combine_with_without_load(self, file_type):
         """
-        Kombiniert Daten aus 'with_load' und 'without_load' CSV-Dateien basierend auf übereinstimmenden Zahlen in den Dateinamen.
-        Diese Funktion verarbeitet entweder 'Pipes' oder 'Node' Typ Dateien, kombiniert die relevanten Spalten und speichert
-        das Ergebnis in einer neuen CSV-Datei, wobei der '_with' Teil aus dem Dateinamen entfernt wird.
-
-        Zusätzlich berechnet sie physikalische Größen für 'Pipes' Dateien und integriert diese in das kombinierte DataFrame,
-        einschließlich der Berechnungen für die vier neuen nicht-linearen Features mit der höchsten Korrelation zu RAU.
+        Combines data from 'with_load' and 'without_load' CSV files based on matching numbers in filenames.
+        This function processes either 'Pipes' or 'Node' type files, combines relevant columns, and saves
+        the result in a new CSV file with the '_with' part removed from the filename.
 
         Args:
-            file_type (str): Der Typ der zu kombinierenden Datei, entweder 'Pipes' oder 'Node'.
+            file_type (str): The type of files to combine, either 'Pipes' or 'Node'.
         """
         try:
-            # Konstanten für physikalische Berechnungen
-            rho = 1000  # Dichte von Wasser in kg/m^3
-            mu = 0.001  # Dynamische Viskosität von Wasser in Pa·s
-            g = 9.81    # Erdbeschleunigung in m/s^2
-            nu = mu / rho  # Kinematische Viskosität in m^2/s
 
-            # Pfad zum 'Zwischenspeicher' Verzeichnis
+            # Path to the 'Zwischenspeicher' directory
             zwischenspeicher_dir = os.path.join(self.directory, 'Zwischenspeicher')
-            self.logger.info(f"Suche nach Dateien im Verzeichnis: {zwischenspeicher_dir}")
+            self.logger.info(f"Searching for files in directory: {zwischenspeicher_dir}")
 
             if not os.path.exists(zwischenspeicher_dir):
-                self.logger.error(f"'Zwischenspeicher' Verzeichnis nicht gefunden unter: {zwischenspeicher_dir}")
+                self.logger.error(f"'Zwischenspeicher' directory not found at: {zwischenspeicher_dir}")
                 return
 
-            # Initialisiere Dictionaries zum Speichern von with_load und without_load Dateien
+            # Initialize dictionaries to store with_load and without_load files
             with_load_files = {}
             without_load_files = {}
 
-            # Durchlaufe Dateien im 'Zwischenspeicher' Verzeichnis und gleiche basierend auf file_type ab
+            # Iterate through files in the 'Zwischenspeicher' directory and categorize them
             for file in os.listdir(zwischenspeicher_dir):
                 with_load_match = re.match(rf"(.+)_with_load_(\d+)_({file_type})\.csv", file)
                 without_load_match = re.match(rf"(.+)_without_load_(\d+)_({file_type})\.csv", file)
@@ -152,33 +145,32 @@ class DataCombiner:
                 if with_load_match:
                     number = with_load_match.group(2)
                     with_load_files[number] = os.path.join(zwischenspeicher_dir, file)
-                    self.logger.debug(f"Gefundene with_load Datei: {file} mit Nummer: {number}")
+                    self.logger.debug(f"Found with_load file: {file} with number: {number}")
                 elif without_load_match:
                     number = without_load_match.group(2)
                     without_load_files[number] = os.path.join(zwischenspeicher_dir, file)
-                    self.logger.debug(f"Gefundene without_load Datei: {file} mit Nummer: {number}")
+                    self.logger.debug(f"Found without_load file: {file} with number: {number}")
 
-            # Verarbeite übereinstimmende Paare von with_load und without_load Dateien
+            # Process matching pairs of with_load and without_load files
             for number in with_load_files.keys():
                 if number in without_load_files:
                     wl_file = with_load_files[number]
                     wol_file = without_load_files[number]
-                    self.logger.info(f"Kombiniere with_load Datei: {wl_file} und without_load Datei: {wol_file}")
+                    self.logger.info(f"Combining with_load file: {wl_file} and without_load file: {wol_file}")
 
-                    # Lese beide CSV Dateien in DataFrames ein
+                    # Read both CSV files into DataFrames
                     df_wl = pd.read_csv(wl_file, sep=';', decimal='.', encoding='utf-8')
                     df_wol = pd.read_csv(wol_file, sep=';', decimal='.', encoding='utf-8')
 
                     if file_type == 'Pipes':
-                        # Spalten für 'Pipes' Dateien ohne DPREL
-                        key_columns = ['ANFNAM', 'ENDNAM', 'RORL', 'DM', 'ROHRTYP', 'RAISE']
+                        # Columns for 'Pipes' files (Excluding 'RE', 'FLUSS', 'VM')
+                        key_columns = ['ANFNAM', 'ENDNAM', 'RORL', 'DM', 'RAU', 'DPREL', 'ROHRTYP', 'RAISE']
+                        self.logger.debug(f"Key columns for 'Pipes' (excluding 'RE', 'FLUSS', 'VM'): {key_columns}")
 
-                        self.logger.debug(f"Key Spalten für 'Pipes' (ohne DPREL): {key_columns}")
-
-                        # Erstelle ein neues DataFrame mit den Key Spalten aus 'with_load'
+                        # Create a new DataFrame with key columns from 'with_load'
                         combined_df = df_wl[key_columns].copy()
 
-                        # Füge VM und FLUSS Spalten sowohl aus with_load als auch ohne_load hinzu
+                        # Add new columns from both with_load and without_load
                         combined_df['VM_WL'] = pd.to_numeric(df_wl['VM'], errors='coerce')
                         combined_df['FLUSS_WL'] = pd.to_numeric(df_wl['FLUSS'], errors='coerce')
                         combined_df['VM_WOL'] = pd.to_numeric(df_wol['VM'], errors='coerce')
@@ -186,147 +178,35 @@ class DataCombiner:
                         combined_df['RE_WL'] = pd.to_numeric(df_wl['RE'], errors='coerce')
                         combined_df['RE_WOL'] = pd.to_numeric(df_wol['RE'], errors='coerce')
 
-                        # Füge RAU Spalte hinzu
+                        # Add RAU column if present
                         if 'RAU' in df_wl.columns:
                             combined_df['RAU'] = pd.to_numeric(df_wl['RAU'], errors='coerce')
-                            self.logger.info(f"RAU Spalte hinzugefügt für Datei: {wl_file}")
+                            self.logger.info(f"Added RAU column for file: {wl_file}")
                         else:
-                            combined_df['RAU'] = np.nan
-                            self.logger.warning(f"RAU Spalte fehlt in Datei: {wl_file}")
+                            combined_df['RAU'] = pd.NA
+                            self.logger.warning(f"RAU column missing in file: {wl_file}")
 
-                        # Konvertiere Spalten in numerische Typen
+                        # Convert specified columns to numeric types
                         numeric_columns = ['DM', 'VM_WL', 'VM_WOL', 'FLUSS_WL', 'FLUSS_WOL', 'RAU', 'RORL', 'RE_WL', 'RE_WOL']
                         for col in numeric_columns:
                             combined_df[col] = pd.to_numeric(combined_df[col], errors='coerce')
 
-                        # **Konvertiere DM und RORL von mm zu Metern**
-                        combined_df['DM'] = combined_df['DM'] / 1000  # mm zu m
+                        # **Exclude Original Columns ('RE', 'FLUSS', 'VM')**
+                        # Since 'RE', 'FLUSS', 'VM' were excluded from key_columns, they are not present in combined_df
+                        # Only the new '_WL' and '_WOL' columns are included along with key columns
 
-                        # Berechne Reynolds-Zahlen
-                        combined_df['Re_WL'] = (combined_df['VM_WL'] * combined_df['DM']) / nu
-                        combined_df['Re_WOL'] = (combined_df['VM_WOL'] * combined_df['DM']) / nu
-
-                        # **Berechne Reibungsfaktoren ohne RAU**
-                        def calculate_friction_factor(Re, D, assumed_roughness=0.0001):
-                            """
-                            Berechnet den Reibungsfaktor basierend auf der Reynolds-Zahl und dem Rohrdurchmesser.
-                            Verwendet die Blasius-Gleichung für turbulente Strömung in glatten Rohren und Standardformel für laminare Strömung.
-
-                            Parameters:
-                            - Re: Reynolds-Zahl (arrayähnlich)
-                            - D: Rohrdurchmesser (arrayähnlich)
-                            - assumed_roughness: Angenommene Rauhigkeit des Rohrs (Standardwert 0.0001 Meter)
-
-                            Returns:
-                            - f: Reibungsfaktor (arrayähnlich)
-                            """
-                            Re = np.maximum(Re, 1e-6)  # Vermeide Division durch Null
-                            D = np.maximum(D, 1e-6)    # Vermeide Division durch Null
-                            # Relative Rauhigkeit wird nicht verwendet, da glatte Rohre angenommen werden
-                            # Berechne Reibungsfaktor für laminare Strömung
-                            f_laminar = 64 / Re
-                            # Berechne Reibungsfaktor für turbulente Strömung mit Blasius-Gleichung
-                            f_turbulent = 0.3164 * Re**-0.25
-                            # Definiere Masken für verschiedene Strömungsregime
-                            laminar_mask = Re < 2000
-                            turbulent_mask = Re > 4000
-                            transition_mask = (~laminar_mask) & (~turbulent_mask)
-                            # Initialisiere Reibungsfaktor Array
-                            f = np.zeros_like(Re)
-                            # Weisen Sie Reibungsfaktoren basierend auf den Strömungsregimen zu
-                            f[laminar_mask] = f_laminar[laminar_mask]
-                            f[turbulent_mask] = f_turbulent[turbulent_mask]
-                            # Lineare Interpolation für Übergangsregime
-                            f[transition_mask] = f_laminar[transition_mask] + (
-                                (Re[transition_mask] - 2000) * (f_turbulent[transition_mask] - f_laminar[transition_mask]) / 2000
-                            )
-                            return f
-
-                        # Berechne Reibungsfaktoren ohne RAU
-                        combined_df['f_WL'] = calculate_friction_factor(combined_df['Re_WL'], combined_df['DM'])
-                        combined_df['f_WOL'] = calculate_friction_factor(combined_df['Re_WOL'], combined_df['DM'])
-
-                        # Berechne Wandreibungsspannung
-                        combined_df['tau_w_WL'] = (combined_df['f_WL'] / 8) * rho * (combined_df['VM_WL'] ** 2)
-                        combined_df['tau_w_WOL'] = (combined_df['f_WOL'] / 8) * rho * (combined_df['VM_WOL'] ** 2)
-
-                        # Berechne Reibungsgeschwindigkeit
-                        combined_df['u_star_WL'] = np.sqrt(combined_df['tau_w_WL'] / rho)
-                        combined_df['u_star_WOL'] = np.sqrt(combined_df['tau_w_WOL'] / rho)
-
-                        # Berechne Dicke der laminaren Unterschicht
-                        combined_df['delta_WL'] = (5 * nu) / combined_df['u_star_WL']
-                        combined_df['delta_WOL'] = (5 * nu) / combined_df['u_star_WOL']
-
-                        # Berechne Reibungsverlust h_f mittels Darcy-Weisbach-Gleichung
-                        combined_df['h_f_WL'] = combined_df['f_WL'] * (combined_df['RORL'] / combined_df['DM']) * \
-                                                (combined_df['VM_WL'] ** 2) / (2 * g)
-                        combined_df['h_f_WOL'] = combined_df['f_WOL'] * (combined_df['RORL'] / combined_df['DM']) * \
-                                                 (combined_df['VM_WOL'] ** 2) / (2 * g)
-
-                        # Berechne Energiegradient S
-                        combined_df['S_WL'] = combined_df['h_f_WL'] / combined_df['RORL']
-                        combined_df['S_WOL'] = combined_df['h_f_WOL'] / combined_df['RORL']
-
-                        # Berechne Strömungsregime-Indikator
-                        combined_df['flow_regime_WL'] = np.where(
-                            combined_df['Re_WL'] < 2000, 0,
-                            np.where(combined_df['Re_WL'] <= 4000, 1, 2)
-                        )
-                        combined_df['flow_regime_WOL'] = np.where(
-                            combined_df['Re_WOL'] < 2000, 0,
-                            np.where(combined_df['Re_WOL'] <= 4000, 1, 2)
-                        )
-
-                        # Berechne Reibungsverlust pro Kilometer (mbar/km)
-                        # Formel: ΔP(mbar/km) = (f * rho * v^2 * 5) / D
-                        combined_df['Reibungsverlust_mbar_km_WL'] = (combined_df['f_WL'] * rho * (combined_df['VM_WL'] ** 2) * 5) / combined_df['DM']
-                        combined_df['Reibungsverlust_mbar_km_WOL'] = (combined_df['f_WOL'] * rho * (combined_df['VM_WOL'] ** 2) * 5) / combined_df['DM']
-
-                        # Sicherstellen, dass keine unendlichen oder NaN Werte in den Berechnungen vorhanden sind
-                        calc_columns = ['Re_WL', 'Re_WOL', 'f_WL', 'f_WOL', 'tau_w_WL', 'tau_w_WOL',
-                                        'u_star_WL', 'u_star_WOL', 'delta_WL', 'delta_WOL',
-                                        'h_f_WL', 'h_f_WOL', 'S_WL', 'S_WOL',
-                                        'Reibungsverlust_mbar_km_WL', 'Reibungsverlust_mbar_km_WOL']
-                        for col in calc_columns:
-                            combined_df[col] = combined_df[col].replace([np.inf, -np.inf], np.nan).fillna(0)
-
-                        # Konvertiere Strömungsregime-Indikatoren in Ganzzahltypen
-                        combined_df['flow_regime_WL'] = combined_df['flow_regime_WL'].astype(int)
-                        combined_df['flow_regime_WOL'] = combined_df['flow_regime_WOL'].astype(int)
-
-                        # **Berechne die vier neuen nicht-linearen Features mit höchster Korrelation zu RAU**
-
-                        # 1. RAISE_log und RAISE_sqrt
-                        combined_df['RAISE_log'] = combined_df['RAISE'].apply(lambda x: np.log(x) if x > 0 else np.nan)
-                        combined_df['RAISE_sqrt'] = combined_df['RAISE'].apply(lambda x: np.sqrt(x) if x >= 0 else np.nan)
-
-                        # 2. h_f_WL_sqrt und h_f_WOL_sqrt
-                        combined_df['h_f_WL_sqrt'] = combined_df['h_f_WL'].apply(lambda x: np.sqrt(x) if x >= 0 else np.nan)
-                        combined_df['h_f_WOL_sqrt'] = combined_df['h_f_WOL'].apply(lambda x: np.sqrt(x) if x >= 0 else np.nan)
-
-                        # Überprüfen, ob die transformierten Features berechnet wurden
-                        required_transformed_features = ['RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt']
-                        for feature in required_transformed_features:
-                            if feature not in combined_df.columns or combined_df[feature].isnull().all():
-                                combined_df[feature] = np.nan
-                                self.logger.warning(f"{feature} wurde nicht berechnet und auf NaN gesetzt.")
-
-                        # Füllen von NaN-Werten mit 0 (oder einer anderen geeigneten Methode)
-                        for feature in required_transformed_features:
-                            if feature in combined_df.columns:
-                                combined_df[feature] = combined_df[feature].fillna(0)
-                                self.logger.debug(f"{feature} fehlende Werte mit 0 gefüllt.")
+                        # Optionally, drop any remaining unwanted columns if necessary
+                        # Not needed here as 'RE', 'FLUSS', 'VM' are already excluded
 
                     elif file_type == 'Node':
-                        # Spalten für 'Node' Dateien
+                        # Columns for 'Node' files
                         key_columns = ['KNAM', 'GEOH', 'XRECHTS', 'YHOCH']
-                        self.logger.debug(f"Key Spalten für 'Node': {key_columns}")
+                        self.logger.debug(f"Key columns for 'Node': {key_columns}")
 
-                        # Erstelle ein neues DataFrame mit den Key Spalten aus 'with_load'
+                        # Create a new DataFrame with key columns from 'with_load'
                         combined_df = df_wl[key_columns].copy()
 
-                        # Füge PRECH, HP und ZUFLUSS Spalten sowohl aus with_load als auch ohne_load hinzu
+                        # Add PRECH, HP, and ZUFLUSS columns from both with_load and without_load
                         combined_df['PRECH_WL'] = pd.to_numeric(df_wl['PRECH'], errors='coerce')
                         combined_df['HP_WL'] = pd.to_numeric(df_wl['HP'], errors='coerce')
                         combined_df['ZUFLUSS_WL'] = pd.to_numeric(df_wl['ZUFLUSS'], errors='coerce')
@@ -334,28 +214,30 @@ class DataCombiner:
                         combined_df['HP_WOL'] = pd.to_numeric(df_wol['HP'], errors='coerce')
                         combined_df['ZUFLUSS_WOL'] = pd.to_numeric(df_wol['ZUFLUSS'], errors='coerce')
 
-                        # Füge dp Spalte für Node Dateien als PRECH_WOL - PRECH_WL hinzu
+                        # Add dp column as PRECH_WOL - PRECH_WL
                         combined_df['dp'] = combined_df['PRECH_WOL'] - combined_df['PRECH_WL']
-                        self.logger.debug(f"Spalte dp als PRECH_WOL - PRECH_WL für Node berechnet")
+                        self.logger.debug("Calculated 'dp' as PRECH_WOL - PRECH_WL for Node")
 
-                        # Berechne Änderung in der hydraulischen Höhe (delta_H)
+                        # Add delta_H column as HP_WL - HP_WOL
                         combined_df['delta_H'] = combined_df['HP_WL'] - combined_df['HP_WOL']
 
-                        # Sicherstellen, dass keine unendlichen oder NaN Werte in den Berechnungen vorhanden sind
+                        # Ensure no infinite or NaN values in the calculations
                         node_calc_columns = ['PRECH_WL', 'HP_WL', 'ZUFLUSS_WL', 'PRECH_WOL',
                                              'HP_WOL', 'ZUFLUSS_WOL', 'dp', 'delta_H']
                         for col in node_calc_columns:
-                            combined_df[col] = combined_df[col].replace([np.inf, -np.inf], np.nan).fillna(0)
+                            combined_df[col] = combined_df[col].replace([np.inf, -np.inf], pd.NA).fillna(0)
 
-                    # Extrahiere den Basisdateinamen ohne "_with" und definiere den Ausgabedateinamen
+                    # Extract the base filename without "_with" and define the output filename
                     base_name = re.sub(rf'_with_load_\d+_({file_type})\.csv', '', os.path.basename(wl_file))
                     output_file = os.path.join(zwischenspeicher_dir, f"{base_name}_{number}_combined_{file_type}.csv")
 
-                    # Speichere das kombinierte DataFrame in eine neue CSV Datei
+                    # Save the combined DataFrame to a new CSV file
                     combined_df.to_csv(output_file, index=False, sep=';', decimal='.')
-                    self.logger.info(f"Kombinierte CSV Datei erfolgreich gespeichert unter: {output_file}")
+                    self.logger.info(f"Combined CSV file saved successfully at: {output_file}")
 
         except Exception as e:
-            self.logger.error(f"Fehler beim Kombinieren der Dateien: {e}", exc_info=True)
+            self.logger.error(f"Error combining files: {e}", exc_info=True)
+
+
 
 
