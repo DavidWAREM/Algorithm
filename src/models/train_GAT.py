@@ -86,10 +86,10 @@ class DataModule:
                 logger.debug(f"Spalte {col} fehlt in {node_file}.")
                 raise ValueError(f"Spalte {col} fehlt in {node_file}.")
 
-        # Check for required edge columns, einschließlich der transformierten Features
+        # Check for required edge columns, einschließlich der transformierten Features (ohne 'ROHRTYP')
         required_edge_columns = [
             'ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL',
-            'ROHRTYP', 'RORL', 'DM', 'RAISE', 'RAU',
+            'RORL', 'DM', 'RAISE', 'RAU',
             'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'  # Hinzugefügte transformierte Features
         ]
         for col in required_edge_columns:
@@ -125,9 +125,10 @@ class DataModule:
         # Create unique edge identifier
         edges_df['edge_id'] = edges_df['ANFNAM'] + '_' + edges_df['ENDNAM']
 
-        # One-Hot Encoding for 'ROHRTYP'
-        edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
-        logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt.")
+        # **Entfernung der One-Hot-Encoding für 'ROHRTYP'**
+        # Entfernen der One-Hot-Kodierungsschritte
+        # edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
+        # logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt.")
 
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
@@ -200,20 +201,22 @@ class DataModule:
         # Create node features
         node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
 
-        # Update edge_columns to include neue transformierte Features
+        # Update edge_columns to include neue transformierte Features (ohne 'ROHRTYP')
         continuous_edge_columns = [
             'RORL', 'DM', 'RAISE',
             'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
             'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
-        one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
-        edge_columns = continuous_edge_columns + one_hot_edge_columns
+        # Entfernen der One-Hot 'ROHRTYP' Spalten
+        # one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
+        # edge_columns = continuous_edge_columns + one_hot_edge_columns
+        edge_columns = continuous_edge_columns
 
         # Ensure all edge attributes are numeric
         edges_df[edge_columns] = edges_df[edge_columns].apply(pd.to_numeric, errors='coerce')
 
-        # Fill missing values in One-Hot encoded columns if any
-        edges_df[one_hot_edge_columns] = edges_df[one_hot_edge_columns].fillna(0)
+        # **Entfernung der One-Hot-Spaltenfüllung**
+        # edges_df[one_hot_edge_columns] = edges_df[one_hot_edge_columns].fillna(0)
 
         # Apply scaling only to continuous edge attributes
         edges_df[continuous_edge_columns] = pd.DataFrame(
@@ -224,6 +227,7 @@ class DataModule:
         logger.debug("Skalierung auf kontinuierliche Kantenattribute angewendet.")
 
         # Combine scaled continuous and unscaled One-Hot encoded edge attributes
+        # Da One-Hot Encoding entfernt wurde, verwenden wir nur die kontinuierlichen Kantenattribute
         edge_attributes = edges_df[edge_columns].values
 
         # Convert to tensors
@@ -347,24 +351,27 @@ class DataModule:
         self.rau_scaler.fit(edges_df_all[['RAU']])  # Scale target variable
         logger.debug("Physikalische, geografische und RAU Skalierer angepasst.")
 
-        # One-Hot Encoding for 'ROHRTYP'
-        edges_df_all = pd.get_dummies(edges_df_all, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
-        logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt (Skalierer-Anpassung).")
+        # **Entfernung der One-Hot-Encoding für 'ROHRTYP'**
+        # Entfernen der One-Hot-Kodierungsschritte
+        # edges_df_all = pd.get_dummies(edges_df_all, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
+        # logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt (Skalierer-Anpassung).")
 
-        # Update edge_columns to include neue transformierte Features
+        # Update edge_columns to include neue transformierte Features (ohne 'ROHRTYP')
         continuous_edge_columns = [
             'RORL', 'DM', 'RAISE',
             'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
             'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
-        one_hot_edge_columns = list(edges_df_all.filter(like='ROHRTYP').columns)
-        edge_columns = continuous_edge_columns + one_hot_edge_columns
+        # Entfernen der One-Hot 'ROHRTYP' Spalten
+        # one_hot_edge_columns = list(edges_df_all.filter(like='ROHRTYP').columns)
+        # edge_columns = continuous_edge_columns + one_hot_edge_columns
+        edge_columns = continuous_edge_columns
 
         # Ensure all edge attributes are numeric
         edges_df_all[edge_columns] = edges_df_all[edge_columns].apply(pd.to_numeric, errors='coerce')
 
-        # Fill missing values in One-Hot encoded columns if any
-        edges_df_all[one_hot_edge_columns] = edges_df_all[one_hot_edge_columns].fillna(0)
+        # **Entfernung der One-Hot-Spaltenfüllung**
+        # edges_df_all[one_hot_edge_columns] = edges_df_all[one_hot_edge_columns].fillna(0)
 
         # Fit scaler to continuous edge attributes
         self.edge_scaler.fit(edges_df_all[continuous_edge_columns])
@@ -449,15 +456,16 @@ class DataModule:
             sample_data = self.datasets[0]
             node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
                                     'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin', 'GEOH_cos']
-            # Dynamisch die 'ROHRTYP' One-Hot-Spalten ermitteln
-            roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+            # **Entfernung der dynamischen Ermittlung von 'ROHRTYP' One-Hot-Spalten**
+            # roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
             edge_feature_columns = ['RORL', 'DM', 'RAISE', 'RAISE_log', 'RAISE_sqrt',
-                                    'h_f_WL_sqrt', 'h_f_WOL_sqrt'] + roh_columns
+                                    'h_f_WL_sqrt', 'h_f_WOL_sqrt']
 
             logger.info(f"Verwendete Knotenspalten für das Training: {node_feature_columns}")
             logger.info(f"Verwendete Kantenspalten für das Training: {edge_feature_columns}")
 
         return train_loader, val_loader, test_loader
+
 
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=64, dropout=0.15):
@@ -502,6 +510,7 @@ class EdgeGAT(torch.nn.Module):
         logger.debug("Berechnete edge_logits.")
 
         return edge_logits  # Returns raw values for regression
+
 
 # Trainer Class
 class Trainer:
@@ -648,6 +657,7 @@ class Trainer:
         torch.save(self.model.state_dict(), path)
         self.logger.info(f'Modell gespeichert unter: {path}')
 
+
 # Evaluator Class
 class Evaluator:
     def __init__(self, model, device, target_scaler):
@@ -714,6 +724,7 @@ class Evaluator:
         plt.show()
         logger.debug("Residuenplot erstellt.")
 
+
 def main():
 
     # Path to the configuration file relative to the project root
@@ -761,9 +772,11 @@ def main():
     sample_data = data_module.datasets[0]
     # Annahme: 'edge_attr' ist ein Pandas DataFrame, ansonsten muss dies angepasst werden
     if isinstance(sample_data.edge_attr, pd.DataFrame):
-        roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+        # **Entfernung der dynamischen Ermittlung von 'ROHRTYP' One-Hot-Spalten**
+        # roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+        roh_columns = []  # Da 'ROHRTYP' entfernt wurde
     else:
-        roh_columns = [f'ROHRTYP_{i}' for i in range(num_edge_features) if i >= 0]  # Beispielhafte Ermittlung
+        roh_columns = []  # Da 'ROHRTYP' entfernt wurde
 
     edge_feature_columns = [
         'RORL', 'DM', 'RAISE',
