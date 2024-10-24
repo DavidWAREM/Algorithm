@@ -53,10 +53,10 @@ class DataProcessor:
             lei_df = lei_df[lei_df.iloc[:, 0] == 'LEI']
 
             # Define relevant columns for each DataFrame.
-            kno_columns = ['REM', 'FLDNAM', 'KNO', 'KNAM', 'ZUFLUSS', 'GEOH', 'PRECH',
+            kno_columns = ['KNAM', 'ZUFLUSS', 'GEOH', 'PRECH',
                            'XRECHTS', 'YHOCH', 'HP']
-            lei_columns = ['REM', 'FLDNAM', 'LEI', 'ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'RAU', 'FLUSS',
-                           'VM', 'DPREL', 'ROHRTYP', 'RAISE', 'DPREL']
+            lei_columns = ['ANFNAM', 'ENDNAM', 'RORL', 'DM', 'RAU', 'FLUSS',
+                           'VM', 'DPREL', 'ROHRTYP', 'RAISE', 'RE']
 
             # Ensure that only relevant columns in kno_columns are extracted from kno_df.
             kno_columns_present = [col for col in kno_columns if col in kno_df.columns]
@@ -171,7 +171,7 @@ class DataCombiner:
 
                     if file_type == 'Pipes':
                         # Spalten für 'Pipes' Dateien ohne DPREL
-                        key_columns = ['ANFNAM', 'ENDNAM', 'ANFNR', 'ENDNR', 'RORL', 'DM', 'ROHRTYP', 'RAISE']
+                        key_columns = ['ANFNAM', 'ENDNAM', 'RORL', 'DM', 'ROHRTYP', 'RAISE']
 
                         self.logger.debug(f"Key Spalten für 'Pipes' (ohne DPREL): {key_columns}")
 
@@ -183,6 +183,8 @@ class DataCombiner:
                         combined_df['FLUSS_WL'] = pd.to_numeric(df_wl['FLUSS'], errors='coerce')
                         combined_df['VM_WOL'] = pd.to_numeric(df_wol['VM'], errors='coerce')
                         combined_df['FLUSS_WOL'] = pd.to_numeric(df_wol['FLUSS'], errors='coerce')
+                        combined_df['RE_WL'] = pd.to_numeric(df_wl['RE'], errors='coerce')
+                        combined_df['RE_WOL'] = pd.to_numeric(df_wol['RE'], errors='coerce')
 
                         # Füge RAU Spalte hinzu
                         if 'RAU' in df_wl.columns:
@@ -193,7 +195,7 @@ class DataCombiner:
                             self.logger.warning(f"RAU Spalte fehlt in Datei: {wl_file}")
 
                         # Konvertiere Spalten in numerische Typen
-                        numeric_columns = ['DM', 'VM_WL', 'VM_WOL', 'FLUSS_WL', 'FLUSS_WOL', 'RAU', 'RORL']
+                        numeric_columns = ['DM', 'VM_WL', 'VM_WOL', 'FLUSS_WL', 'FLUSS_WOL', 'RAU', 'RORL', 'RE_WL', 'RE_WOL']
                         for col in numeric_columns:
                             combined_df[col] = pd.to_numeric(combined_df[col], errors='coerce')
 
