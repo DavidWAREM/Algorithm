@@ -5,7 +5,8 @@ import torch
 import numpy as np
 import yaml
 import joblib
-from torch_geometric.data import Data, DataLoader
+from torch_geometric.data import Data
+from torch_geometric.loader import DataLoader  # Updated import to resolve deprecation warning
 from torch_geometric.nn import GATConv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -58,9 +59,17 @@ class DataModule:
         self.additional_physical_columns = ['ZUFLUSS_WL']
         self.all_physical_columns = self.adjusted_physical_columns + self.additional_physical_columns
 
-        # Define new transformed edge features to be added
-        self.transformed_edge_columns = ['RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt']
-        # Note: No edge features are present in node files
+        # Define node feature columns (12 features)
+        self.node_feature_columns = [
+            'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
+            'ZUFLUSS_WL',
+            'XRECHTS_sin', 'XRECHTS_cos',
+            'YHOCH_sin', 'YHOCH_cos',
+            'GEOH_sin', 'GEOH_cos'
+        ]
+
+        # Define edge feature columns (3 features)
+        self.edge_feature_columns = ['RORL', 'DM', 'RAISE']
 
     def add_positional_encoding(self, df, columns, max_value=10000):
         """
@@ -134,18 +143,17 @@ class DataModule:
             logger.error(f"Error loading files {node_file} or {edge_file}: {e}")
             raise e
 
-        # Check for required node columns (excluding transformed edge features)
+        # Check for required node columns
         required_node_columns = ['KNAM', 'XRECHTS', 'YHOCH', 'GEOH'] + self.adjusted_physical_columns + ['ZUFLUSS_WL']
         for col in required_node_columns:
             if col not in nodes_df.columns:
                 logger.debug(f"Column {col} is missing in {node_file}.")
                 raise ValueError(f"Column {col} is missing in {node_file}.")
 
-        # Check for required edge columns, including transformed features (excluding 'ROHRTYP')
+        # Check for required edge columns
         required_edge_columns = [
             'ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL',
-            'RORL', 'DM', 'RAISE', 'RAU',
-            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'  # Transformed edge features
+            'RORL', 'DM', 'RAISE', 'RAU'
         ]
         for col in required_edge_columns:
             if col not in edges_df.columns:
@@ -183,11 +191,8 @@ class DataModule:
         # Extract edge indices for graph representation
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
-        # Ensure relevant edge columns are numeric, including transformed features
-        edge_features_columns = [
-            'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAU',
-            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'
-        ]
+        # Ensure relevant edge columns are numeric
+        edge_features_columns = self.edge_feature_columns  # ['RORL', 'DM', 'RAISE']
         edges_df[edge_features_columns] = edges_df[edge_features_columns].astype(float)
         logger.debug("Converted relevant edge columns to float.")
 
@@ -213,11 +218,6 @@ class DataModule:
             axis=1
         )
         logger.debug("Handled 'ZUFLUSS_WL' for specific nodes.")
-
-        # Add indicators for missing values in all physical columns
-        for col in self.all_physical_columns:
-            nodes_df[f'{col}_missing'] = nodes_df[col].isna().astype(float)
-            logger.debug(f"Added missing indicator for {col}.")
 
         # Perform graph-based imputation for missing 'ZUFLUSS_WL' values
         nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
@@ -248,30 +248,20 @@ class DataModule:
         nodes_df = self.add_positional_encoding(nodes_df, self.geo_columns)
         logger.debug("Added positional encoding to geographic columns.")
 
-        # Create node features by dropping unnecessary columns
-        node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
+        # Create node features by selecting the defined columns
+        node_features = nodes_df[self.node_feature_columns].values
 
-        # Update edge_columns to include only continuous transformed edge features (excluding 'ROHRTYP')
-        continuous_edge_columns = [
-            'RORL', 'DM', 'RAISE',
-            'RAISE_log', 'RAISE_sqrt',  # Transformed edge features
-            'h_f_WL_sqrt', 'h_f_WOL_sqrt'
-        ]
-        edge_columns = continuous_edge_columns
-
-        # Ensure all edge attributes are numeric
-        edges_df[edge_columns] = edges_df[edge_columns].apply(pd.to_numeric, errors='coerce')
-
-        # Apply scaling only to continuous edge attributes
-        edges_df[continuous_edge_columns] = pd.DataFrame(
-            self.edge_scaler.transform(edges_df[continuous_edge_columns]),
-            columns=continuous_edge_columns,
+        # Ensure all edge attributes are numeric (already handled above)
+        # Apply scaling to edge attributes
+        edges_df[self.edge_feature_columns] = pd.DataFrame(
+            self.edge_scaler.transform(edges_df[self.edge_feature_columns]),
+            columns=self.edge_feature_columns,
             index=edges_df.index
         )
-        logger.debug("Applied scaling to continuous edge attributes.")
+        logger.debug("Applied scaling to edge attributes.")
 
-        # Combine scaled continuous edge attributes
-        edge_attributes = edges_df[edge_columns].values
+        # Combine scaled edge attributes
+        edge_attributes = edges_df[self.edge_feature_columns].values
 
         # Convert node features, edge indices, and edge attributes to PyTorch tensors
         try:
@@ -383,22 +373,26 @@ class DataModule:
         )
         logger.debug("Handled 'ZUFLUSS_WL' for specific nodes (scaler fitting).")
 
-        # Add indicators for missing values in all physical columns
-        for col in self.all_physical_columns:
-            nodes_df_all[f'{col}_missing'] = nodes_df_all[col].isna().astype(float)
-            logger.debug(f"Added missing indicator for {col} (scaler fitting).")
+        # Perform graph-based imputation for missing 'ZUFLUSS_WL' values
+        # Note: Edge index is not available here; assuming no imputation during scaler fitting
 
-        # Handle missing values using KNN Imputer for adjusted physical columns
+        # Handle missing values for other physical columns using KNN Imputer
         imputer = KNNImputer(n_neighbors=5)
-        nodes_df_all[self.adjusted_physical_columns] = imputer.fit_transform(
-            nodes_df_all[self.adjusted_physical_columns])
+        nodes_df_all[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df_all[self.adjusted_physical_columns])
         logger.debug("Performed KNN imputation for adjusted physical columns (scaler fitting).")
+
+        # Remove the helper 'Included' column as it's no longer needed
+        nodes_df_all = nodes_df_all.drop(columns=['Included'])
+        logger.debug("Removed helper column 'Included' from node data (scaler fitting).")
 
         # Fit scalers using the combined training data
         self.physical_scaler.fit(nodes_df_all[self.all_physical_columns])
         self.geo_scaler.fit(nodes_df_all[self.geo_columns])
         self.rau_scaler.fit(edges_df_all[['RAU']])  # Scale target variable
-        logger.debug("Fitted physical, geographic, and RAU scalers.")
+
+        # Fit the edge scaler on edge features
+        self.edge_scaler.fit(edges_df_all[self.edge_feature_columns])
+        logger.debug("Fitted physical, geographic, edge, and RAU scalers.")
 
     def load_all_data(self):
         """
@@ -492,14 +486,8 @@ class DataModule:
         # Log the feature columns used for training based on a sample dataset
         if len(self.datasets) > 0:
             sample_data = self.datasets[0]
-            node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-                                    'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin',
-                                    'GEOH_cos']
-            edge_feature_columns = ['RORL', 'DM', 'RAISE', 'RAISE_log', 'RAISE_sqrt',
-                                    'h_f_WL_sqrt', 'h_f_WOL_sqrt']
-
-            logger.info(f"Used node feature columns for training: {node_feature_columns}")
-            logger.info(f"Used edge feature columns for training: {edge_feature_columns}")
+            logger.info(f"Used node feature columns for training: {self.node_feature_columns}")
+            logger.info(f"Used edge feature columns for training: {self.edge_feature_columns}")
 
         return train_loader, val_loader, test_loader
 
@@ -987,35 +975,14 @@ def main():
         logger.error("No datasets found for training the model.")
         raise ValueError("No datasets found for training the model.")
 
-    # Calculate the number of edge features based on the first dataset
-    num_edge_features = data_module.datasets[0].edge_attr.shape[1]
-
-    # Extract and log the used edge feature columns
-    sample_data = data_module.datasets[0]
-    # Assuming 'edge_attr' is a PyTorch Tensor; adjust if it's a different type
-    if isinstance(sample_data.edge_attr, pd.DataFrame):
-        roh_columns = []  # 'ROHRTYP' has been removed
-    else:
-        roh_columns = []  # 'ROHRTYP' has been removed
-
-    edge_feature_columns = [
-                               'RORL', 'DM', 'RAISE',
-                               'RAISE_log', 'RAISE_sqrt',
-                               'h_f_WL_sqrt', 'h_f_WOL_sqrt'
-                           ] + roh_columns
-
-    logger.info(f"Used edge feature columns for training: {edge_feature_columns}")
-
-    # Define the node feature columns based on the DataModule's configuration
-    node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-                            'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin',
-                            'GEOH_cos']
-    logger.info(f"Used node feature columns for training: {node_feature_columns}")
+    # Get the number of node and edge features from the DataModule
+    num_node_features = len(data_module.node_feature_columns)
+    num_edge_features = len(data_module.edge_feature_columns)
 
     # Initialize the EdgeGAT model with the determined number of node and edge features
     model = EdgeGAT(
-        num_node_features=len(node_feature_columns),
-        num_edge_features=num_edge_features,  # Updated to account for new edge features
+        num_node_features=num_node_features,
+        num_edge_features=num_edge_features,
         hidden_dim=64,
         dropout=0.15
     ).to(device)

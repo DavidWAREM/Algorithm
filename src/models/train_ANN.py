@@ -27,7 +27,7 @@ class ANNModel:
         self.logger.info("ANN model built and compiled successfully.")
         return model
 
-    def train(self, X_train, y_train, validation_split=0.2, epochs=100, batch_size=32, patience=10):
+    def train(self, X_train, y_train, validation_split=0.2, epochs=1000, batch_size=32, patience=10):
         early_stopping = EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True)
         history = self.model.fit(X_train, y_train, validation_split=validation_split, epochs=epochs,
                                  batch_size=batch_size, callbacks=[early_stopping], verbose=1)
