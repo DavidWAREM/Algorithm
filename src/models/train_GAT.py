@@ -19,45 +19,88 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import KNNImputer
 import logging
 
-# Initialize logging
+# Initialize logging with INFO level to capture essential information
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 class DataModule:
+    """
+    DataModule is responsible for loading, preprocessing, and preparing the dataset
+    for training, validation, and testing. It handles node and edge data, applies
+    scaling, imputes missing values, and adds positional encoding to geographic features.
+    """
+
     def __init__(self, directory, included_nodes, zfluss_wl_nodes):
+        """
+        Initializes the DataModule with the specified directory and node configurations.
+
+        Args:
+            directory (str): Path to the directory containing node and edge CSV files.
+            included_nodes (list): List of node names to be included with available measurement data.
+            zfluss_wl_nodes (list): List of node names for which 'ZUFLUSS_WL' is applicable.
+        """
         self.directory = directory
         self.included_nodes = included_nodes
         self.zfluss_wl_nodes = zfluss_wl_nodes
+
+        # Initialize scalers for different types of features
         self.physical_scaler = StandardScaler()
         self.geo_scaler = MinMaxScaler()
         self.edge_scaler = StandardScaler()
-        self.rau_scaler = StandardScaler()  # Für das Skalieren der Zielvariable
+        self.rau_scaler = StandardScaler()  # For scaling the target variable 'RAU'
+
         self.datasets = []
+
+        # Define column names for geographic and physical attributes
         self.geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
         self.adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
         self.additional_physical_columns = ['ZUFLUSS_WL']
         self.all_physical_columns = self.adjusted_physical_columns + self.additional_physical_columns
 
-        # Neue transformierte Edge-Features hinzufügen
+        # Define new transformed edge features to be added
         self.transformed_edge_columns = ['RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt']
-        # Keine Edge-Features in Node-Dateien
+        # Note: No edge features are present in node files
 
     def add_positional_encoding(self, df, columns, max_value=10000):
+        """
+        Adds sinusoidal positional encoding to the specified columns to capture spatial information.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing the data.
+            columns (list): List of column names to which positional encoding will be added.
+            max_value (int, optional): Maximum value used to scale the positional encoding. Defaults to 10000.
+
+        Returns:
+            pd.DataFrame: DataFrame with added positional encoding columns.
+        """
         for col in columns:
             df[f'{col}_sin'] = np.sin(df[col] * (2 * np.pi / max_value))
             df[f'{col}_cos'] = np.cos(df[col] * (2 * np.pi / max_value))
         return df
 
     def graph_based_imputation(self, df, edge_index, feature_name):
+        """
+        Performs graph-based imputation for missing values in a specified feature using neighboring nodes.
+
+        Args:
+            df (pd.DataFrame): DataFrame containing node data.
+            edge_index (np.ndarray): Array containing edge indices.
+            feature_name (str): Name of the feature to impute.
+
+        Returns:
+            pd.DataFrame: DataFrame with imputed values for the specified feature.
+        """
         node_values = df[feature_name].values
         missing_mask = np.isnan(node_values)
-        # Create adjacency list
+
+        # Create adjacency list from edge indices
         adjacency = {i: [] for i in range(len(df))}
         for src, dst in edge_index.T:
             adjacency[src].append(dst)
             adjacency[dst].append(src)
-        # Iterate over missing values
+
+        # Iterate over missing values and impute based on neighbors
         for idx in np.where(missing_mask)[0]:
             neighbors = adjacency[idx]
             neighbor_values = [node_values[n] for n in neighbors if not np.isnan(node_values[n])]
@@ -65,82 +108,90 @@ class DataModule:
                 node_values[idx] = np.mean(neighbor_values)
             else:
                 node_values[idx] = np.nanmean(node_values)
+
         df[feature_name] = node_values
-        logger.debug(f"Graph-basierte Imputation für Merkmal '{feature_name}' durchgeführt.")
+        logger.debug(f"Graph-based imputation completed for feature '{feature_name}'.")
         return df
 
     def load_data(self, node_file, edge_file):
+        """
+        Loads and preprocesses node and edge data from CSV files, applies scaling,
+        imputes missing values, and constructs a PyTorch Geometric Data object.
+
+        Args:
+            node_file (str): Path to the node CSV file.
+            edge_file (str): Path to the edge CSV file.
+
+        Returns:
+            Data: PyTorch Geometric Data object containing processed node and edge data.
+        """
         try:
             # Load node and edge data separately
             nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
             edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
-            logger.debug(f"Dateien geladen: {node_file}, {edge_file}.")
+            logger.debug(f"Loaded files: {node_file}, {edge_file}.")
         except Exception as e:
-            logger.error(f"Fehler beim Laden der Dateien {node_file} oder {edge_file}: {e}")
+            logger.error(f"Error loading files {node_file} or {edge_file}: {e}")
             raise e
 
-        # Check for required node columns (ohne transformierte Edge-Features)
+        # Check for required node columns (excluding transformed edge features)
         required_node_columns = ['KNAM', 'XRECHTS', 'YHOCH', 'GEOH'] + self.adjusted_physical_columns + ['ZUFLUSS_WL']
         for col in required_node_columns:
             if col not in nodes_df.columns:
-                logger.debug(f"Spalte {col} fehlt in {node_file}.")
-                raise ValueError(f"Spalte {col} fehlt in {node_file}.")
+                logger.debug(f"Column {col} is missing in {node_file}.")
+                raise ValueError(f"Column {col} is missing in {node_file}.")
 
-        # Check for required edge columns, einschließlich der transformierten Features (ohne 'ROHRTYP')
+        # Check for required edge columns, including transformed features (excluding 'ROHRTYP')
         required_edge_columns = [
             'ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL',
             'RORL', 'DM', 'RAISE', 'RAU',
-            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'  # Hinzugefügte transformierte Features
+            'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'  # Transformed edge features
         ]
         for col in required_edge_columns:
             if col not in edges_df.columns:
-                logger.debug(f"Spalte {col} fehlt in {edge_file}.")
-                raise ValueError(f"Spalte {col} fehlt in {edge_file}.")
+                logger.debug(f"Column {col} is missing in {edge_file}.")
+                raise ValueError(f"Column {col} is missing in {edge_file}.")
 
-        # Clean node and edge names
+        # Clean node and edge names by stripping whitespace and converting to lowercase
         nodes_df['KNAM'] = nodes_df['KNAM'].astype(str).str.strip().str.lower()
         edges_df['ANFNAM'] = edges_df['ANFNAM'].astype(str).str.strip().str.lower()
         edges_df['ENDNAM'] = edges_df['ENDNAM'].astype(str).str.strip().str.lower()
 
-        # Map nodes to indices
+        # Map node names to unique indices for graph representation
         node_mapping = {name: idx for idx, name in enumerate(nodes_df['KNAM'])}
         nodes_df['node_idx'] = nodes_df['KNAM'].map(node_mapping)
         edges_df['ANFNR'] = edges_df['ANFNAM'].map(node_mapping)
         edges_df['ENDNR'] = edges_df['ENDNAM'].map(node_mapping)
 
-        # Check for missing node indices in edges
+        # Check for any missing node indices in edges
         missing_anfnr = edges_df['ANFNR'].isnull()
         missing_endnr = edges_df['ENDNR'].isnull()
 
         if missing_anfnr.any() or missing_endnr.any():
             missing_anfnam = edges_df.loc[missing_anfnr, 'ANFNAM'].unique()
             missing_endnam = edges_df.loc[missing_endnr, 'ENDNAM'].unique()
-            logger.error(f"Fehlende Knotenindizes für ANFNAMs: {missing_anfnam}, ENDNAMs: {missing_endnam}")
-            raise ValueError("Kantendaten enthalten Knoten, die in den Knotendaten nicht gefunden wurden.")
+            logger.error(f"Missing node indices for ANFNAMs: {missing_anfnam}, ENDNAMs: {missing_endnam}")
+            raise ValueError("Edge data contains nodes that are not found in node data.")
 
-        # Convert indices to integers
+        # Convert node indices to integers
         edges_df['ANFNR'] = edges_df['ANFNR'].astype(int)
         edges_df['ENDNR'] = edges_df['ENDNR'].astype(int)
 
-        # Create unique edge identifier
+        # Create a unique identifier for each edge by concatenating node names
         edges_df['edge_id'] = edges_df['ANFNAM'] + '_' + edges_df['ENDNAM']
 
-        # **Entfernung der One-Hot-Encoding für 'ROHRTYP'**
-        # Entfernen der One-Hot-Kodierungsschritte
-        # edges_df = pd.get_dummies(edges_df, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
-        # logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt.")
-
+        # Extract edge indices for graph representation
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
-        # Ensure relevant edge columns are numeric (einschließlich der neuen transformierten Features)
+        # Ensure relevant edge columns are numeric, including transformed features
         edge_features_columns = [
             'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RAU',
             'RAISE_log', 'RAISE_sqrt', 'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
         edges_df[edge_features_columns] = edges_df[edge_features_columns].astype(float)
-        logger.debug("Relevante Kantenspalten in float konvertiert.")
+        logger.debug("Converted relevant edge columns to float.")
 
-        # Create and scale target variable
+        # Create and scale the target variable 'RAU'
         y_df = edges_df[['RAU']].copy()
         y_df_scaled = pd.DataFrame(
             self.rau_scaler.transform(y_df),
@@ -148,38 +199,37 @@ class DataModule:
             index=y_df.index
         )
         y = torch.tensor(y_df_scaled['RAU'].values, dtype=torch.float)
-        logger.debug("Skalierte Zielvariable 'RAU' erstellt.")
+        logger.debug("Scaled target variable 'RAU'.")
 
-        # Adjust node attributes
-        # Set adjusted_physical_columns to NaN for nodes not in included_nodes
+        # Adjust node attributes by setting non-included nodes' physical columns to NaN
         nodes_df['Included'] = nodes_df['KNAM'].isin([n.lower() for n in self.included_nodes])
         for col in self.adjusted_physical_columns:
             nodes_df.loc[~nodes_df['Included'], col] = np.nan
-            logger.debug(f"{col} auf NaN gesetzt für Knoten, die nicht enthalten sind.")
+            logger.debug(f"Set {col} to NaN for nodes not included.")
 
-        # Handle ZUFLUSS_WL only for specific nodes
+        # Handle 'ZUFLUSS_WL' only for specific nodes
         nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
             lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
-        logger.debug("'ZUFLUSS_WL' für bestimmte Knoten behandelt.")
+        logger.debug("Handled 'ZUFLUSS_WL' for specific nodes.")
 
-        # Add missing indicators
+        # Add indicators for missing values in all physical columns
         for col in self.all_physical_columns:
             nodes_df[f'{col}_missing'] = nodes_df[col].isna().astype(float)
-            logger.debug(f"Fehlender Indikator für {col} hinzugefügt.")
+            logger.debug(f"Added missing indicator for {col}.")
 
-        # Graph-based imputation for missing ZUFLUSS_WL values
+        # Perform graph-based imputation for missing 'ZUFLUSS_WL' values
         nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
 
-        # Handle missing values for other physical columns with KNN Imputer
+        # Handle missing values for other physical columns using KNN Imputer
         imputer = KNNImputer(n_neighbors=5)
         nodes_df[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df[self.adjusted_physical_columns])
-        logger.debug("KNN-Imputation für angepasste physikalische Spalten durchgeführt.")
+        logger.debug("Performed KNN imputation for adjusted physical columns.")
 
-        # Remove helper column
+        # Remove the helper 'Included' column as it's no longer needed
         nodes_df = nodes_df.drop(columns=['Included'])
-        logger.debug("Hilfsspalte 'Included' aus Knotendaten entfernt.")
+        logger.debug("Removed helper column 'Included' from node data.")
 
         # Apply scaling to node attributes
         nodes_df[self.all_physical_columns] = pd.DataFrame(
@@ -192,31 +242,25 @@ class DataModule:
             columns=self.geo_columns,
             index=nodes_df.index
         )
-        logger.debug("Skalierung auf physikalische und geografische Spalten angewendet.")
+        logger.debug("Applied scaling to physical and geographic node columns.")
 
-        # Add positional encoding
+        # Add positional encoding to geographic columns to capture spatial relationships
         nodes_df = self.add_positional_encoding(nodes_df, self.geo_columns)
-        logger.debug("Positionscodierung zu geografischen Spalten hinzugefügt.")
+        logger.debug("Added positional encoding to geographic columns.")
 
-        # Create node features
+        # Create node features by dropping unnecessary columns
         node_features = nodes_df.drop(columns=['KNAM', 'node_idx']).values
 
-        # Update edge_columns to include neue transformierte Features (ohne 'ROHRTYP')
+        # Update edge_columns to include only continuous transformed edge features (excluding 'ROHRTYP')
         continuous_edge_columns = [
             'RORL', 'DM', 'RAISE',
-            'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
+            'RAISE_log', 'RAISE_sqrt',  # Transformed edge features
             'h_f_WL_sqrt', 'h_f_WOL_sqrt'
         ]
-        # Entfernen der One-Hot 'ROHRTYP' Spalten
-        # one_hot_edge_columns = list(edges_df.filter(like='ROHRTYP').columns)
-        # edge_columns = continuous_edge_columns + one_hot_edge_columns
         edge_columns = continuous_edge_columns
 
         # Ensure all edge attributes are numeric
         edges_df[edge_columns] = edges_df[edge_columns].apply(pd.to_numeric, errors='coerce')
-
-        # **Entfernung der One-Hot-Spaltenfüllung**
-        # edges_df[one_hot_edge_columns] = edges_df[one_hot_edge_columns].fillna(0)
 
         # Apply scaling only to continuous edge attributes
         edges_df[continuous_edge_columns] = pd.DataFrame(
@@ -224,297 +268,349 @@ class DataModule:
             columns=continuous_edge_columns,
             index=edges_df.index
         )
-        logger.debug("Skalierung auf kontinuierliche Kantenattribute angewendet.")
+        logger.debug("Applied scaling to continuous edge attributes.")
 
-        # Combine scaled continuous and unscaled One-Hot encoded edge attributes
-        # Da One-Hot Encoding entfernt wurde, verwenden wir nur die kontinuierlichen Kantenattribute
+        # Combine scaled continuous edge attributes
         edge_attributes = edges_df[edge_columns].values
 
-        # Convert to tensors
+        # Convert node features, edge indices, and edge attributes to PyTorch tensors
         try:
             x = torch.tensor(node_features, dtype=torch.float)
             edge_index = torch.tensor(edge_index, dtype=torch.long)
             edge_attr = torch.tensor(edge_attributes, dtype=torch.float)
         except Exception as e:
-            logger.error(f"Fehler beim Konvertieren zu Tensoren: {e}")
+            logger.error(f"Error converting to tensors: {e}")
             logger.debug(f"node_features dtype: {node_features.dtype}")
             logger.debug(f"edge_index dtype: {edge_index.dtype}")
             logger.debug(f"edge_attr dtype: {edge_attributes.dtype}")
             raise e
 
+        # Create a PyTorch Geometric Data object with node features, edge indices, edge attributes, and target variable
         data = Data(x=x, edge_index=edge_index, edge_attr=edge_attr, y=y)
 
-        # Save edge identifiers in the Data object
+        # Save edge identifiers in the Data object for reference
         data.edge_ids = edges_df['edge_id'].values  # This is a NumPy array
 
-        logger.debug("PyTorch Geometric Data-Objekt erstellt.")
+        logger.debug("Created PyTorch Geometric Data object.")
         return data
 
     def fit_scalers(self):
+        """
+        Fits the scalers for physical, geographic, and edge attributes using all training data.
+        This ensures that scaling parameters are learned from the training set and can be consistently applied.
+        """
         # Lists to hold all node and edge DataFrames for fitting scalers
         all_nodes_dfs = []
         all_edges_dfs = []
 
-        # Use glob to find matching files
+        # Use glob to find matching node and edge files based on patterns
         node_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Node.csv')
         edge_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Pipes.csv')
 
         node_files = glob.glob(node_pattern)
         edge_files = glob.glob(edge_pattern)
 
-        # Sort files for consistency
+        # Sort files for consistency in processing
         node_files.sort()
         edge_files.sort()
 
-        # Log found files
-        logger.info(f"Gefundene Knotendateien zum Anpassen der Skalierer: {node_files}")
-        logger.info(f"Gefundene Kantendateien zum Anpassen der Skalierer: {edge_files}")
+        # Log the found files for scaler fitting
+        logger.info(f"Found node files for scaler fitting: {node_files}")
+        logger.info(f"Found edge files for scaler fitting: {edge_files}")
 
-        # Remove monitoring files from the lists
+        # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
         monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
         monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Pipes.csv')
 
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
 
-        # Remove monitoring files from node_files and edge_files
+        # Remove monitoring files from the main lists to ensure only training data is used for scaler fitting
         for monitoring_node_file in monitoring_node_files:
             if monitoring_node_file in node_files:
                 node_files.remove(monitoring_node_file)
-                logger.debug(f"Monitoring Knotendatei entfernt: {monitoring_node_file}")
+                logger.debug(f"Removed monitoring node file: {monitoring_node_file}")
         for monitoring_edge_file in monitoring_edge_files:
             if monitoring_edge_file in edge_files:
                 edge_files.remove(monitoring_edge_file)
-                logger.debug(f"Monitoring Kantendatei entfernt: {monitoring_edge_file}")
+                logger.debug(f"Removed monitoring edge file: {monitoring_edge_file}")
 
-        # Check if there are any training files left
+        # Check if there are any training files left after removing monitoring files
         if not node_files or not edge_files:
-            logger.error("Keine Trainingsdateien gefunden. Bitte überprüfen Sie das Datenverzeichnis und die Dateinamen.")
-            raise ValueError("Keine Trainingsdaten gefunden.")
+            logger.error("No training files found. Please check the data directory and file names.")
+            raise ValueError("No training data found.")
 
-        # Iterate over training files and load them
+        # Iterate over training files and load them into DataFrames
         for node_file, edge_file in zip(node_files, edge_files):
             try:
                 nodes_df = pd.read_csv(node_file, delimiter=';', decimal='.')
                 edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
                 all_nodes_dfs.append(nodes_df)
                 all_edges_dfs.append(edges_df)
-                logger.debug(f"Dateien zum Anpassen der Skalierer geladen: {node_file}, {edge_file}.")
+                logger.debug(f"Loaded files for scaler fitting: {node_file}, {edge_file}.")
             except Exception as e:
-                logger.error(f"Fehler beim Laden der Dateien {node_file} oder {edge_file} zum Anpassen der Skalierer: {e}")
+                logger.error(f"Error loading files {node_file} or {edge_file} for scaler fitting: {e}")
                 continue
 
         # Log the number of loaded DataFrames
-        logger.info(f"Anzahl der geladenen Knotendateien zum Anpassen der Skalierer: {len(all_nodes_dfs)}")
-        logger.info(f"Anzahl der geladenen Kantendateien zum Anpassen der Skalierer: {len(all_edges_dfs)}")
+        logger.info(f"Number of node files loaded for scaler fitting: {len(all_nodes_dfs)}")
+        logger.info(f"Number of edge files loaded for scaler fitting: {len(all_edges_dfs)}")
 
         # Check if any DataFrames were loaded
         if not all_nodes_dfs or not all_edges_dfs:
-            logger.error("Keine Knotendaten oder Kantendaten zum Anpassen der Skalierer gefunden.")
-            raise ValueError("Keine Daten zum Anpassen der Skalierer vorhanden.")
+            logger.error("No node or edge data found for scaler fitting.")
+            raise ValueError("No data available for scaler fitting.")
 
-        # Combine all DataFrames
+        # Combine all DataFrames into single DataFrames for nodes and edges
         nodes_df_all = pd.concat(all_nodes_dfs, ignore_index=True)
         edges_df_all = pd.concat(all_edges_dfs, ignore_index=True)
 
-        # Clean node and edge names
+        # Clean node and edge names by stripping whitespace and converting to lowercase
         nodes_df_all['KNAM'] = nodes_df_all['KNAM'].astype(str).str.strip().str.lower()
         edges_df_all['ANFNAM'] = edges_df_all['ANFNAM'].astype(str).str.strip().str.lower()
         edges_df_all['ENDNAM'] = edges_df_all['ENDNAM'].astype(str).str.strip().str.lower()
 
-        # Set adjusted_physical_columns to NaN for nodes not in included_nodes
+        # Adjust node attributes by setting non-included nodes' physical columns to NaN
         nodes_df_all['Included'] = nodes_df_all['KNAM'].isin([n.lower() for n in self.included_nodes])
         for col in self.adjusted_physical_columns:
             nodes_df_all.loc[~nodes_df_all['Included'], col] = np.nan
-            logger.debug(f"{col} auf NaN gesetzt für Knoten, die nicht enthalten sind (Skalierer-Anpassung).")
+            logger.debug(f"Set {col} to NaN for nodes not included (scaler fitting).")
 
-        # Handle ZUFLUSS_WL only for specific nodes
+        # Handle 'ZUFLUSS_WL' only for specific nodes
         nodes_df_all['ZUFLUSS_WL'] = nodes_df_all.apply(
             lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
-        logger.debug("'ZUFLUSS_WL' für bestimmte Knoten behandelt (Skalierer-Anpassung).")
+        logger.debug("Handled 'ZUFLUSS_WL' for specific nodes (scaler fitting).")
 
-        # Add missing indicators
+        # Add indicators for missing values in all physical columns
         for col in self.all_physical_columns:
             nodes_df_all[f'{col}_missing'] = nodes_df_all[col].isna().astype(float)
-            logger.debug(f"Fehlender Indikator für {col} hinzugefügt (Skalierer-Anpassung).")
+            logger.debug(f"Added missing indicator for {col} (scaler fitting).")
 
-        # Handle missing values with KNN Imputer
+        # Handle missing values using KNN Imputer for adjusted physical columns
         imputer = KNNImputer(n_neighbors=5)
-        nodes_df_all[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df_all[self.adjusted_physical_columns])
-        logger.debug("KNN-Imputation für angepasste physikalische Spalten durchgeführt (Skalierer-Anpassung).")
+        nodes_df_all[self.adjusted_physical_columns] = imputer.fit_transform(
+            nodes_df_all[self.adjusted_physical_columns])
+        logger.debug("Performed KNN imputation for adjusted physical columns (scaler fitting).")
 
-        # Fit scalers
+        # Fit scalers using the combined training data
         self.physical_scaler.fit(nodes_df_all[self.all_physical_columns])
         self.geo_scaler.fit(nodes_df_all[self.geo_columns])
         self.rau_scaler.fit(edges_df_all[['RAU']])  # Scale target variable
-        logger.debug("Physikalische, geografische und RAU Skalierer angepasst.")
-
-        # **Entfernung der One-Hot-Encoding für 'ROHRTYP'**
-        # Entfernen der One-Hot-Kodierungsschritte
-        # edges_df_all = pd.get_dummies(edges_df_all, columns=['ROHRTYP'], prefix='ROHRTYP', dtype=float)
-        # logger.debug("One-Hot-Encoding für 'ROHRTYP' durchgeführt (Skalierer-Anpassung).")
-
-        # Update edge_columns to include neue transformierte Features (ohne 'ROHRTYP')
-        continuous_edge_columns = [
-            'RORL', 'DM', 'RAISE',
-            'RAISE_log', 'RAISE_sqrt',  # Hinzugefügte transformierte Features
-            'h_f_WL_sqrt', 'h_f_WOL_sqrt'
-        ]
-        # Entfernen der One-Hot 'ROHRTYP' Spalten
-        # one_hot_edge_columns = list(edges_df_all.filter(like='ROHRTYP').columns)
-        # edge_columns = continuous_edge_columns + one_hot_edge_columns
-        edge_columns = continuous_edge_columns
-
-        # Ensure all edge attributes are numeric
-        edges_df_all[edge_columns] = edges_df_all[edge_columns].apply(pd.to_numeric, errors='coerce')
-
-        # **Entfernung der One-Hot-Spaltenfüllung**
-        # edges_df_all[one_hot_edge_columns] = edges_df_all[one_hot_edge_columns].fillna(0)
-
-        # Fit scaler to continuous edge attributes
-        self.edge_scaler.fit(edges_df_all[continuous_edge_columns])
-        logger.debug("Skalierer an kontinuierliche Kantenattribute angepasst.")
+        logger.debug("Fitted physical, geographic, and RAU scalers.")
 
     def load_all_data(self):
+        """
+        Loads all datasets by fitting scalers first and then loading each dataset.
+        Excludes monitoring files during loading.
+        """
         self.fit_scalers()
-        logger.info("Beginne mit dem Laden aller Datensätze.")
+        logger.info("Started loading all datasets.")
 
-        # Use glob to find matching files
+        # Use glob to find matching node and edge files based on patterns
         node_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Node.csv')
         edge_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Pipes.csv')
 
         node_files = glob.glob(node_pattern)
         edge_files = glob.glob(edge_pattern)
 
-        # Sort files for consistency
+        # Sort files for consistency in processing
         node_files.sort()
         edge_files.sort()
 
-        # Log found files
-        logger.info(f"Gefundene Knotendateien zum Laden: {node_files}")
-        logger.info(f"Gefundene Kantendateien zum Laden: {edge_files}")
+        # Log the found files for data loading
+        logger.info(f"Found node files for loading: {node_files}")
+        logger.info(f"Found edge files for loading: {edge_files}")
 
-        # Remove monitoring files from the lists
+        # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
         monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
         monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Pipes.csv')
 
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
 
-        # Remove monitoring files from node_files and edge_files
+        # Remove monitoring files from the main lists to ensure only training data is loaded
         for monitoring_node_file in monitoring_node_files:
             if monitoring_node_file in node_files:
                 node_files.remove(monitoring_node_file)
-                logger.debug(f"Monitoring Knotendatei entfernt: {monitoring_node_file}")
+                logger.debug(f"Removed monitoring node file: {monitoring_node_file}")
         for monitoring_edge_file in monitoring_edge_files:
             if monitoring_edge_file in edge_files:
                 edge_files.remove(monitoring_edge_file)
-                logger.debug(f"Monitoring Kantendatei entfernt: {monitoring_edge_file}")
+                logger.debug(f"Removed monitoring edge file: {monitoring_edge_file}")
 
-        # Check if there are any training files left
+        # Check if there are any training files left after removing monitoring files
         if not node_files or not edge_files:
-            logger.error("Keine Trainingsdateien gefunden. Bitte überprüfen Sie das Datenverzeichnis und die Dateinamen.")
-            raise ValueError("Keine Trainingsdaten gefunden.")
+            logger.error("No training files found. Please check the data directory and file names.")
+            raise ValueError("No training data found.")
 
-        # Iterate over training files and load them
+        # Iterate over training files and load them into datasets
         for node_file, edge_file in zip(node_files, edge_files):
             try:
                 data = self.load_data(node_file, edge_file)
                 self.datasets.append(data)
-                logger.debug(f'Datensatz erfolgreich geladen: {node_file}, {edge_file}')
+                logger.debug(f"Successfully loaded dataset: {node_file}, {edge_file}")
             except Exception as e:
-                logger.error(f'Fehler beim Laden der Dateien {node_file} oder {edge_file}: {e}')
+                logger.error(f"Error loading files {node_file} or {edge_file}: {e}")
                 continue
-        logger.info("Alle Datensätze geladen.")
+        logger.info("All datasets loaded successfully.")
 
     def get_loaders(self, val_size=0.25, test_size=0.2, random_state=42):
+        """
+        Splits the loaded datasets into training, validation, and test sets and creates DataLoaders.
+
+        Args:
+            val_size (float, optional): Proportion of data to use for validation. Defaults to 0.25.
+            test_size (float, optional): Proportion of data to use for testing. Defaults to 0.2.
+            random_state (int, optional): Random seed for reproducibility. Defaults to 42.
+
+        Returns:
+            tuple: DataLoaders for training, validation, and testing datasets.
+        """
         if not self.datasets:
-            logger.error("Keine Datensätze verfügbar.")
+            logger.error("No datasets available.")
             return None, None, None
 
-        # Split data into train+val and test
+        # Split data into training+validation and test sets
         train_val_data, test_data = train_test_split(
             self.datasets, test_size=test_size, random_state=random_state
         )
-        # Adjust validation ratio
+        # Adjust validation ratio relative to the remaining training data
         val_ratio = val_size / (1 - test_size)  # e.g., 0.25 / 0.8 = 0.3125
         train_data, val_data = train_test_split(
             train_val_data, test_size=val_ratio, random_state=random_state
         )
-        logger.info("Daten in Trainings-, Validierungs- und Testmengen aufgeteilt.")
+        logger.info("Split data into training, validation, and test sets.")
 
-        # Create DataLoaders with appropriate batch size
+        # Create DataLoaders with a batch size of 16
         train_loader = DataLoader(train_data, batch_size=16, shuffle=True)
         val_loader = DataLoader(val_data, batch_size=16, shuffle=False)
         test_loader = DataLoader(test_data, batch_size=16, shuffle=False)
-        logger.info("DataLoader für Trainings-, Validierungs- und Testmengen erstellt.")
+        logger.info("Created DataLoaders for training, validation, and test sets.")
 
-        # Log the feature columns used for training
+        # Log the feature columns used for training based on a sample dataset
         if len(self.datasets) > 0:
             sample_data = self.datasets[0]
             node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-                                    'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin', 'GEOH_cos']
-            # **Entfernung der dynamischen Ermittlung von 'ROHRTYP' One-Hot-Spalten**
-            # roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
+                                    'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin',
+                                    'GEOH_cos']
             edge_feature_columns = ['RORL', 'DM', 'RAISE', 'RAISE_log', 'RAISE_sqrt',
                                     'h_f_WL_sqrt', 'h_f_WOL_sqrt']
 
-            logger.info(f"Verwendete Knotenspalten für das Training: {node_feature_columns}")
-            logger.info(f"Verwendete Kantenspalten für das Training: {edge_feature_columns}")
+            logger.info(f"Used node feature columns for training: {node_feature_columns}")
+            logger.info(f"Used edge feature columns for training: {edge_feature_columns}")
 
         return train_loader, val_loader, test_loader
 
 
 class EdgeGAT(torch.nn.Module):
+    """
+    EdgeGAT is a Graph Attention Network (GAT) model tailored for edge-level regression tasks.
+    It processes node and edge features to predict target values associated with each edge.
+    """
+
     def __init__(self, num_node_features, num_edge_features, hidden_dim=64, dropout=0.15):
+        """
+        Initializes the EdgeGAT model with specified parameters.
+
+        Args:
+            num_node_features (int): Number of features per node.
+            num_edge_features (int): Number of features per edge.
+            hidden_dim (int, optional): Dimension of hidden layers. Defaults to 64.
+            dropout (float, optional): Dropout rate. Defaults to 0.15.
+        """
         super(EdgeGAT, self).__init__()
+        # Define three Graph Attention Convolutional layers with 8 attention heads each
         self.conv1 = GATConv(num_node_features, hidden_dim, heads=8, dropout=dropout)
         self.conv2 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=dropout)
         self.conv3 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=dropout)
+
+        # Define Batch Normalization layers after each convolutional layer
         self.bn1 = torch.nn.BatchNorm1d(hidden_dim * 8)
         self.bn2 = torch.nn.BatchNorm1d(hidden_dim * 8)
         self.bn3 = torch.nn.BatchNorm1d(hidden_dim * 8)
+
+        # Define an MLP for processing edge features
         self.edge_mlp = torch.nn.Sequential(
             torch.nn.Linear(num_edge_features, hidden_dim * 8),
             torch.nn.ReLU(),
             torch.nn.Linear(hidden_dim * 8, hidden_dim * 8)
         )
+
+        # Define a fully connected layer to produce the final edge output
         self.fc_edge = torch.nn.Linear(2 * hidden_dim * 8 + hidden_dim * 8, 1)  # Output is a scalar
+
         self.dropout = dropout
 
     def forward(self, data):
+        """
+        Defines the forward pass of the EdgeGAT model.
+
+        Args:
+            data (Data): PyTorch Geometric Data object containing node features, edge indices, edge attributes, and target.
+
+        Returns:
+            torch.Tensor: Predicted values for each edge.
+        """
         x, edge_index, edge_attr = data.x, data.edge_index, data.edge_attr
+
+        # Apply the first Graph Attention Convolutional layer
         x = self.conv1(x, edge_index)
         x = F.elu(x)
         x = self.bn1(x)
         x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass durch conv1.")
+        logger.debug("Forward pass through conv1.")
 
+        # Apply the second Graph Attention Convolutional layer
         x = self.conv2(x, edge_index)
         x = F.elu(x)
         x = self.bn2(x)
         x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass durch conv2.")
+        logger.debug("Forward pass through conv2.")
 
+        # Apply the third Graph Attention Convolutional layer
         x = self.conv3(x, edge_index)
         x = F.elu(x)
         x = self.bn3(x)
         x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass durch conv3.")
+        logger.debug("Forward pass through conv3.")
 
+        # Process edge attributes through the MLP
         edge_features = self.edge_mlp(edge_attr)
+
+        # Concatenate source node features, target node features, and edge features
         edge_embeddings = torch.cat([x[edge_index[0]], x[edge_index[1]], edge_features], dim=1)
+
+        # Pass the concatenated embeddings through the fully connected layer to get edge predictions
         edge_logits = self.fc_edge(edge_embeddings).squeeze()
-        logger.debug("Berechnete edge_logits.")
+        logger.debug("Computed edge logits.")
 
         return edge_logits  # Returns raw values for regression
 
 
-# Trainer Class
 class Trainer:
-    def __init__(self, model, optimizer, criterion, scheduler, device, num_epochs=500, patience=20, results_dir='results'):
+    """
+    Trainer handles the training loop, including training and validation epochs,
+    monitoring performance on a separate dataset, implementing early stopping,
+    and saving the best model based on validation loss.
+    """
+
+    def __init__(self, model, optimizer, criterion, scheduler, device, num_epochs=500, patience=20,
+                 results_dir='results'):
+        """
+        Initializes the Trainer with the specified model, optimizer, loss function, scheduler, and training parameters.
+
+        Args:
+            model (torch.nn.Module): The model to be trained.
+            optimizer (torch.optim.Optimizer): Optimizer for updating model weights.
+            criterion (torch.nn.Module): Loss function to be minimized.
+            scheduler (torch.optim.lr_scheduler): Learning rate scheduler.
+            device (torch.device): Device to run the training on (CPU or GPU).
+            num_epochs (int, optional): Maximum number of training epochs. Defaults to 500.
+            patience (int, optional): Number of epochs with no improvement after which training will be stopped. Defaults to 20.
+            results_dir (str, optional): Directory to save training results. Defaults to 'results'.
+        """
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
@@ -522,11 +618,20 @@ class Trainer:
         self.device = device
         self.num_epochs = num_epochs
         self.patience = patience
-        self.results_dir = results_dir  # Added
+        self.results_dir = results_dir  # Directory to save results
         self.best_model_state = None
         self.logger = logging.getLogger(__name__)
 
     def train_epoch(self, loader):
+        """
+        Executes a single training epoch.
+
+        Args:
+            loader (DataLoader): DataLoader for the training data.
+
+        Returns:
+            float: Average training loss for the epoch.
+        """
         self.model.train()
         total_loss = 0
         for batch in loader:
@@ -542,6 +647,15 @@ class Trainer:
         return avg_loss
 
     def validate_epoch(self, loader):
+        """
+        Executes a single validation epoch.
+
+        Args:
+            loader (DataLoader): DataLoader for the validation data.
+
+        Returns:
+            float: Average validation loss for the epoch.
+        """
         self.model.eval()
         total_loss = 0
         with torch.no_grad():
@@ -555,6 +669,17 @@ class Trainer:
         return avg_loss
 
     def evaluate_monitoring_dataset(self, monitoring_loader, epoch, data_module):
+        """
+        Evaluates the model on a monitoring dataset, calculates metrics, and saves predictions.
+
+        Args:
+            monitoring_loader (DataLoader): DataLoader for the monitoring data.
+            epoch (int): Current epoch number.
+            data_module (DataModule): Instance of DataModule for inverse scaling.
+
+        Returns:
+            dict: Dictionary containing loss, MSE, MAE, and R² metrics.
+        """
         self.model.eval()
         total_loss = 0
         y_true_list = []
@@ -580,7 +705,7 @@ class Trainer:
         y_true = data_module.rau_scaler.inverse_transform(y_true_scaled.reshape(-1, 1)).flatten()
         y_pred = data_module.rau_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
 
-        # Calculate metrics on inversely scaled values
+        # Calculate regression metrics on inversely scaled values
         mse = mean_squared_error(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
         r2 = r2_score(y_true, y_pred)
@@ -592,87 +717,137 @@ class Trainer:
             'r2_score': r2
         }
 
-        # Save predictions per edge to a CSV file
+        # Save predictions per edge to a CSV file for analysis
         df_predictions = pd.DataFrame({
             'edge_id': edge_ids_all,
             'y_true': y_true,
             'y_pred': y_pred
         })
 
-        # Save CSV file
+        # Define the filename and filepath for saving predictions
         csv_filename = f'monitoring_predictions_epoch_{epoch}.csv'
         csv_filepath = os.path.join(self.results_dir, csv_filename)
         df_predictions.to_csv(csv_filepath, index=False)
-        logger.info(f'Per-Kante-Vorhersagen für Epoche {epoch} gespeichert unter {csv_filepath}')
+        logger.info(f'Saved edge-wise predictions for epoch {epoch} at {csv_filepath}')
 
         return metrics
 
     def train_model(self, train_loader, val_loader, monitoring_loader=None, data_module=None):
+        """
+        Trains the model over multiple epochs, evaluates on validation and monitoring datasets,
+        implements early stopping, and retains the best model based on validation loss.
+
+        Args:
+            train_loader (DataLoader): DataLoader for the training data.
+            val_loader (DataLoader): DataLoader for the validation data.
+            monitoring_loader (DataLoader, optional): DataLoader for the monitoring dataset. Defaults to None.
+            data_module (DataModule, optional): Instance of DataModule for inverse scaling. Defaults to None.
+        """
         best_val_loss = float('inf')
         patience_counter = 0
 
         self.monitoring_results = []
 
-        logger.info("Starte den Trainingsprozess.")
+        logger.info("Starting the training process.")
         for epoch in range(1, self.num_epochs + 1):
+            # Perform training and validation for the current epoch
             train_loss = self.train_epoch(train_loader)
             val_loss = self.validate_epoch(val_loader)
 
-            # Evaluation on monitoring dataset
+            # Evaluate on the monitoring dataset if provided
             if monitoring_loader is not None and data_module is not None:
                 monitoring_metrics = self.evaluate_monitoring_dataset(monitoring_loader, epoch, data_module)
                 self.monitoring_results.append((epoch, monitoring_metrics))
                 logger.info(
-                    f'Epoche {epoch:03d}, Überwachung - Verlust: {monitoring_metrics["loss"]:.4f}, '
+                    f'Epoch {epoch:03d}, Monitoring - Loss: {monitoring_metrics["loss"]:.4f}, '
                     f'MSE: {monitoring_metrics["mse"]:.4f}, MAE: {monitoring_metrics["mae"]:.4f}, R²: {monitoring_metrics["r2_score"]:.4f}'
                 )
 
+            # Step the scheduler based on validation loss
             self.scheduler.step(val_loss)
 
+            # Log training and validation loss every 10 epochs
             if epoch % 10 == 0:
                 self.logger.info(
-                    f'Epoche {epoch:03d}, Trainingsverlust: {train_loss:.4f}, Validierungsverlust: {val_loss:.4f}'
+                    f'Epoch {epoch:03d}, Training Loss: {train_loss:.4f}, Validation Loss: {val_loss:.4f}'
                 )
 
-            # Early Stopping Logic
+            # Implement Early Stopping based on validation loss improvement
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
                 patience_counter = 0
                 self.best_model_state = self.model.state_dict()
-                logger.debug(f"Epoche {epoch}: Verbesserter Validierungsverlust auf {val_loss:.4f}.")
+                logger.debug(f"Epoch {epoch}: Improved validation loss to {val_loss:.4f}.")
             else:
                 patience_counter += 1
-                logger.debug(f"Epoche {epoch}: Keine Verbesserung des Validierungsverlusts.")
+                logger.debug(f"Epoch {epoch}: No improvement in validation loss.")
 
+            # Check if patience threshold is reached for early stopping
             if patience_counter >= self.patience:
-                self.logger.info(f"Frühes Stoppen in Epoche {epoch}.")
+                self.logger.info(f"Early stopping triggered at epoch {epoch}.")
                 break
 
-        # Load the best model
+        # Load the best model state based on validation loss
         if self.best_model_state is not None:
             self.model.load_state_dict(self.best_model_state)
-            self.logger.info("Bestes Modell basierend auf dem Validierungsverlust geladen.")
+            self.logger.info("Loaded the best model based on validation loss.")
 
     def save_model(self, path):
+        """
+        Saves the model's state dictionary to the specified path.
+
+        Args:
+            path (str): File path where the model will be saved.
+        """
         torch.save(self.model.state_dict(), path)
-        self.logger.info(f'Modell gespeichert unter: {path}')
+        self.logger.info(f'Model saved at: {path}')
 
 
-# Evaluator Class
 class Evaluator:
+    """
+    Evaluator handles the evaluation of the trained model on test data,
+    calculating performance metrics, and generating visualization plots.
+    """
+
     def __init__(self, model, device, target_scaler):
+        """
+        Initializes the Evaluator with the trained model, device, and scaler for the target variable.
+
+        Args:
+            model (torch.nn.Module): The trained model to evaluate.
+            device (torch.device): Device to run the evaluation on (CPU or GPU).
+            target_scaler (StandardScaler): Scaler used for inverse transforming the target variable.
+        """
         self.model = model
         self.device = device
-        self.rau_scaler = target_scaler  # Scaler for RAU
+        self.rau_scaler = target_scaler  # Scaler for the target variable 'RAU'
         self.logger = logging.getLogger(__name__)
 
     def test_model(self, loader):
+        """
+        Tests the model on the provided test dataset and returns the true and predicted values.
+
+        Args:
+            loader (DataLoader): DataLoader for the test data.
+
+        Returns:
+            tuple: Arrays of true and predicted target values.
+        """
         y_true_scaled, y_pred_scaled = self._test(loader)
         y_true = self.rau_scaler.inverse_transform(y_true_scaled.reshape(-1, 1)).flatten()
         y_pred = self.rau_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1)).flatten()
         return y_true, y_pred
 
     def _test(self, loader):
+        """
+        Internal method to perform the testing loop.
+
+        Args:
+            loader (DataLoader): DataLoader for the test data.
+
+        Returns:
+            tuple: Arrays of scaled true and predicted target values.
+        """
         self.model.eval()
         y_true_list = []
         y_pred_list = []
@@ -684,10 +859,20 @@ class Evaluator:
                 y_pred_list.append(preds_scaled.cpu().numpy())
         y_true_scaled = np.concatenate(y_true_list)
         y_pred_scaled = np.concatenate(y_pred_list)
-        logger.info("Modelltest abgeschlossen.")
+        logger.info("Model testing completed.")
         return y_true_scaled, y_pred_scaled
 
     def calculate_metrics(self, y_true, y_pred):
+        """
+        Calculates regression metrics (MSE, MAE, R²) between true and predicted values.
+
+        Args:
+            y_true (np.ndarray): True target values.
+            y_pred (np.ndarray): Predicted target values.
+
+        Returns:
+            tuple: Mean Squared Error, Mean Absolute Error, and R² score.
+        """
         mse = mean_squared_error(y_true, y_pred)
         mae = mean_absolute_error(y_true, y_pred)
         r2 = r2_score(y_true, y_pred)
@@ -695,38 +880,71 @@ class Evaluator:
         return mse, mae, r2
 
     def plot_metrics(self, y_true, y_pred):
+        """
+        Generates and displays plots for predicted vs. true values and residuals.
+
+        Args:
+            y_true (np.ndarray): True target values.
+            y_pred (np.ndarray): Predicted target values.
+        """
         self.plot_predictions(y_true, y_pred)
         self.plot_residuals(y_true, y_pred)
 
     def plot_predictions(self, y_true, y_pred):
+        """
+        Plots predicted values against true values to visualize model performance.
+
+        Args:
+            y_true (np.ndarray): True target values.
+            y_pred (np.ndarray): Predicted target values.
+        """
         plt.figure(figsize=(8, 6))
-        plt.scatter(y_true, y_pred, alpha=0.5)
+        plt.scatter(y_true, y_pred, alpha=0.5, label='Predictions')
         min_val = min(y_true.min(), y_pred.min())
         max_val = max(y_true.max(), y_pred.max())
-        plt.plot([min_val, max_val], [min_val, max_val], 'r--')
-        plt.xlabel('Tatsächliche RAU-Werte')
-        plt.ylabel('Vorhergesagte RAU-Werte')
-        plt.title('Tatsächliche vs. Vorhergesagte RAU-Werte')
-        plt.legend(['Ideal'])
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='Ideal')
+        plt.xlabel('True RAU Values')
+        plt.ylabel('Predicted RAU Values')
+        plt.title('True vs. Predicted RAU Values')
+        plt.legend()
         plt.grid(True)
         plt.show()
-        logger.debug("Plot der tatsächlichen vs. vorhergesagten Werte erstellt.")
+        logger.debug("Generated plot for true vs. predicted RAU values.")
 
     def plot_residuals(self, y_true, y_pred):
+        """
+        Plots residuals (differences between true and predicted values) to assess model errors.
+
+        Args:
+            y_true (np.ndarray): True target values.
+            y_pred (np.ndarray): Predicted target values.
+        """
         residuals = y_true - y_pred
         plt.figure(figsize=(8, 6))
         plt.scatter(y_pred, residuals, alpha=0.5)
         plt.hlines(0, y_pred.min(), y_pred.max(), colors='r', linestyles='dashed')
-        plt.xlabel('Vorhergesagte RAU-Werte')
-        plt.ylabel('Residuen')
-        plt.title('Residuenplot')
+        plt.xlabel('Predicted RAU Values')
+        plt.ylabel('Residuals')
+        plt.title('Residuals Plot')
         plt.grid(True)
         plt.show()
-        logger.debug("Residuenplot erstellt.")
+        logger.debug("Generated residuals plot.")
 
 
 def main():
-
+    """
+    The main function orchestrates the entire workflow:
+    - Loads configuration.
+    - Initializes the DataModule and loads all data.
+    - Splits data into training, validation, and test sets.
+    - Initializes the EdgeGAT model, optimizer, loss function, and scheduler.
+    - Sets up the Trainer and Evaluator.
+    - Loads the monitoring dataset.
+    - Trains the model with early stopping.
+    - Evaluates the model on the test dataset.
+    - Generates evaluation metrics and plots.
+    - Saves the trained model.
+    """
     # Path to the configuration file relative to the project root
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))  # Two levels up
@@ -734,12 +952,14 @@ def main():
 
     # Check if config file exists
     if not os.path.exists(config_file):
-        logger.error(f"Konfigurationsdatei nicht gefunden unter: {config_file}")
-        raise FileNotFoundError(f"Konfigurationsdatei nicht gefunden unter: {config_file}")
+        logger.error(f"Configuration file not found at: {config_file}")
+        raise FileNotFoundError(f"Configuration file not found at: {config_file}")
 
+    # Load configuration from YAML file
     with open(config_file, 'r') as file:
         config = yaml.safe_load(file)
 
+    # Directory containing data files
     directory = config['paths']['folder_path_data']
 
     logger = logging.getLogger(__name__)
@@ -748,129 +968,138 @@ def main():
     included_nodes = config['nodes']['included_nodes']
     zfluss_wl_nodes = config['nodes']['zfluss_wl_nodes']
 
-    # Initialize DataModule
+    # Initialize DataModule with specified directory and node configurations
     data_module = DataModule(directory, included_nodes, zfluss_wl_nodes)
     data_module.load_all_data()
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
+    # Check if DataLoaders were successfully created
     if not train_loader or not val_loader or not test_loader:
-        logger.error("DataLoader konnten nicht erstellt werden. Beende das Programm.")
+        logger.error("DataLoaders could not be created. Exiting the program.")
         return
 
+    # Determine the device to run the training on (GPU if available, else CPU)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    logger.info(f"Verwende Gerät: {device}")
+    logger.info(f"Using device: {device}")
 
-    # Ensure there is at least one dataset
+    # Ensure there is at least one dataset loaded for training
     if len(data_module.datasets) == 0:
-        logger.error("Keine Datensätze gefunden zum Trainieren des Modells.")
-        raise ValueError("Keine Datensätze gefunden zum Trainieren des Modells.")
+        logger.error("No datasets found for training the model.")
+        raise ValueError("No datasets found for training the model.")
 
-    # Berechnen der Anzahl der Edge-Features
+    # Calculate the number of edge features based on the first dataset
     num_edge_features = data_module.datasets[0].edge_attr.shape[1]
 
-    # Extrahiere und logge die verwendeten Kantenspalten
+    # Extract and log the used edge feature columns
     sample_data = data_module.datasets[0]
-    # Annahme: 'edge_attr' ist ein Pandas DataFrame, ansonsten muss dies angepasst werden
+    # Assuming 'edge_attr' is a PyTorch Tensor; adjust if it's a different type
     if isinstance(sample_data.edge_attr, pd.DataFrame):
-        # **Entfernung der dynamischen Ermittlung von 'ROHRTYP' One-Hot-Spalten**
-        # roh_columns = [col for col in sample_data.edge_attr.columns if 'ROHRTYP_' in col]
-        roh_columns = []  # Da 'ROHRTYP' entfernt wurde
+        roh_columns = []  # 'ROHRTYP' has been removed
     else:
-        roh_columns = []  # Da 'ROHRTYP' entfernt wurde
+        roh_columns = []  # 'ROHRTYP' has been removed
 
     edge_feature_columns = [
-        'RORL', 'DM', 'RAISE',
-        'RAISE_log', 'RAISE_sqrt',
-        'h_f_WL_sqrt', 'h_f_WOL_sqrt'
-    ] + roh_columns
+                               'RORL', 'DM', 'RAISE',
+                               'RAISE_log', 'RAISE_sqrt',
+                               'h_f_WL_sqrt', 'h_f_WOL_sqrt'
+                           ] + roh_columns
 
-    logger.info(f"Verwendete Kantenspalten für das Training: {edge_feature_columns}")
+    logger.info(f"Used edge feature columns for training: {edge_feature_columns}")
 
-    # Definiere die Knotenspalten basierend auf dem DataModule
+    # Define the node feature columns based on the DataModule's configuration
     node_feature_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-                            'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin', 'GEOH_cos']
-    logger.info(f"Verwendete Knotenspalten für das Training: {node_feature_columns}")
+                            'ZUFLUSS_WL', 'XRECHTS_sin', 'XRECHTS_cos', 'YHOCH_sin', 'YHOCH_cos', 'GEOH_sin',
+                            'GEOH_cos']
+    logger.info(f"Used node feature columns for training: {node_feature_columns}")
 
+    # Initialize the EdgeGAT model with the determined number of node and edge features
     model = EdgeGAT(
         num_node_features=len(node_feature_columns),
-        num_edge_features=num_edge_features,  # Aktualisiert, um die neuen Edge-Features zu berücksichtigen
+        num_edge_features=num_edge_features,  # Updated to account for new edge features
         hidden_dim=64,
         dropout=0.15
     ).to(device)
-    logger.info("EdgeGAT-Modell initialisiert.")
+    logger.info("Initialized EdgeGAT model.")
 
+    # Initialize the AdamW optimizer with learning rate and weight decay
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-5)
-    logger.info("AdamW-Optimierer initialisiert.")
+    logger.info("Initialized AdamW optimizer.")
 
-    # Loss function for regression
+    # Define the loss function for regression tasks
     criterion = torch.nn.MSELoss()
-    logger.info("MSELoss initialisiert.")
+    logger.info("Initialized MSELoss as the loss function.")
 
-    # Learning Rate Scheduler
+    # Initialize the learning rate scheduler to reduce LR on plateau of validation loss
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode='min', factor=0.5, patience=10, verbose=True
     )
-    logger.info("ReduceLROnPlateau-Scheduler initialisiert.")
+    logger.info("Initialized ReduceLROnPlateau scheduler.")
 
-    # Define the results directory for the trainer
+    # Define the results directory for storing training outputs
     results_dir = os.path.join(project_root, 'results', 'results')
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
-        logger.debug(f"Erstellte Ergebnisse-Verzeichnis: {results_dir}")
+        logger.debug(f"Created results directory at: {results_dir}")
 
-    # Initialize Trainer
+    # Initialize the Trainer with the model, optimizer, loss function, scheduler, and training parameters
     trainer = Trainer(
         model, optimizer, criterion, scheduler, device,
         num_epochs=500, patience=20, results_dir=results_dir  # Pass results_dir
     )
-    logger.info("Trainer initialisiert.")
+    logger.info("Initialized Trainer.")
 
-    # Loading the monitoring dataset
+    # Define patterns to locate the monitoring dataset files
     monitoring_node_pattern = os.path.join(directory, '*_Roughness_0_combined_Node.csv')
     monitoring_edge_pattern = os.path.join(directory, '*_Roughness_0_combined_Pipes.csv')
 
     try:
+        # Use glob to find monitoring node and edge files
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
 
+        # Check if monitoring files are found
         if monitoring_node_files and monitoring_edge_files:
             monitoring_node_file = monitoring_node_files[0]
             monitoring_edge_file = monitoring_edge_files[0]
             monitoring_data = data_module.load_data(monitoring_node_file, monitoring_edge_file)
             monitoring_loader = DataLoader([monitoring_data], batch_size=16, shuffle=False)
-            logger.info("Überwachungsdatensatz erfolgreich geladen.")
+            logger.info("Successfully loaded monitoring dataset.")
         else:
-            logger.error("Überwachungsdatensatz nicht gefunden.")
+            logger.error("Monitoring dataset not found.")
             monitoring_loader = None
     except Exception as e:
-        logger.error(f'Fehler beim Laden des Überwachungsdatensatzes: {e}')
+        logger.error(f"Error loading monitoring dataset: {e}")
         monitoring_loader = None
 
-    # Start training with the monitoring_loader and data_module
+    # Start training the model with the training and validation DataLoaders
+    # If a monitoring dataset is available, it will be used for additional evaluation
     trainer.train_model(train_loader, val_loader, monitoring_loader=monitoring_loader, data_module=data_module)
 
-    # Initialize Evaluator with the scaler
+    # Initialize the Evaluator with the trained model, device, and target scaler
     evaluator = Evaluator(model, device, data_module.rau_scaler)
-    logger.info("Evaluator initialisiert.")
+    logger.info("Initialized Evaluator.")
 
-    # Test the model on the test dataset
+    # Test the model on the test dataset to obtain true and predicted values
     y_true, y_pred = evaluator.test_model(test_loader)
 
-    # Calculate metrics
+    # Calculate and log regression metrics
     mse, mae, r2 = evaluator.calculate_metrics(y_true, y_pred)
 
-    # Generate plots
+    # Generate and display evaluation plots
     evaluator.plot_metrics(y_true, y_pred)
 
-    # Save the model
+    # Define the directory to save the trained model
     models_dir = os.path.join(project_root, 'results', 'models')
     if not os.path.exists(models_dir):
         os.makedirs(models_dir)
-        logger.debug(f"Erstellte Modelle-Verzeichnis: {models_dir}")
+        logger.debug(f"Created models directory at: {models_dir}")
+
+    # Define the path to save the trained model's state dictionary
     model_path = os.path.join(models_dir, 'edge_gat_model_regression.pth')
     trainer.save_model(model_path)
 
-    logger.info("Programm erfolgreich abgeschlossen.")
+    logger.info("Program completed successfully.")
+
 
 if __name__ == "__main__":
     main()
