@@ -7,7 +7,7 @@ import yaml
 import joblib
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader  # Updated import to resolve deprecation warning
-from torch_geometric.nn import GATConv
+from torch_geometric.nn import GATv2Conv  # Using GATv2Conv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -56,20 +56,23 @@ class DataModule:
         # Define column names for geographic and physical attributes
         self.geo_columns = ['XRECHTS', 'YHOCH', 'GEOH']
         self.adjusted_physical_columns = ['PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp']
-        self.additional_physical_columns = ['ZUFLUSS_WL']
+        self.additional_physical_columns = ['ZUFLUSS_WL', 'ZUFLUSS_WOL']
         self.all_physical_columns = self.adjusted_physical_columns + self.additional_physical_columns
 
-        # Define node feature columns (12 features)
+        # Define node feature columns (14 features)
         self.node_feature_columns = [
             'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-            'ZUFLUSS_WL',
+            'ZUFLUSS_WL', 'ZUFLUSS_WOL',  # Conditionally included
             'XRECHTS_sin', 'XRECHTS_cos',
             'YHOCH_sin', 'YHOCH_cos',
             'GEOH_sin', 'GEOH_cos'
         ]
 
-        # Define edge feature columns (3 features)
-        self.edge_feature_columns = ['RORL', 'DM', 'RAISE']
+        # Define edge feature columns (9 features)
+        self.edge_feature_columns = [
+            'RORL', 'DM', 'RAISE',
+            'VM_WL', 'VM_WOL', 'FLUSS_WL', 'FLUSS_WOL', 'RE_WL', 'RE_WOL'
+        ]
 
     def add_positional_encoding(self, df, columns, max_value=10000):
         """
@@ -144,7 +147,7 @@ class DataModule:
             raise e
 
         # Check for required node columns
-        required_node_columns = ['KNAM', 'XRECHTS', 'YHOCH', 'GEOH'] + self.adjusted_physical_columns + ['ZUFLUSS_WL']
+        required_node_columns = ['KNAM', 'XRECHTS', 'YHOCH', 'GEOH'] + self.adjusted_physical_columns + self.additional_physical_columns
         for col in required_node_columns:
             if col not in nodes_df.columns:
                 logger.debug(f"Column {col} is missing in {node_file}.")
@@ -152,8 +155,8 @@ class DataModule:
 
         # Check for required edge columns
         required_edge_columns = [
-            'ANFNAM', 'ENDNAM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL',
-            'RORL', 'DM', 'RAISE', 'RAU'
+            'ANFNAM', 'ENDNAM', 'RORL', 'DM', 'RAISE',
+            'VM_WL', 'VM_WOL', 'FLUSS_WL', 'FLUSS_WOL', 'RE_WL', 'RE_WOL', 'RAU'
         ]
         for col in required_edge_columns:
             if col not in edges_df.columns:
@@ -192,7 +195,7 @@ class DataModule:
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
         # Ensure relevant edge columns are numeric
-        edge_features_columns = self.edge_feature_columns  # ['RORL', 'DM', 'RAISE']
+        edge_features_columns = self.edge_feature_columns  # Updated to include new features
         edges_df[edge_features_columns] = edges_df[edge_features_columns].astype(float)
         logger.debug("Converted relevant edge columns to float.")
 
@@ -212,15 +215,20 @@ class DataModule:
             nodes_df.loc[~nodes_df['Included'], col] = np.nan
             logger.debug(f"Set {col} to NaN for nodes not included.")
 
-        # Handle 'ZUFLUSS_WL' only for specific nodes
+        # Handle 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' only for specific nodes
         nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
             lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
-        logger.debug("Handled 'ZUFLUSS_WL' for specific nodes.")
+        nodes_df['ZUFLUSS_WOL'] = nodes_df.apply(
+            lambda row: row['ZUFLUSS_WOL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
+            axis=1
+        )
+        logger.debug("Handled 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' for specific nodes.")
 
-        # Perform graph-based imputation for missing 'ZUFLUSS_WL' values
+        # Perform graph-based imputation for missing 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' values
         nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
+        nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WOL')
 
         # Handle missing values for other physical columns using KNN Imputer
         imputer = KNNImputer(n_neighbors=5)
@@ -305,8 +313,8 @@ class DataModule:
         edge_files.sort()
 
         # Log the found files for scaler fitting
-        logger.info(f"Found node files for scaler fitting: {node_files}")
-        logger.info(f"Found edge files for scaler fitting: {edge_files}")
+        logger.debug(f"Found node files for scaler fitting: {node_files}")
+        logger.debug("Found edge files for scaler fitting: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
         monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
@@ -366,14 +374,18 @@ class DataModule:
             nodes_df_all.loc[~nodes_df_all['Included'], col] = np.nan
             logger.debug(f"Set {col} to NaN for nodes not included (scaler fitting).")
 
-        # Handle 'ZUFLUSS_WL' only for specific nodes
+        # Handle 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' only for specific nodes
         nodes_df_all['ZUFLUSS_WL'] = nodes_df_all.apply(
             lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
             axis=1
         )
-        logger.debug("Handled 'ZUFLUSS_WL' for specific nodes (scaler fitting).")
+        nodes_df_all['ZUFLUSS_WOL'] = nodes_df_all.apply(
+            lambda row: row['ZUFLUSS_WOL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
+            axis=1
+        )
+        logger.debug("Handled 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' for specific nodes (scaler fitting).")
 
-        # Perform graph-based imputation for missing 'ZUFLUSS_WL' values
+        # Perform graph-based imputation for missing 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' values
         # Note: Edge index is not available here; assuming no imputation during scaler fitting
 
         # Handle missing values for other physical columns using KNN Imputer
@@ -414,8 +426,8 @@ class DataModule:
         edge_files.sort()
 
         # Log the found files for data loading
-        logger.info(f"Found node files for loading: {node_files}")
-        logger.info(f"Found edge files for loading: {edge_files}")
+        logger.debug(f"Found node files for loading: {node_files}")
+        logger.debug(f"Found edge files for loading: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
         monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
@@ -477,10 +489,10 @@ class DataModule:
         )
         logger.info("Split data into training, validation, and test sets.")
 
-        # Create DataLoaders with a batch size of 16
-        train_loader = DataLoader(train_data, batch_size=16, shuffle=True)
-        val_loader = DataLoader(val_data, batch_size=16, shuffle=False)
-        test_loader = DataLoader(test_data, batch_size=16, shuffle=False)
+        # Create DataLoaders with a batch size of 32 (increased for larger models)
+        train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+        val_loader = DataLoader(val_data, batch_size=32, shuffle=False)
+        test_loader = DataLoader(test_data, batch_size=32, shuffle=False)
         logger.info("Created DataLoaders for training, validation, and test sets.")
 
         # Log the feature columns used for training based on a sample dataset
@@ -494,42 +506,51 @@ class DataModule:
 
 class EdgeGAT(torch.nn.Module):
     """
-    EdgeGAT is a Graph Attention Network (GAT) model tailored for edge-level regression tasks.
-    It processes node and edge features to predict target values associated with each edge.
+    EdgeGAT is a Graph Attention Network (GAT) model optimized for
+    edge-level regression tasks. It processes node and edge features to predict target values for each edge.
     """
 
-    def __init__(self, num_node_features, num_edge_features, hidden_dim=64, dropout=0.15):
+    def __init__(self, num_node_features, num_edge_features, hidden_dim=256, dropout=0.3, num_heads=16, num_layers=6):
         """
         Initializes the EdgeGAT model with specified parameters.
 
         Args:
             num_node_features (int): Number of features per node.
             num_edge_features (int): Number of features per edge.
-            hidden_dim (int, optional): Dimension of hidden layers. Defaults to 64.
-            dropout (float, optional): Dropout rate. Defaults to 0.15.
+            hidden_dim (int, optional): Dimension of hidden layers. Defaults to 256.
+            dropout (float, optional): Dropout rate. Defaults to 0.3.
+            num_heads (int, optional): Number of attention heads. Defaults to 16.
+            num_layers (int, optional): Number of GAT layers. Defaults to 6.
         """
         super(EdgeGAT, self).__init__()
-        # Define three Graph Attention Convolutional layers with 8 attention heads each
-        self.conv1 = GATConv(num_node_features, hidden_dim, heads=8, dropout=dropout)
-        self.conv2 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=dropout)
-        self.conv3 = GATConv(hidden_dim * 8, hidden_dim, heads=8, dropout=dropout)
+        self.dropout = dropout
+        self.num_layers = num_layers
+        self.num_heads = num_heads
 
-        # Define Batch Normalization layers after each convolutional layer
-        self.bn1 = torch.nn.BatchNorm1d(hidden_dim * 8)
-        self.bn2 = torch.nn.BatchNorm1d(hidden_dim * 8)
-        self.bn3 = torch.nn.BatchNorm1d(hidden_dim * 8)
+        # Initialize GATv2Conv layers and BatchNorm layers using ModuleList
+        self.convs = torch.nn.ModuleList()
+        self.bns = torch.nn.ModuleList()
 
-        # Define an MLP for processing edge features
+        # First layer without residual connection
+        self.convs.append(GATv2Conv(num_node_features, hidden_dim, heads=num_heads, dropout=dropout, add_self_loops=True))
+        self.bns.append(torch.nn.BatchNorm1d(hidden_dim * num_heads))
+
+        # Additional layers with residual connections
+        for _ in range(num_layers - 1):
+            self.convs.append(GATv2Conv(hidden_dim * num_heads, hidden_dim, heads=num_heads, dropout=dropout, add_self_loops=True))
+            self.bns.append(torch.nn.BatchNorm1d(hidden_dim * num_heads))
+
+        # Define a deeper MLP for edge features
         self.edge_mlp = torch.nn.Sequential(
-            torch.nn.Linear(num_edge_features, hidden_dim * 8),
+            torch.nn.Linear(num_edge_features, hidden_dim * num_heads),
             torch.nn.ReLU(),
-            torch.nn.Linear(hidden_dim * 8, hidden_dim * 8)
+            torch.nn.Linear(hidden_dim * num_heads, hidden_dim * num_heads),
+            torch.nn.ReLU(),
+            torch.nn.Linear(hidden_dim * num_heads, hidden_dim * num_heads)
         )
 
-        # Define a fully connected layer to produce the final edge output
-        self.fc_edge = torch.nn.Linear(2 * hidden_dim * 8 + hidden_dim * 8, 1)  # Output is a scalar
-
-        self.dropout = dropout
+        # Fully connected layer to generate final edge output
+        self.fc_edge = torch.nn.Linear(2 * hidden_dim * num_heads + hidden_dim * num_heads, 1)  # Output is a scalar
 
     def forward(self, data):
         """
@@ -543,34 +564,33 @@ class EdgeGAT(torch.nn.Module):
         """
         x, edge_index, edge_attr = data.x, data.edge_index, data.edge_attr
 
-        # Apply the first Graph Attention Convolutional layer
-        x = self.conv1(x, edge_index)
-        x = F.elu(x)
-        x = self.bn1(x)
-        x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass through conv1.")
+        for i in range(self.num_layers):
+            x_res = x  # Residual
+            x = self.convs[i](x, edge_index)
+            x = F.elu(x)
+            x = self.bns[i](x)
+            x = F.dropout(x, p=self.dropout, training=self.training)
 
-        # Apply the second Graph Attention Convolutional layer
-        x = self.conv2(x, edge_index)
-        x = F.elu(x)
-        x = self.bn2(x)
-        x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass through conv2.")
+            if i > 0:
+                # Residual connection only from the second layer onwards
+                if x.shape == x_res.shape:
+                    x = x + x_res
+                else:
+                    # Optional: Use a linear projection if dimensions do not match
+                    projection = torch.nn.Linear(x_res.size(1), x.size(1)).to(x.device)
+                    x = x + projection(x_res)
+                # Log the residual connection
+                logger.debug(f"Layer {i+1}: Residual connection applied.")
+            else:
+                logger.debug(f"Layer {i+1}: No residual connection applied.")
 
-        # Apply the third Graph Attention Convolutional layer
-        x = self.conv3(x, edge_index)
-        x = F.elu(x)
-        x = self.bn3(x)
-        x = F.dropout(x, p=self.dropout, training=self.training)
-        logger.debug("Forward pass through conv3.")
-
-        # Process edge attributes through the MLP
+        # Process edge attributes through the deeper MLP
         edge_features = self.edge_mlp(edge_attr)
 
-        # Concatenate source node features, target node features, and edge features
+        # Concatenate source and target node features with edge features
         edge_embeddings = torch.cat([x[edge_index[0]], x[edge_index[1]], edge_features], dim=1)
 
-        # Pass the concatenated embeddings through the fully connected layer to get edge predictions
+        # Pass through the fully connected layer to predict edge values
         edge_logits = self.fc_edge(edge_embeddings).squeeze()
         logger.debug("Computed edge logits.")
 
@@ -584,7 +604,7 @@ class Trainer:
     and saving the best model based on validation loss.
     """
 
-    def __init__(self, model, optimizer, criterion, scheduler, device, num_epochs=500, patience=20,
+    def __init__(self, model, optimizer, criterion, scheduler, device, num_epochs=1000, patience=50,
                  results_dir='results'):
         """
         Initializes the Trainer with the specified model, optimizer, loss function, scheduler, and training parameters.
@@ -595,8 +615,8 @@ class Trainer:
             criterion (torch.nn.Module): Loss function to be minimized.
             scheduler (torch.optim.lr_scheduler): Learning rate scheduler.
             device (torch.device): Device to run the training on (CPU or GPU).
-            num_epochs (int, optional): Maximum number of training epochs. Defaults to 500.
-            patience (int, optional): Number of epochs with no improvement after which training will be stopped. Defaults to 20.
+            num_epochs (int, optional): Maximum number of training epochs. Defaults to 1000.
+            patience (int, optional): Number of epochs with no improvement after which training will be stopped. Defaults to 50.
             results_dir (str, optional): Directory to save training results. Defaults to 'results'.
         """
         self.model = model
@@ -983,10 +1003,12 @@ def main():
     model = EdgeGAT(
         num_node_features=num_node_features,
         num_edge_features=num_edge_features,
-        hidden_dim=64,
-        dropout=0.15
+        hidden_dim=256,      # Increased hidden dimension
+        dropout=0.3,         # Increased dropout rate for regularization
+        num_heads=16,        # Increased number of attention heads
+        num_layers=6         # Increased number of GAT layers
     ).to(device)
-    logger.info("Initialized EdgeGAT model.")
+    logger.info("Initialized EdgeGAT model with increased complexity.")
 
     # Initialize the AdamW optimizer with learning rate and weight decay
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-5)
@@ -1011,7 +1033,7 @@ def main():
     # Initialize the Trainer with the model, optimizer, loss function, scheduler, and training parameters
     trainer = Trainer(
         model, optimizer, criterion, scheduler, device,
-        num_epochs=500, patience=20, results_dir=results_dir  # Pass results_dir
+        num_epochs=1000, patience=50, results_dir=results_dir  # Increased number of epochs and patience
     )
     logger.info("Initialized Trainer.")
 
@@ -1029,7 +1051,7 @@ def main():
             monitoring_node_file = monitoring_node_files[0]
             monitoring_edge_file = monitoring_edge_files[0]
             monitoring_data = data_module.load_data(monitoring_node_file, monitoring_edge_file)
-            monitoring_loader = DataLoader([monitoring_data], batch_size=16, shuffle=False)
+            monitoring_loader = DataLoader([monitoring_data], batch_size=32, shuffle=False)  # Increased batch size
             logger.info("Successfully loaded monitoring dataset.")
         else:
             logger.error("Monitoring dataset not found.")
