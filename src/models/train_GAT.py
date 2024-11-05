@@ -1010,13 +1010,13 @@ def main():
     ).to(device)
     logger.info("Initialized EdgeGAT model with increased complexity.")
 
-    # Initialize the AdamW optimizer with learning rate and weight decay
+    # Initialize the optimizer with learning rate and weight decay
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-5)
     logger.info("Initialized AdamW optimizer.")
 
-    # Define the loss function for regression tasks
-    criterion = torch.nn.MSELoss()
-    logger.info("Initialized MSELoss as the loss function.")
+    # **Updated Loss Function: Using Huber Loss (SmoothL1Loss)**
+    criterion = torch.nn.SmoothL1Loss()
+    logger.info("Initialized SmoothL1Loss (Huber Loss) as the loss function.")
 
     # Initialize the learning rate scheduler to reduce LR on plateau of validation loss
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(

@@ -15,7 +15,7 @@ def load_and_analyze_rau_values(directory, num_valves=100):
 
     # Iteriere durch alle Dateien und lade die RAU-Werte
     for i in range(1, num_valves + 1):
-        edge_file = os.path.join(directory, f'SyntheticData-Spechbach_Simplification^2_Roughness_{i}_combined_Pipes.csv')
+        edge_file = os.path.join(directory, f'SyntheticData-Spechbach_Simplification^3_Roughness_{i}_combined_Pipes.csv')
 
         try:
             edges_df = pd.read_csv(edge_file, delimiter=';', decimal='.')
