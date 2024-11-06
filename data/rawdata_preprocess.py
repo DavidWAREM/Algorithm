@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import logging
 import re
-import numpy as np  # Für numerische Berechnungen
+import numpy as np  # For numerical computations
 
 class DataProcessor:
     def __init__(self, dataframe, original_file_path):
@@ -80,7 +80,7 @@ class DataProcessor:
             # Split the data into 'KNO' and 'LEI' DataFrames.
             kno_df, lei_df = self.split_data()
             if kno_df is not None and lei_df is not None:
-                # Define file paths für das Speichern der DataFrames.
+                # Define file paths for saving the DataFrames.
                 zwischenspeicher_dir = os.path.join(self.directory, 'Zwischenspeicher')
                 if not os.path.exists(zwischenspeicher_dir):
                     os.makedirs(zwischenspeicher_dir)
@@ -89,9 +89,9 @@ class DataProcessor:
                 kno_path = os.path.join(zwischenspeicher_dir, f"{self.base_filename}_Node.csv")
                 lei_path = os.path.join(zwischenspeicher_dir, f"{self.base_filename}_Pipes.csv")
 
-                # Speichern des 'KNO' DataFrames als CSV.
+                # Save the 'KNO' DataFrame as CSV.
                 kno_df.to_csv(kno_path, index=False, sep=';')
-                # Speichern des 'LEI' DataFrames als CSV.
+                # Save the 'LEI' DataFrame as CSV.
                 lei_df.to_csv(lei_path, index=False, sep=';')
 
                 self.logger.info(f"DataFrames saved successfully: {kno_path} and {lei_path}")
@@ -99,8 +99,6 @@ class DataProcessor:
                 self.logger.error("DataFrames could not be saved due to an earlier error.")
         except Exception as e:
             self.logger.error(f"Error saving DataFrames: {e}")  # Log any errors encountered during saving.
-
-
 
 class DataCombiner:
     def __init__(self, directory):
@@ -118,7 +116,7 @@ class DataCombiner:
         """
         Combines data from 'with_load' and 'without_load' CSV files based on matching numbers in filenames.
         This function processes either 'Pipes' or 'Node' type files, combines relevant columns, and saves
-        the result in a new CSV file with the '_with' part removed from the filename.
+        the result in a new CSV file with the '_combined' suffix.
 
         Args:
             file_type (str): The type of files to combine, either 'Pipes' or 'Node'.
@@ -238,6 +236,116 @@ class DataCombiner:
         except Exception as e:
             self.logger.error(f"Error combining files: {e}", exc_info=True)
 
+    def create_common_files(self):
+        """
+        Creates common files from the _combined_Pipes.csv and _combined_Node.csv files that share the same number.
+        The common files are saved in the same 'Zwischenspeicher' directory.
+        Additionally, two new columns 'delta_PRECH_WOL' and 'delta_PRECH_WL' are introduced for Pipes to represent
+        the differences between PRECH_WOL and PRECH_WL of ANFNAM and ENDNAM respectively.
+        The 'Type' column is used to describe the type of data ('LEI' for Pipes and 'KNO' for Nodes).
+        """
+        try:
+            zwischenspeicher_dir = os.path.join(self.directory, 'Zwischenspeicher')
+            self.logger.info(f"Creating common files in directory: {zwischenspeicher_dir}")
 
+            if not os.path.exists(zwischenspeicher_dir):
+                self.logger.error(f"'Zwischenspeicher' directory not found at: {zwischenspeicher_dir}")
+                return
 
+            # Patterns for combined Pipes and Node files
+            combined_pipes_pattern = re.compile(r".+_(\d+)_combined_Pipes\.csv$")
+            combined_node_pattern = re.compile(r".+_(\d+)_combined_Node\.csv$")
 
+            # Dictionaries to store paths based on the number
+            pipes_files = {}
+            node_files = {}
+
+            # Search the directory for combined files
+            for file in os.listdir(zwischenspeicher_dir):
+                pipes_match = combined_pipes_pattern.match(file)
+                node_match = combined_node_pattern.match(file)
+
+                if pipes_match:
+                    number = pipes_match.group(1)
+                    pipes_files[number] = os.path.join(zwischenspeicher_dir, file)
+                    self.logger.debug(f"Found combined Pipes file: {file} with number: {number}")
+                elif node_match:
+                    number = node_match.group(1)
+                    node_files[number] = os.path.join(zwischenspeicher_dir, file)
+                    self.logger.debug(f"Found combined Node file: {file} with number: {number}")
+
+            # Find numbers that are present in both Pipes and Node files
+            common_numbers = set(pipes_files.keys()).intersection(set(node_files.keys()))
+            self.logger.info(f"Found {len(common_numbers)} common numbers to create common files.")
+
+            for number in common_numbers:
+                pipes_file = pipes_files[number]
+                node_file = node_files[number]
+                self.logger.info(f"Creating common file for number: {number}")
+
+                # Read the combined Pipes and Node files
+                df_pipes = pd.read_csv(pipes_file, sep=';', decimal='.', encoding='utf-8')
+                df_node = pd.read_csv(node_file, sep=';', decimal='.', encoding='utf-8')
+
+                # Add a new column 'Type' as the first column
+                df_pipes.insert(0, 'Type', 'LEI')  # 'LEI' for Pipes
+                df_node.insert(0, 'Type', 'KNO')   # 'KNO' for Nodes
+
+                # Create a mapping from KNAM to PRECH_WOL and PRECH_WL in Nodes
+                knam_to_prech_wol = df_node.set_index('KNAM')['PRECH_WOL'].to_dict()
+                knam_to_prech_wl = df_node.set_index('KNAM')['PRECH_WL'].to_dict()
+
+                # Compute delta_PRECH_WOL for each row in Pipes (absolute value)
+                df_pipes['delta_PRECH_WOL'] = (df_pipes['ANFNAM'].map(knam_to_prech_wol) -
+                                                df_pipes['ENDNAM'].map(knam_to_prech_wol)).abs()
+
+                # Compute delta_PRECH_WL for each row in Pipes (absolute value)
+                df_pipes['delta_PRECH_WL'] = (df_pipes['ANFNAM'].map(knam_to_prech_wl) -
+                                               df_pipes['ENDNAM'].map(knam_to_prech_wl)).abs()
+
+                # Ensure that 'delta_PRECH_WOL' and 'delta_PRECH_WL' are the last columns
+                delta_columns = ['delta_PRECH_WOL', 'delta_PRECH_WL']
+                for col in delta_columns:
+                    if col in df_pipes.columns:
+                        # Move the column to the end
+                        cols = df_pipes.columns.tolist()
+                        cols.remove(col)
+                        cols.append(col)
+                        df_pipes = df_pipes[cols]
+
+                # Add 'delta_PRECH_WOL' and 'delta_PRECH_WL' columns to Nodes DataFrame with NaN values
+                df_node['delta_PRECH_WOL'] = np.nan
+                df_node['delta_PRECH_WL'] = np.nan
+
+                # Ensure that the new delta columns are the last columns in Nodes DataFrame
+                for col in delta_columns:
+                    if col in df_node.columns:
+                        cols_node = df_node.columns.tolist()
+                        cols_node.remove(col)
+                        cols_node.append(col)
+                        df_node = df_node[cols_node]
+
+                # Create a common DataFrame by stacking Pipes and Node data vertically
+                # This will result in a DataFrame where each row is either a Pipe or a Node, indicated by the 'Type' column
+                common_df = pd.concat([df_pipes, df_node], axis=0, ignore_index=True)
+
+                # Optionally: Remove duplicates or unnecessary columns
+                # For example, if both DataFrames have a column with the same name, you can clean them up
+
+                # Define the output path
+                base_name_pipes = re.sub(rf'_(\d+)_combined_Pipes\.csv$', '', os.path.basename(pipes_file))
+                # base_name_node = re.sub(rf'_(\d+)_combined_Node\.csv$', '', os.path.basename(node_file))
+
+                # Assumption: The base names are the same or similar; adjust if necessary
+                # Here we use the base name from Pipes
+                common_base_name = base_name_pipes  # or another logic to determine the base name
+
+                # Define the common output file name
+                common_output_file = os.path.join(zwischenspeicher_dir, f"{common_base_name}_{number}_combined.csv")
+
+                # Save the common DataFrame
+                common_df.to_csv(common_output_file, index=False, sep=';', decimal='.')
+                self.logger.info(f"Common CSV file saved successfully at: {common_output_file}")
+
+        except Exception as e:
+            self.logger.error(f"Error creating common files: {e}", exc_info=True)

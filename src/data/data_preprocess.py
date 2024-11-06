@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 import joblib
 import os
 
-
 class FeatureEngineer:
     def __init__(self, all_data):
         """
@@ -56,8 +55,8 @@ class FeatureEngineer:
             pd.Series: Target data (y) which is the 'RAU' column.
         """
         self.poly = PolynomialFeatures(degree=2, include_bias=False)  # Initialize PolynomialFeatures
-        # Select the relevant columns for feature engineering
-        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE']]
+        # Select the relevant columns for feature engineering, inklusive der neuen Spalten
+        X_combined = self.combined_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE', 'delta_PRECH_WL', 'delta_PRECH_WOL']]
         X_combined_poly = self.poly.fit_transform(X_combined)  # Generate polynomial features
         y_combined = self.combined_data['RAU']  # Target variable
         self.logger.info("Feature engineering complete with polynomial features of degree 2")
@@ -180,7 +179,6 @@ class PredictionPreprocessor:
         self.scaler = joblib.load(self.scaler_path)  # Load the scaler
         self.logger.info("Loaded polynomial transformer and scaler from disk.")
 
-
     def preprocess(self):
         """
         Preprocesses the new data by applying polynomial transformation and scaling.
@@ -191,13 +189,24 @@ class PredictionPreprocessor:
         This method applies the saved polynomial transformer and scaler to the new data and returns the result.
         """
         self.logger.info("Starting preprocessing for prediction data.")
-        # Select the relevant columns from the new data for preprocessing
-        X_new = self.new_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE']]
-        X_new_poly = self.poly.transform(X_new)  # Apply the polynomial transformation
-        X_new_scaled = self.scaler.transform(X_new_poly)  # Scale the transformed data
-        self.processed_data = pd.DataFrame(X_new_scaled)  # Store the processed data as a DataFrame
+        # Load the transformers
+        self.load_transformers()
+
+        # Select the relevant columns from the new data for preprocessing, inklusive der neuen Spalten
+        X_new = self.new_data[['RORL', 'DM', 'FLUSS_WL', 'FLUSS_WOL', 'VM_WL', 'VM_WOL', 'RE_WL', 'RE_WOL', 'RAISE', 'delta_PRECH_WL', 'delta_PRECH_WOL']]
+        self.logger.debug(f"Selected columns for preprocessing: {X_new.columns.tolist()}")
+
+        # Handle missing values oder andere notwendige Bereinigungen hier, falls erforderlich
+
+        # Apply the polynomial transformation
+        X_new_poly = self.poly.transform(X_new)
+        self.logger.debug(f"Polynomial transformation applied. Shape: {X_new_poly.shape}")
+
+        # Apply the scaler transformation
+        X_new_scaled = self.scaler.transform(X_new_poly)
+        self.logger.debug(f"Scaler transformation applied. Shape: {X_new_scaled.shape}")
+
+        # Store the processed data as a DataFrame (optional)
+        self.processed_data = pd.DataFrame(X_new_scaled)
         self.logger.info("Preprocessing for prediction data completed successfully.")
         return self.processed_data  # Return the preprocessed data
-
-
-

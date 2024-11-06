@@ -1,10 +1,9 @@
 import os
-import logging  # Korrigierter Import
+import logging  # Corrected import
 import yaml
 from data.rawdata_load import DataLoader  # Custom class to load raw data
-from data.rawdata_preprocess import DataProcessor, DataCombiner  # Custom class to process raw data
+from data.rawdata_preprocess import DataProcessor, DataCombiner  # Custom classes to process raw data
 from src.logging_config import setup_logging  # Custom function to set up logging
-
 
 def load_config(config_file='config/config.yaml'):
     """
@@ -30,7 +29,6 @@ def load_config(config_file='config/config.yaml'):
         config = yaml.safe_load(file)
 
     return config  # Return the loaded configuration
-
 
 def process_file(file_path, file_name, logger):
     """
@@ -68,7 +66,6 @@ def process_file(file_path, file_name, logger):
         # Log any errors that occur during processing
         logger.error(f"Error processing data for file {file_name}: {e}")
 
-
 def main():
     """
     Main function that sets up logging, loads configuration, and processes files.
@@ -77,7 +74,7 @@ def main():
     """
     setup_logging()  # Set up the logging configuration
     logger = logging.getLogger(__name__)  # Create a logger for this script
-    logger.info('Logger gestartet')
+    logger.info('Logger started')
 
     # Load configuration settings from the YAML file
     config = load_config()
@@ -97,6 +94,8 @@ def main():
     data_combiner.combine_with_without_load('Pipes')
     data_combiner.combine_with_without_load('Node')
 
+    # Create common files after combining Pipes and Node files
+    data_combiner.create_common_files()
 
 if __name__ == "__main__":
     main()  # Entry point: run the main function if this script is executed directly
