@@ -1,13 +1,9 @@
 paths:
-  folder_path_rawdata: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness'
-  folder_path_data: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\Zwischenspeicher'
-  folder_path_data_predicted: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\Predicted'
-  folder_path_data_results: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\Results'
-  folder_path_data_GNN_dataset: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\GNN Dataset'
-  save_path: 'C:\\Users\\D.Muehlfeld\\Documents\\Berechnungsdaten_Roughness\\Zwischenspeicher\\saved_data'
-  knoten_file: 'export_results_13_Spechbach_RNAB.TXT_0_Node.csv'
-  leitungen_file: 'export_results_13_Spechbach_RNAB.TXT_0_Pipes.csv'
-  log_file: 'C:\\Users\\D.Muehlfeld\\PycharmProjects\\Algorithm\\logs\\verify_graph.log'
+  folder_path_rawdata: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\'
+  folder_path_data: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Zwischenspeicher'
+  folder_path_data_predicted: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Predicted'
+  folder_path_data_results: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Results'
+
 
 
 nodes:

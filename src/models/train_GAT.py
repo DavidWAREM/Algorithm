@@ -430,8 +430,8 @@ class DataModule:
         logger.debug(f"Found edge files for loading: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
-        monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
-        monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Pipes.csv')
+        monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_900_combined_Node.csv')
+        monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_900_combined_Pipes.csv')
 
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
@@ -1038,8 +1038,8 @@ def main():
     logger.info("Initialized Trainer.")
 
     # Define patterns to locate the monitoring dataset files
-    monitoring_node_pattern = os.path.join(directory, '*_Roughness_0_combined_Node.csv')
-    monitoring_edge_pattern = os.path.join(directory, '*_Roughness_0_combined_Pipes.csv')
+    monitoring_node_pattern = os.path.join(directory, '*_Roughness_900_combined_Node.csv')
+    monitoring_edge_pattern = os.path.join(directory, '*_Roughness_900_combined_Pipes.csv')
 
     try:
         # Use glob to find monitoring node and edge files
