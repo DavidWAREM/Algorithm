@@ -330,7 +330,7 @@ def provide_recommendations(df, transformed_corrs, vif_data):
 # Main function
 def main():
     # Adjust the path to your data directory
-    directory = 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;100)\\Zwischenspeicher'
+    directory = 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^4(0;100)\\Zwischenspeicher'
 
     # Set up logging
     logger = setup_logging(directory)

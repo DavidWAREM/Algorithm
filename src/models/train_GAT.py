@@ -18,6 +18,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.impute import KNNImputer
+from datetime import datetime
 import logging
 
 # Initialize logging with INFO level to capture essential information
@@ -302,8 +303,8 @@ class DataModule:
         all_edges_dfs = []
 
         # Use glob to find matching node and edge files based on patterns
-        node_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Node.csv')
-        edge_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Pipes.csv')
+        node_pattern = os.path.join(self.directory, '*Roughness_*_combined_Node.csv')
+        edge_pattern = os.path.join(self.directory, '*Roughness_*_combined_Pipes.csv')
 
         node_files = glob.glob(node_pattern)
         edge_files = glob.glob(edge_pattern)
@@ -317,8 +318,8 @@ class DataModule:
         logger.debug("Found edge files for scaler fitting: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
-        monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Node.csv')
-        monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_0_combined_Pipes.csv')
+        monitoring_node_pattern = os.path.join(self.directory, '*Roughness_0_combined_Node.csv')
+        monitoring_edge_pattern = os.path.join(self.directory, '*Roughness_0_combined_Pipes.csv')
 
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
@@ -415,8 +416,8 @@ class DataModule:
         logger.info("Started loading all datasets.")
 
         # Use glob to find matching node and edge files based on patterns
-        node_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Node.csv')
-        edge_pattern = os.path.join(self.directory, '*_Roughness_*_combined_Pipes.csv')
+        node_pattern = os.path.join(self.directory, '*Roughness_*_combined_Node.csv')
+        edge_pattern = os.path.join(self.directory, '*Roughness_*_combined_Pipes.csv')
 
         node_files = glob.glob(node_pattern)
         edge_files = glob.glob(edge_pattern)
@@ -430,8 +431,8 @@ class DataModule:
         logger.debug(f"Found edge files for loading: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
-        monitoring_node_pattern = os.path.join(self.directory, '*_Roughness_900_combined_Node.csv')
-        monitoring_edge_pattern = os.path.join(self.directory, '*_Roughness_900_combined_Pipes.csv')
+        monitoring_node_pattern = os.path.join(self.directory, '*Roughness_9_combined_Node.csv')
+        monitoring_edge_pattern = os.path.join(self.directory, '*Roughness_9_combined_Pipes.csv')
 
         monitoring_node_files = glob.glob(monitoring_node_pattern)
         monitoring_edge_files = glob.glob(monitoring_edge_pattern)
@@ -724,20 +725,6 @@ class Trainer:
             'mae': mae,
             'r2_score': r2
         }
-
-        # Save predictions per edge to a CSV file for analysis
-        df_predictions = pd.DataFrame({
-            'edge_id': edge_ids_all,
-            'y_true': y_true,
-            'y_pred': y_pred
-        })
-
-        # Define the filename and filepath for saving predictions
-        csv_filename = f'monitoring_predictions_epoch_{epoch}.csv'
-        csv_filepath = os.path.join(self.results_dir, csv_filename)
-        df_predictions.to_csv(csv_filepath, index=False)
-        logger.info(f'Saved edge-wise predictions for epoch {epoch} at {csv_filepath}')
-
         return metrics
 
     def train_model(self, train_loader, val_loader, monitoring_loader=None, data_module=None):
@@ -817,7 +804,7 @@ class Evaluator:
     calculating performance metrics, and generating visualization plots.
     """
 
-    def __init__(self, model, device, target_scaler):
+    def __init__(self, model, device, target_scaler, data_label):
         """
         Initializes the Evaluator with the trained model, device, and scaler for the target variable.
 
@@ -829,6 +816,7 @@ class Evaluator:
         self.model = model
         self.device = device
         self.rau_scaler = target_scaler  # Scaler for the target variable 'RAU'
+        self.data_label = data_label
         self.logger = logging.getLogger(__name__)
 
     def test_model(self, loader):
@@ -896,47 +884,49 @@ class Evaluator:
             y_pred (np.ndarray): Predicted target values.
         """
         self.plot_predictions(y_true, y_pred)
-        self.plot_residuals(y_true, y_pred)
 
     def plot_predictions(self, y_true, y_pred):
         """
         Plots predicted values against true values to visualize model performance.
-
-        Args:
-            y_true (np.ndarray): True target values.
-            y_pred (np.ndarray): Predicted target values.
         """
-        plt.figure(figsize=(8, 6))
-        plt.scatter(y_true, y_pred, alpha=0.5, label='Predictions')
+        # Compute metrics
+        mse = mean_squared_error(y_true, y_pred)
+        rmse = np.sqrt(mse)
+        mae = mean_absolute_error(y_true, y_pred)
+        r2 = r2_score(y_true, y_pred)
+
+        plt.figure(figsize=(10, 5))
+        plt.scatter(y_true, y_pred, alpha=0.7)
         min_val = min(y_true.min(), y_pred.min())
         max_val = max(y_true.max(), y_pred.max())
-        plt.plot([min_val, max_val], [min_val, max_val], 'r--', label='Ideal')
-        plt.xlabel('True RAU Values')
-        plt.ylabel('Predicted RAU Values')
-        plt.title('True vs. Predicted RAU Values')
-        plt.legend()
-        plt.grid(True)
-        plt.show()
-        logger.debug("Generated plot for true vs. predicted RAU values.")
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--',)
+        plt.xlabel('True Values')
+        plt.ylabel('Predicted Values')
+        plt.title(f'GAT - True vs. Predicted RAU Values\n{self.data_label}')
+        plt.grid(False)
 
-    def plot_residuals(self, y_true, y_pred):
-        """
-        Plots residuals (differences between true and predicted values) to assess model errors.
+        # Add the metrics to the plot as text
+        metrics_text = f"MSE: {mse:.4f}\nMAE: {mae:.4f}\nRMSE: {rmse:.4f}\nR²: {r2:.4f}"
+        plt.text(0.05, 0.95, metrics_text, transform=plt.gca().transAxes, fontsize=12, verticalalignment='top',
+                 bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='white'))
 
-        Args:
-            y_true (np.ndarray): True target values.
-            y_pred (np.ndarray): Predicted target values.
-        """
-        residuals = y_true - y_pred
-        plt.figure(figsize=(8, 6))
-        plt.scatter(y_pred, residuals, alpha=0.5)
-        plt.hlines(0, y_pred.min(), y_pred.max(), colors='r', linestyles='dashed')
-        plt.xlabel('Predicted RAU Values')
-        plt.ylabel('Residuals')
-        plt.title('Residuals Plot')
-        plt.grid(True)
+        # Generate the directory path for saving the plot
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'results')
+        os.makedirs(results_dir, exist_ok=True)
+
+        # Create a filename with the current date and time, including the data label
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"GAT_{self.data_label}_{timestamp}.png"
+        file_path = os.path.join(results_dir, file_name)
+
+        # Save the plot
+        plt.savefig(file_path)
+
+        # Show the plot
         plt.show()
-        logger.debug("Generated residuals plot.")
+
+        self.logger.debug("Generated plot for true vs. predicted RAU values.")
 
 
 def main():
@@ -969,6 +959,10 @@ def main():
 
     # Directory containing data files
     directory = config['paths']['folder_path_data']
+
+    # Extract the substring from 'folder_path_rawdata'
+    rawdata_directory = config['paths']['folder_path_rawdata']
+    data_label = os.path.basename(os.path.normpath(rawdata_directory))
 
     logger = logging.getLogger(__name__)
 
@@ -1038,8 +1032,8 @@ def main():
     logger.info("Initialized Trainer.")
 
     # Define patterns to locate the monitoring dataset files
-    monitoring_node_pattern = os.path.join(directory, '*_Roughness_900_combined_Node.csv')
-    monitoring_edge_pattern = os.path.join(directory, '*_Roughness_900_combined_Pipes.csv')
+    monitoring_node_pattern = os.path.join(directory, '*Roughness_9_combined_Node.csv')
+    monitoring_edge_pattern = os.path.join(directory, '*Roughness_9_combined_Pipes.csv')
 
     try:
         # Use glob to find monitoring node and edge files
@@ -1065,7 +1059,7 @@ def main():
     trainer.train_model(train_loader, val_loader, monitoring_loader=monitoring_loader, data_module=data_module)
 
     # Initialize the Evaluator with the trained model, device, and target scaler
-    evaluator = Evaluator(model, device, data_module.rau_scaler)
+    evaluator = Evaluator(model, device, data_module.rau_scaler, data_label)
     logger.info("Initialized Evaluator.")
 
     # Test the model on the test dataset to obtain true and predicted values
