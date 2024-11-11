@@ -1,6 +1,6 @@
 paths:
-  folder_path_rawdata: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(20;0)_Test\\'
-  folder_path_data: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(20;0)_Test\\Zwischenspeicher'
+  folder_path_rawdata: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(50;0)\\'
+  folder_path_data: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(50;0)\\Zwischenspeicher'
   folder_path_data_predicted: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Predicted'
   folder_path_data_results: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Results'
 
