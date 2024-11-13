@@ -1,32 +1,5 @@
 paths:
-  folder_path_rawdata: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(50;0)\\'
-  folder_path_data: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(50;0)\\Zwischenspeicher'
+  folder_path_rawdata: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(20;0)_Test\\'
+  folder_path_data: 'C:\Users\D.Muehlfeld\Documents\Synthetic_Data\SyntheticData_Roughness(20;0)_Test\\Zwischenspeicher'
   folder_path_data_predicted: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Predicted'
   folder_path_data_results: 'C:\\Users\\D.Muehlfeld\\Documents\Synthetic_Data\\Synthetic_Data_Roughness_Simplification^3(0;0.1)\\Results'
-
-
-
-nodes:
-  included_nodes: [
-    K0095, K0096, K0098, K0101, K0117, K0123,
-    K0181, K0250, K0252, K0257, K0288, K0302,
-    K0303, K0341, K0342, K0344, K0345, K1002,
-    K1003, K1004, K1005, K1012, K1046, K1047,
-    K1048, K1049, K1050, K1051, K1052, K1053,
-    K1054, K1055, K1056, K1057, K1058, K1059,
-    K1060, K1061, K1062, K1063, K1064, K1065,
-    K1066, K1067, K1068, K1069, K1070, K1071,
-    K1072, K1073, K1074, K1075
-  ]
-
-  zfluss_wl_nodes: [
-    K0095, K0096, K0098, K0101, K0117, K0123,
-    K0181, K0250, K0252, K0257, K0288, K0302,
-    K0303, K0341, K0342, K0344, K0345, K1002,
-    K1003, K1004, K1005, K1012, K1046, K1047,
-    K1048, K1049, K1050, K1051, K1052, K1053,
-    K1054, K1055, K1056, K1057, K1058, K1059,
-    K1060, K1061, K1062, K1063, K1064, K1065,
-    K1066, K1067, K1068, K1069, K1070, K1071,
-    K1072, K1073, K1074, K1075
-  ]

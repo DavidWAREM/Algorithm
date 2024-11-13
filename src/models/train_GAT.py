@@ -6,16 +6,12 @@ import numpy as np
 import yaml
 import joblib
 from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader  # Updated import to resolve deprecation warning
-from torch_geometric.nn import GATv2Conv  # Using GATv2Conv
+from torch_geometric.loader import DataLoader
+from torch_geometric.nn import GATv2Conv
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import (
-    mean_squared_error,
-    mean_absolute_error,
-    r2_score,
-)
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.impute import KNNImputer
 from datetime import datetime
@@ -33,18 +29,14 @@ class DataModule:
     scaling, imputes missing values, and adds positional encoding to geographic features.
     """
 
-    def __init__(self, directory, included_nodes, zfluss_wl_nodes):
+    def __init__(self, directory):
         """
-        Initializes the DataModule with the specified directory and node configurations.
+        Initializes the DataModule with the specified directory.
 
         Args:
             directory (str): Path to the directory containing node and edge CSV files.
-            included_nodes (list): List of node names to be included with available measurement data.
-            zfluss_wl_nodes (list): List of node names for which 'ZUFLUSS_WL' is applicable.
         """
         self.directory = directory
-        self.included_nodes = included_nodes
-        self.zfluss_wl_nodes = zfluss_wl_nodes
 
         # Initialize scalers for different types of features
         self.physical_scaler = StandardScaler()
@@ -63,7 +55,7 @@ class DataModule:
         # Define node feature columns (14 features)
         self.node_feature_columns = [
             'PRECH_WOL', 'PRECH_WL', 'HP_WL', 'HP_WOL', 'dp',
-            'ZUFLUSS_WL', 'ZUFLUSS_WOL',  # Conditionally included
+            'ZUFLUSS_WL', 'ZUFLUSS_WOL',
             'XRECHTS_sin', 'XRECHTS_cos',
             'YHOCH_sin', 'YHOCH_cos',
             'GEOH_sin', 'GEOH_cos'
@@ -196,7 +188,7 @@ class DataModule:
         edge_index = edges_df[['ANFNR', 'ENDNR']].values.T
 
         # Ensure relevant edge columns are numeric
-        edge_features_columns = self.edge_feature_columns  # Updated to include new features
+        edge_features_columns = self.edge_feature_columns
         edges_df[edge_features_columns] = edges_df[edge_features_columns].astype(float)
         logger.debug("Converted relevant edge columns to float.")
 
@@ -210,35 +202,14 @@ class DataModule:
         y = torch.tensor(y_df_scaled['RAU'].values, dtype=torch.float)
         logger.debug("Scaled target variable 'RAU'.")
 
-        # Adjust node attributes by setting non-included nodes' physical columns to NaN
-        nodes_df['Included'] = nodes_df['KNAM'].isin([n.lower() for n in self.included_nodes])
-        for col in self.adjusted_physical_columns:
-            nodes_df.loc[~nodes_df['Included'], col] = np.nan
-            logger.debug(f"Set {col} to NaN for nodes not included.")
-
-        # Handle 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' only for specific nodes
-        nodes_df['ZUFLUSS_WL'] = nodes_df.apply(
-            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
-            axis=1
-        )
-        nodes_df['ZUFLUSS_WOL'] = nodes_df.apply(
-            lambda row: row['ZUFLUSS_WOL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
-            axis=1
-        )
-        logger.debug("Handled 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' for specific nodes.")
-
         # Perform graph-based imputation for missing 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' values
         nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WL')
         nodes_df = self.graph_based_imputation(nodes_df, edge_index, 'ZUFLUSS_WOL')
 
-        # Handle missing values for other physical columns using KNN Imputer
+        # Handle missing values for physical columns using KNN Imputer
         imputer = KNNImputer(n_neighbors=5)
-        nodes_df[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df[self.adjusted_physical_columns])
-        logger.debug("Performed KNN imputation for adjusted physical columns.")
-
-        # Remove the helper 'Included' column as it's no longer needed
-        nodes_df = nodes_df.drop(columns=['Included'])
-        logger.debug("Removed helper column 'Included' from node data.")
+        nodes_df[self.all_physical_columns] = imputer.fit_transform(nodes_df[self.all_physical_columns])
+        logger.debug("Performed KNN imputation for physical columns.")
 
         # Apply scaling to node attributes
         nodes_df[self.all_physical_columns] = pd.DataFrame(
@@ -260,7 +231,6 @@ class DataModule:
         # Create node features by selecting the defined columns
         node_features = nodes_df[self.node_feature_columns].values
 
-        # Ensure all edge attributes are numeric (already handled above)
         # Apply scaling to edge attributes
         edges_df[self.edge_feature_columns] = pd.DataFrame(
             self.edge_scaler.transform(edges_df[self.edge_feature_columns]),
@@ -315,7 +285,7 @@ class DataModule:
 
         # Log the found files for scaler fitting
         logger.debug(f"Found node files for scaler fitting: {node_files}")
-        logger.debug("Found edge files for scaler fitting: {edge_files}")
+        logger.debug(f"Found edge files for scaler fitting: {edge_files}")
 
         # Define patterns to identify and exclude monitoring files (typically used for validation or testing)
         monitoring_node_pattern = os.path.join(self.directory, '*Roughness_0_combined_Node.csv')
@@ -369,34 +339,10 @@ class DataModule:
         edges_df_all['ANFNAM'] = edges_df_all['ANFNAM'].astype(str).str.strip().str.lower()
         edges_df_all['ENDNAM'] = edges_df_all['ENDNAM'].astype(str).str.strip().str.lower()
 
-        # Adjust node attributes by setting non-included nodes' physical columns to NaN
-        nodes_df_all['Included'] = nodes_df_all['KNAM'].isin([n.lower() for n in self.included_nodes])
-        for col in self.adjusted_physical_columns:
-            nodes_df_all.loc[~nodes_df_all['Included'], col] = np.nan
-            logger.debug(f"Set {col} to NaN for nodes not included (scaler fitting).")
-
-        # Handle 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' only for specific nodes
-        nodes_df_all['ZUFLUSS_WL'] = nodes_df_all.apply(
-            lambda row: row['ZUFLUSS_WL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
-            axis=1
-        )
-        nodes_df_all['ZUFLUSS_WOL'] = nodes_df_all.apply(
-            lambda row: row['ZUFLUSS_WOL'] if row['KNAM'] in [n.lower() for n in self.zfluss_wl_nodes] else np.nan,
-            axis=1
-        )
-        logger.debug("Handled 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' for specific nodes (scaler fitting).")
-
-        # Perform graph-based imputation for missing 'ZUFLUSS_WL' and 'ZUFLUSS_WOL' values
-        # Note: Edge index is not available here; assuming no imputation during scaler fitting
-
-        # Handle missing values for other physical columns using KNN Imputer
+        # Handle missing values for physical columns using KNN Imputer
         imputer = KNNImputer(n_neighbors=5)
-        nodes_df_all[self.adjusted_physical_columns] = imputer.fit_transform(nodes_df_all[self.adjusted_physical_columns])
-        logger.debug("Performed KNN imputation for adjusted physical columns (scaler fitting).")
-
-        # Remove the helper 'Included' column as it's no longer needed
-        nodes_df_all = nodes_df_all.drop(columns=['Included'])
-        logger.debug("Removed helper column 'Included' from node data (scaler fitting).")
+        nodes_df_all[self.all_physical_columns] = imputer.fit_transform(nodes_df_all[self.all_physical_columns])
+        logger.debug("Performed KNN imputation for physical columns (scaler fitting).")
 
         # Fit scalers using the combined training data
         self.physical_scaler.fit(nodes_df_all[self.all_physical_columns])
@@ -490,7 +436,7 @@ class DataModule:
         )
         logger.info("Split data into training, validation, and test sets.")
 
-        # Create DataLoaders with a batch size of 32 (increased for larger models)
+        # Create DataLoaders with a batch size of 32
         train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
         val_loader = DataLoader(val_data, batch_size=32, shuffle=False)
         test_loader = DataLoader(test_data, batch_size=32, shuffle=False)
@@ -812,6 +758,7 @@ class Evaluator:
             model (torch.nn.Module): The trained model to evaluate.
             device (torch.device): Device to run the evaluation on (CPU or GPU).
             target_scaler (StandardScaler): Scaler used for inverse transforming the target variable.
+            data_label (str): Label for the dataset used in plots.
         """
         self.model = model
         self.device = device
@@ -899,7 +846,7 @@ class Evaluator:
         plt.scatter(y_true, y_pred, alpha=0.7)
         min_val = min(y_true.min(), y_pred.min())
         max_val = max(y_true.max(), y_pred.max())
-        plt.plot([min_val, max_val], [min_val, max_val], 'r--',)
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--')
         plt.xlabel('True Values')
         plt.ylabel('Predicted Values')
         plt.title(f'GAT - True vs. Predicted RAU Values\n{self.data_label}')
@@ -966,12 +913,8 @@ def main():
 
     logger = logging.getLogger(__name__)
 
-    # List of nodes with available measurement data
-    included_nodes = config['nodes']['included_nodes']
-    zfluss_wl_nodes = config['nodes']['zfluss_wl_nodes']
-
-    # Initialize DataModule with specified directory and node configurations
-    data_module = DataModule(directory, included_nodes, zfluss_wl_nodes)
+    # Initialize DataModule with the specified directory
+    data_module = DataModule(directory)
     data_module.load_all_data()
     train_loader, val_loader, test_loader = data_module.get_loaders()
 
@@ -1008,7 +951,7 @@ def main():
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.001, weight_decay=1e-5)
     logger.info("Initialized AdamW optimizer.")
 
-    # **Updated Loss Function: Using Huber Loss (SmoothL1Loss)**
+    # Using Huber Loss (SmoothL1Loss)
     criterion = torch.nn.SmoothL1Loss()
     logger.info("Initialized SmoothL1Loss (Huber Loss) as the loss function.")
 
