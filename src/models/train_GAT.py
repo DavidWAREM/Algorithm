@@ -16,12 +16,17 @@ from sklearn.metrics import (
     average_precision_score,
     confusion_matrix,
     ConfusionMatrixDisplay,
+    roc_curve,
+    auc,
+    precision_score,
+    recall_score,
+    f1_score
 )
 from math import pi
 from sklearn.model_selection import train_test_split
 from sklearn.impute import KNNImputer
-from sklearn.metrics import roc_curve, auc
 import logging
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -372,7 +377,6 @@ class DataModule:
         return train_loader, val_loader, test_loader
 
 
-
 # GAT Model with Edge Prediction for Binary Classification
 class EdgeGAT(torch.nn.Module):
     def __init__(self, num_node_features, num_edge_features, hidden_dim=16, dropout=0.2):
@@ -496,8 +500,6 @@ class Trainer:
         self.logger.info(f'Model saved at: {path}')
 
 
-
-# Evaluator Class
 class Evaluator:
     def __init__(self, model, device):
         self.model = model
@@ -535,9 +537,15 @@ class Evaluator:
 
         y_pred_binary = (y_pred >= 0.5).astype(int)
         accuracy = accuracy_score(y_true, y_pred_binary)
+        precision = precision_score(y_true, y_pred_binary, zero_division=0)
+        recall = recall_score(y_true, y_pred_binary, zero_division=0)
+        f1 = f1_score(y_true, y_pred_binary, zero_division=0)
         self.logger.info(f'Accuracy: {accuracy:.4f}')
+        self.logger.info(f'Precision: {precision:.4f}')
+        self.logger.info(f'Recall: {recall:.4f}')
+        self.logger.info(f'F1 Score: {f1:.4f}')
 
-        return accuracy, auc_score, y_pred_binary
+        return accuracy, auc_score, y_pred_binary, precision, recall, f1
 
     def plot_metrics(self, y_true, y_pred):
         self.plot_roc_curve(y_true, y_pred)
@@ -554,8 +562,23 @@ class Evaluator:
         plt.ylabel('True Positive Rate')
         plt.title('Receiver Operating Characteristic (ROC)')
         plt.legend(loc="lower right")
+
+        # Verzeichnis zum Speichern des Plots erstellen
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'results')
+        os.makedirs(results_dir, exist_ok=True)
+
+        # Dateiname mit aktuellem Datum und Uhrzeit erstellen
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"Valve_ROC_Curve_{timestamp}.png"
+        file_path = os.path.join(results_dir, file_name)
+
+        # Plot speichern
+        plt.savefig(file_path)
+
+        # Plot anzeigen
         plt.show()
-        logger.debug("Plotted ROC curve.")
+        self.logger.debug(f"ROC-Kurve geplottet und gespeichert unter {file_path}.")
 
     def plot_precision_recall(self, y_true, y_pred):
         precision, recall, _ = precision_recall_curve(y_true, y_pred)
@@ -566,20 +589,67 @@ class Evaluator:
         plt.ylabel('Precision')
         plt.title('Precision-Recall Curve')
         plt.legend(loc="lower left")
+
+        # Verzeichnis zum Speichern des Plots erstellen
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'results')
+        os.makedirs(results_dir, exist_ok=True)
+
+        # Dateiname mit aktuellem Datum und Uhrzeit erstellen
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"Valve_Precision_Recall_Curve_{timestamp}.png"
+        file_path = os.path.join(results_dir, file_name)
+
+        # Plot speichern
+        plt.savefig(file_path)
+
+        # Plot anzeigen
         plt.show()
-        logger.debug("Plotted Precision-Recall curve.")
+        self.logger.debug(f"Precision-Recall-Kurve geplottet und gespeichert unter {file_path}.")
 
     def plot_confusion_matrix(self, y_true, y_pred_binary):
         cm = confusion_matrix(y_true, y_pred_binary)
         disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-        disp.plot()
-        plt.title('Confusion Matrix')
+
+        # Figur und Achsen erstellen
+        fig, ax = plt.subplots(figsize=(8, 6))
+        disp.plot(ax=ax)
+        ax.set_title('Confusion Matrix')
+
+        # Metriken berechnen
+        accuracy = accuracy_score(y_true, y_pred_binary)
+        precision = precision_score(y_true, y_pred_binary, zero_division=0)
+        recall = recall_score(y_true, y_pred_binary, zero_division=0)
+        f1 = f1_score(y_true, y_pred_binary, zero_division=0)
+
+        # Metriken als Text hinzufügen
+        metrics_text = f"Accuracy: {accuracy:.4f}\nPrecision: {precision:.4f}\nRecall: {recall:.4f}\nF1 Score: {f1:.4f}"
+
+        # Platz für den Text rechts neben der Plotfläche schaffen
+        plt.subplots_adjust(right=0.7)
+        fig.text(0.72, 0.5, metrics_text, fontsize=12, verticalalignment='center',
+                 bbox=dict(boxstyle='round,pad=0.5', edgecolor='black', facecolor='white'))
+
+        # Verzeichnis zum Speichern des Plots erstellen
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        results_dir = os.path.join(project_root, 'results', 'results')
+        os.makedirs(results_dir, exist_ok=True)
+
+        # Dateiname mit aktuellem Datum und Uhrzeit erstellen
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_name = f"Valve_Confusion_Matrix_{timestamp}.png"
+        file_path = os.path.join(results_dir, file_name)
+
+        # Plot speichern
+        plt.savefig(file_path)
+
+        # Plot anzeigen
         plt.show()
-        logger.debug("Plotted Confusion Matrix.")
+        self.logger.debug(f"Konfusionsmatrix geplottet und gespeichert unter {file_path}.")
+
 
 # Main Function
 def main():
-
     # Get the absolute path to the config file relative to the project root
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))  # Two levels up
@@ -656,7 +726,7 @@ def main():
     y_true, y_pred = evaluator.test_model(test_loader)
 
     # Calculate metrics
-    accuracy, auc_score, y_pred_binary = evaluator.calculate_metrics(y_true, y_pred)
+    accuracy, auc_score, y_pred_binary, precision, recall, f1 = evaluator.calculate_metrics(y_true, y_pred)
 
     # Generate plots
     evaluator.plot_metrics(y_true, y_pred)
@@ -664,10 +734,12 @@ def main():
     # Save the model
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     results_dir = os.path.join(project_root, 'results', 'models')
+    os.makedirs(results_dir, exist_ok=True)
     model_path = os.path.join(results_dir, 'edge_gat_model_classification.pth')
     trainer.save_model(model_path)
 
     logger.info("Program completed successfully.")
+
 
 if __name__ == "__main__":
     main()
